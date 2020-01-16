@@ -72,7 +72,7 @@ export async function executeAutoMerge(pr: AutoMergeOnReview.PullRequest,
         }
 
         if (isPrAutoMergeEnabled(pr)) {
-            const api = gitHub(creds, apiUrl(pr.repo));
+            const api = gitHub((creds as TokenCredentials).token, apiUrl(pr.repo));
 
             return doWithRetry<HandlerResult>(async () => {
 
@@ -192,7 +192,7 @@ function statusComment(pr: AutoMergeOnReview.PullRequest): string {
 
 export const DefaultGitHubApiUrl = "https://api.github.com/";
 
-function apiUrl(repo: any): string {
+export function apiUrl(repo: any): string {
     if (repo.org && repo.org.provider && repo.org.provider.apiUrl) {
         let providerUrl = repo.org.provider.apiUrl;
         if (providerUrl.slice(-1) === "/") {
@@ -204,14 +204,23 @@ function apiUrl(repo: any): string {
     }
 }
 
-function gitHub(creds: ProjectOperationCredentials, url: string): github {
-    const apiurl = new URL(url);
-    const api = new github({
-        auth: `token ${(creds as TokenCredentials).token}`,
-        protocol: apiurl.protocol,
-        host: apiurl.host,
-        port: +apiurl.port,
-        pathPrefix: apiurl.pathname,
+export function gitHub(token: string, url: string = DefaultGitHubApiUrl): github {
+    return new github({
+        auth: `token ${token}`,
+        baseUrl: url.endsWith("/") ? url.slice(0, -1) : url,
+        throttle: {
+            onRateLimit: (retryAfter: any, options: any) => {
+                logger.warn(`Request quota exhausted for request '${options.method} ${options.url}'`);
+
+                if (options.request.retryCount === 0) { // only retries once
+                    logger.debug(`Retrying after ${retryAfter} seconds!`);
+                    return true;
+                }
+                return false;
+            },
+            onAbuseLimit: (retryAfter: any, options: any) => {
+                logger.warn(`Abuse detected for request '${options.method} ${options.url}'`);
+            },
+        },
     });
-    return api;
 }

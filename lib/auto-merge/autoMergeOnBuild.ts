@@ -30,7 +30,7 @@ export function autoMergeOnBuild(sdm: SoftwareDeliveryMachine)
     return {
         name: "AutoMergeOnBuild",
         description: "Auto merge reviewed and approved pull requests on Build events",
-        subscription: subscription("autoMergeOnBuild"),
+        subscription: subscription("AutoMergeOnBuild"),
         parameters: OrgTokenParameters,
         tags: ["github", "pr", "automerge"],
         listener: async (e, ctx) => {

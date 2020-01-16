@@ -1,0 +1,13 @@
+subscription ConvergePullRequestAutoMergeLabels {
+    PullRequest(action: created) {
+        repo {
+            owner
+            name
+            org {
+                provider {
+                    apiUrl
+                }
+            }
+        }
+    }
+}

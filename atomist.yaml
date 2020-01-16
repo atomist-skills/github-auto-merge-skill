@@ -15,8 +15,8 @@
 # 
     
 skill:
-  id: "@atomist/auto-merge-skill"
-  name: Pull Request Auto Merge
+  id: "@atomist/github-auto-merge-skill"
+  name: GitHub Pull Request Auto Merge
   version: 0.1.0
   author: Atomist
   description: |
@@ -31,4 +31,4 @@ skill:
 
   package:
     - use: '@atomist/package-sdm-skill/package'
-    - use: '@atomist/package-sdm-skill/bundle'
+    # - use: '@atomist/package-sdm-skill/bundle'

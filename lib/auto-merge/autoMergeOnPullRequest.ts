@@ -29,7 +29,7 @@ export function autoMergeOnPullRequest(sdm: SoftwareDeliveryMachine)
     return {
         name: "AutoMergeOnPullRequest",
         description: "Auto merge reviewed and approved pull requests on PullRequest event",
-        subscription: subscription("autoMergeOnPullRequest"),
+        subscription: subscription("AutoMergeOnPullRequest"),
         parameters: OrgTokenParameters,
         tags: ["github", "pr", "automerge"],
         listener: async (e, ctx) => {
