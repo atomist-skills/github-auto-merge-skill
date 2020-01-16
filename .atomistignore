@@ -1,0 +1,5 @@
+.gitignore
+.atomistignore
+*.MD
+tsconfig.json
+tslint.json
