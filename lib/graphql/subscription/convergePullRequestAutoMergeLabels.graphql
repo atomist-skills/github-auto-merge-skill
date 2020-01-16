@@ -1,5 +1,5 @@
 subscription ConvergePullRequestAutoMergeLabels {
-    PullRequest(action: created) {
+    PullRequest {
         repo {
             owner
             name
