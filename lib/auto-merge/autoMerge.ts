@@ -33,7 +33,6 @@ import {
     ParametersObject,
 } from "@atomist/sdm/lib/api/registration/ParametersDefinition";
 import * as github from "@octokit/rest";
-import { Error } from "tslint/lib/error";
 import { AutoMergeOnReview } from "../typings/types";
 
 export const AtomistGeneratedLabel = "atomist:generated";
