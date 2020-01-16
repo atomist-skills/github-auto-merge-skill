@@ -20,7 +20,7 @@ skill:
   version: 0.1.0
   author: Atomist
   description: |
-    Atomist Skill automatically merge Pull Requests on GitHub based on assigned 
+    Atomist Skill to automatically merge Pull Requests on GitHub based on assigned 
     labels
   category:
     - productivity
