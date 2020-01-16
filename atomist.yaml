@@ -17,7 +17,7 @@
 skill:
   id: "@atomist/github-auto-merge-skill"
   name: GitHub Pull Request Auto Merge
-  version: 0.1.0
+  version: 0.1.0.0
   author: Atomist
   description: |
     Atomist Skill to automatically merge Pull Requests on GitHub based on assigned 
