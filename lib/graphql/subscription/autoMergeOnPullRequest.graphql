@@ -1,4 +1,4 @@
-subscription autoMergeOnPullRequest {
+subscription AutoMergeOnPullRequest {
   PullRequest {
     _id
     number

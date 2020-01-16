@@ -1,4 +1,4 @@
-subscription autoMergeOnStatus {
+subscription AutoMergeOnStatus {
   Status {
     _id
     commit {

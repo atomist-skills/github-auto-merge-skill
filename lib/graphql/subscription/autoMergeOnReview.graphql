@@ -1,4 +1,4 @@
-subscription autoMergeOnReview {
+subscription AutoMergeOnReview {
   Review {
     _id
     pullRequest {
