@@ -15,15 +15,12 @@
  */
 
 import { subscription } from "@atomist/automation-client/lib/graph/graphQL";
+import { GitHubRepoRef } from "@atomist/automation-client/lib/operations/common/GitHubRepoRef";
 import { resolveCredentialsPromise } from "@atomist/sdm/lib/api-helper/machine/handlerRegistrations";
 import { SoftwareDeliveryMachine } from "@atomist/sdm/lib/api/machine/SoftwareDeliveryMachine";
 import { EventHandlerRegistration } from "@atomist/sdm/lib/api/registration/EventHandlerRegistration";
-import * as _ from "lodash";
 import { AutoMergeOnBuild } from "../typings/types";
-import {
-    executeAutoMerge,
-    OrgTokenParameters,
-} from "./autoMerge";
+import { executeAutoMerge } from "./autoMerge";
 
 export function autoMergeOnBuild(sdm: SoftwareDeliveryMachine)
     : EventHandlerRegistration<AutoMergeOnBuild.Subscription, { token: string }> {
@@ -31,11 +28,14 @@ export function autoMergeOnBuild(sdm: SoftwareDeliveryMachine)
         name: "AutoMergeOnBuild",
         description: "Auto merge reviewed and approved pull requests on Build events",
         subscription: subscription("AutoMergeOnBuild"),
-        parameters: OrgTokenParameters,
         tags: ["github", "pr", "automerge"],
         listener: async (e, ctx) => {
-            const creds = await resolveCredentialsPromise(sdm.configuration.sdm.credentialsResolver.eventHandlerCredentials(ctx));
-            const pr = _.get(e, "data.Build[0].pullRequest");
+            const pr = e.data.Build[0].pullRequest;
+            const creds = await resolveCredentialsPromise(sdm.configuration.sdm.credentialsResolver.eventHandlerCredentials(ctx, GitHubRepoRef.from({
+                owner: pr.repo.owner,
+                repo: pr.repo.name,
+                rawApiBase: pr.repo.org.provider.apiUrl,
+            })));
             return executeAutoMerge(pr, creds);
         },
     };

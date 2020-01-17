@@ -15,19 +15,14 @@
  */
 
 import { subscription } from "@atomist/automation-client/lib/graph/graphQL";
-import {
-    failure,
-    Success,
-} from "@atomist/automation-client/lib/HandlerResult";
+import { Success } from "@atomist/automation-client/lib/HandlerResult";
+import { GitHubRepoRef } from "@atomist/automation-client/lib/operations/common/GitHubRepoRef";
 import { resolveCredentialsPromise } from "@atomist/sdm/lib/api-helper/machine/handlerRegistrations";
 import { SoftwareDeliveryMachine } from "@atomist/sdm/lib/api/machine/SoftwareDeliveryMachine";
 import { EventHandlerRegistration } from "@atomist/sdm/lib/api/registration/EventHandlerRegistration";
 import * as _ from "lodash";
 import { AutoMergeOnStatus } from "../typings/types";
-import {
-    executeAutoMerge,
-    OrgTokenParameters,
-} from "./autoMerge";
+import { executeAutoMerge } from "./autoMerge";
 
 export function autoMergeOnStatus(sdm: SoftwareDeliveryMachine)
     : EventHandlerRegistration<AutoMergeOnStatus.Subscription, { token: string }> {
@@ -35,18 +30,18 @@ export function autoMergeOnStatus(sdm: SoftwareDeliveryMachine)
         name: "AutoMergeOnStatus",
         description: "Auto merge reviewed and approved pull requests on Status events",
         subscription: subscription("AutoMergeOnStatus"),
-        parameters: OrgTokenParameters,
         tags: ["github", "pr", "automerge"],
         listener: async (e, ctx, params) => {
-            const creds = await resolveCredentialsPromise(sdm.configuration.sdm.credentialsResolver.eventHandlerCredentials(ctx));
             const prs = _.get(e, "data.Status[0].commit.pullRequests") as AutoMergeOnStatus.PullRequests[];
-            if (prs) {
-                return Promise.all(prs.map(pr => executeAutoMerge(pr, creds)))
-                    .then(() => Success)
-                    .catch(failure);
-            } else {
-                return Success;
+            for (const pr of prs) {
+                const creds = await resolveCredentialsPromise(sdm.configuration.sdm.credentialsResolver.eventHandlerCredentials(ctx, GitHubRepoRef.from({
+                    owner: pr.repo.owner,
+                    repo: pr.repo.name,
+                    rawApiBase: pr.repo.org.provider.apiUrl,
+                })));
+                await executeAutoMerge(pr, creds);
             }
+            return Success;
         },
     };
 }
