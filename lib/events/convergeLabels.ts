@@ -22,6 +22,7 @@ import { TokenCredentials } from "@atomist/automation-client/lib/operations/comm
 import { EventMaker } from "@atomist/sdm-core/lib/machine/yaml/configureYaml";
 import { resolveCredentialsPromise } from "@atomist/sdm/lib/api-helper/machine/handlerRegistrations";
 import * as Octokit from "@octokit/rest";
+import { ReposGetResponse } from "@octokit/rest";
 import {
     apiUrl,
     AutoMergeCheckSuccessLabel,
@@ -45,16 +46,29 @@ export const ConvergePullRequestAutoMergeLabels: EventMaker<ConvergePullRequestA
         })));
 
         const api = gitHub((creds as TokenCredentials).token, apiUrl(repo));
+        const repoDetails = (await api.repos.get({ owner, repo: name })).data;
 
         await addLabel(AutoMergeLabel, "277D7D", owner, name, api);
         await addLabel(AutoMergeCheckSuccessLabel, "277D7D", owner, name, api);
 
         for (const label of AutoMergeMethods) {
-            await addLabel(`${AutoMergeMethodLabel}${label}`, "1C334B", owner, name, api);
+            if (mergeMethodSettings(repoDetails)[label]) {
+                await addLabel(`${AutoMergeMethodLabel}${label}`, "1C334B", owner, name, api);
+            } else {
+                await removeLabel(`${AutoMergeMethodLabel}${label}`, owner, name, api);
+            }
         }
         return Success;
     },
 });
+
+function mergeMethodSettings(repoDetails: ReposGetResponse): { squash: boolean, merge: boolean, rebase: boolean } {
+    return {
+        merge: repoDetails.allow_merge_commit,
+        rebase: repoDetails.allow_rebase_merge,
+        squash: repoDetails.allow_squash_merge,
+    };
+}
 
 async function addLabel(name: string,
                         color: string,
@@ -74,5 +88,20 @@ async function addLabel(name: string,
             name,
             color,
         });
+    }
+}
+
+async function removeLabel(name: string,
+                           owner: string,
+                           repo: string,
+                           api: Octokit): Promise<void> {
+    try {
+        await api.issues.deleteLabel({
+            owner,
+            repo,
+            name,
+        });
+    } catch (err) {
+        // ignore
     }
 }
