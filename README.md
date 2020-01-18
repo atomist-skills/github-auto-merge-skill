@@ -22,7 +22,7 @@ To specify the desired merge method, one of the following optional labels can be
 ### Label Management
 
 The labels are automatically added to and removed from the repository depending on its settings.
-E.g. disabling the _rebase_ merge method will remove automatically remove the label.
+E.g. disabling the _rebase_ merge method will automatically remove the label.
 
 ---
 
