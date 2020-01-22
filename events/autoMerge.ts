@@ -19,8 +19,6 @@ import * as github from "@octokit/rest";
 import promiseRetry = require("promise-retry");
 import { PullRequest } from "./types";
 
-export const AtomistGeneratedLabel = "atomist:generated";
-
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
 export const AutoMergeTag = `[${AutoMergeLabel}]`;
