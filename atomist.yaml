@@ -31,4 +31,10 @@ skill:
 
   package:
     - use: '@atomist/package-sdm-skill/package'
-    # - use: '@atomist/package-sdm-skill/bundle'
+      parameters:
+        main: 'node_modules/@atomist/skill/lib/function.js'
+
+  runtime:
+    memory: 1024
+    name: nodejs10
+    entry_point: entryPoint
