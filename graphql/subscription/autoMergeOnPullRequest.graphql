@@ -1,6 +1,5 @@
 subscription AutoMergeOnPullRequest {
   PullRequest {
-    _id
     number
     body
     title

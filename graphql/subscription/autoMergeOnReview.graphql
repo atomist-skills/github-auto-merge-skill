@@ -1,6 +1,5 @@
 subscription AutoMergeOnReview {
   Review {
-    _id
     pullRequest {
       number
       body

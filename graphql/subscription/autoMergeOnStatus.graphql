@@ -1,6 +1,5 @@
 subscription AutoMergeOnStatus {
   Status {
-    _id
     commit {
       pullRequests {
         number

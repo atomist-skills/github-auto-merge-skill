@@ -14,26 +14,10 @@
  * limitations under the License.
  */
 
-import { Secrets } from "@atomist/automation-client/lib/decorators";
-import {
-    HandlerResult,
-    Success,
-} from "@atomist/automation-client/lib/HandlerResult";
-import {
-    ProjectOperationCredentials,
-    TokenCredentials,
-} from "@atomist/automation-client/lib/operations/common/ProjectOperationCredentials";
-import { logger } from "@atomist/automation-client/lib/util/logger";
-import {
-    DefaultRetryOptions,
-    doWithRetry,
-} from "@atomist/automation-client/lib/util/retry";
-import {
-    DeclarationType,
-    ParametersObject,
-} from "@atomist/sdm/lib/api/registration/ParametersDefinition";
+import { GitHubAppCredential } from "@atomist/skill/lib/secrets";
 import * as github from "@octokit/rest";
-import { AutoMergeOnReview } from "../typings/types";
+import { PullRequest } from "./types";
+import promiseRetry = require("promise-retry");
 
 export const AtomistGeneratedLabel = "atomist:generated";
 
@@ -45,35 +29,32 @@ export const AutoMergeCheckSuccessTag = `[${AutoMergeCheckSuccessLabel}]`;
 export const AutoMergeMethodLabel = "auto-merge-method:";
 export const AutoMergeMethods = ["merge", "rebase", "squash"];
 
-export const OrgTokenParameters: ParametersObject<{ token: string }>
-    = { token: { declarationType: DeclarationType.Secret, uri: Secrets.OrgToken } };
-
 // tslint:disable-next-line:cyclomatic-complexity
-export async function executeAutoMerge(pr: AutoMergeOnReview.PullRequest,
-                                       creds: ProjectOperationCredentials): Promise<HandlerResult> {
+export async function executeAutoMerge(pr: PullRequest,
+                                       creds: GitHubAppCredential): Promise<void> {
     if (!!pr) {
         // 1. at least one approved review if PR isn't set to merge on successful build
         if (isPrTagged(pr, AutoMergeLabel, AutoMergeTag)) {
             if (!pr.reviews || pr.reviews.length === 0) {
-                return Success;
+                return;
             } else if (pr.reviews.some(r => r.state !== "approved")) {
-                return Success;
+                return;
             }
         }
 
         // 2. all status checks are successful and there is at least one check
         if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
             if (pr.head.statuses.some(s => s.state !== "success")) {
-                return Success;
+                return;
             }
         } else {
-            return Success;
+            return;
         }
 
         if (isPrAutoMergeEnabled(pr)) {
-            const api = gitHub((creds as TokenCredentials).token, apiUrl(pr.repo));
+            const api = gitHub(creds.token, apiUrl(pr.repo));
 
-            return doWithRetry<HandlerResult>(async () => {
+            return promiseRetry(async () => {
 
                     const gpr = await api.pulls.get({
                         owner: pr.repo.owner,
@@ -113,25 +94,28 @@ export async function executeAutoMerge(pr: AutoMergeOnReview.PullRequest,
                             repo: pr.repo.name,
                             ref: `heads/${pr.branch.name.trim()}`,
                         });
-                        return Success;
                     } else {
-                        logger.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
-                        return Success;
+                        console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
                     }
 
                 },
-                "Auto merging GitHub PR", { ...DefaultRetryOptions, log: false });
+                {
+                    retries: 5,
+                    factor: 3,
+                    minTimeout: 1 * 500,
+                    maxTimeout: 5 * 1000,
+                    randomize: true,
+                });
         }
     }
-    return Success;
 }
 
-export function isPrAutoMergeEnabled(pr: AutoMergeOnReview.PullRequest): boolean {
+export function isPrAutoMergeEnabled(pr: PullRequest): boolean {
     return isPrTagged(pr, AutoMergeLabel, AutoMergeTag)
         || isPrTagged(pr, AutoMergeCheckSuccessLabel, AutoMergeCheckSuccessTag);
 }
 
-function isPrTagged(pr: AutoMergeOnReview.PullRequest,
+function isPrTagged(pr: PullRequest,
                     label: string = AutoMergeLabel,
                     tag: string = AutoMergeTag): boolean {
     // 0. check labels
@@ -157,7 +141,7 @@ function isPrTagged(pr: AutoMergeOnReview.PullRequest,
     return false;
 }
 
-function mergeMethod(pr: AutoMergeOnReview.PullRequest): "merge" | "rebase" | "squash" {
+function mergeMethod(pr: PullRequest): "merge" | "rebase" | "squash" {
     const methodLabel = pr.labels.find(l => l.name.startsWith(AutoMergeMethodLabel));
     if (methodLabel && methodLabel.name.includes(":")) {
         const method = methodLabel.name.split(":")[1].toLowerCase() as any;
@@ -172,7 +156,7 @@ function isTagged(msg: string, tag: string): boolean {
     return msg && msg.indexOf(tag) >= 0;
 }
 
-function reviewComment(pr: AutoMergeOnReview.PullRequest): string {
+function reviewComment(pr: PullRequest): string {
     if (pr.reviews && pr.reviews.length > 0) {
         return `${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews.map(
             r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}`;
@@ -181,7 +165,7 @@ function reviewComment(pr: AutoMergeOnReview.PullRequest): string {
     }
 }
 
-function statusComment(pr: AutoMergeOnReview.PullRequest): string {
+function statusComment(pr: PullRequest): string {
     if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
         return `${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}`;
     } else {
@@ -209,16 +193,16 @@ export function gitHub(token: string, url: string = DefaultGitHubApiUrl): github
         baseUrl: url.endsWith("/") ? url.slice(0, -1) : url,
         throttle: {
             onRateLimit: (retryAfter: any, options: any) => {
-                logger.warn(`Request quota exhausted for request '${options.method} ${options.url}'`);
+                console.warn(`Request quota exhausted for request '${options.method} ${options.url}'`);
 
                 if (options.request.retryCount === 0) { // only retries once
-                    logger.debug(`Retrying after ${retryAfter} seconds!`);
+                    console.debug(`Retrying after ${retryAfter} seconds!`);
                     return true;
                 }
                 return false;
             },
             onAbuseLimit: (retryAfter: any, options: any) => {
-                logger.warn(`Abuse detected for request '${options.method} ${options.url}'`);
+                console.warn(`Abuse detected for request '${options.method} ${options.url}'`);
             },
         },
     });

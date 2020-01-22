@@ -3,3 +3,4 @@
 *.MD
 tsconfig.json
 tslint.json
+codegen.yml

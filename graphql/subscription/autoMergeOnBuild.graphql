@@ -1,6 +1,5 @@
 subscription AutoMergeOnBuild {
   Build {
-    _id
     pullRequest {
       number
       body
