@@ -59,7 +59,7 @@ export async function executeAutoMerge(pr: PullRequest,
                     const gpr = await api.pulls.get({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
-                        number: pr.number,
+                        pull_number: pr.number,
                     });
 
                     if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
@@ -70,7 +70,7 @@ export async function executeAutoMerge(pr: PullRequest,
                         await api.pulls.merge({
                             owner: pr.repo.owner,
                             repo: pr.repo.name,
-                            number: pr.number,
+                            pull_number: pr.number,
                             merge_method: mergeMethod(pr),
                             sha: pr.head.sha,
                             commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
@@ -78,15 +78,12 @@ export async function executeAutoMerge(pr: PullRequest,
                         const body = `Pull request auto merged by Atomist.
 
 * ${reviewComment(pr)}
-* ${statusComment(pr)}
-
-[${AtomistGeneratedLabel}] [${isPrTagged(
-                            pr, AutoMergeCheckSuccessLabel, AutoMergeCheckSuccessTag) ? AutoMergeCheckSuccessLabel : AutoMergeLabel}]`;
+* ${statusComment(pr)}`;
 
                         await api.issues.createComment({
                             owner: pr.repo.owner,
                             repo: pr.repo.name,
-                            number: pr.number,
+                            issue_number: pr.number,
                             body,
                         });
                         await api.git.deleteRef({
