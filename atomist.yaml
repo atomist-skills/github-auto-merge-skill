@@ -16,18 +16,25 @@
     
 skill:
   name: "@atomist/github-auto-merge-skill"
-  title: GitHub Pull Request Auto Merge Skill
-  version: 0.1.1
+  title: GitHub Auto-merge pull request
+  version: 0.2.0
   author: Atomist
   description: |
-    Atomist Skill to automatically merge Pull Requests on GitHub based on assigned 
-    labels
+    Automatically merge pull requests that pass all checks required to merge
+  documentation: |
+    Automatically merge pull requests on GitHub based on assigned labels. Required reviews
+    and checks settings configured in the repository on GitHub are used as the rules for auto
+    merging.
+
+    This approach makes is easy for pull request authors, or anyone with permissions in the
+    repository, to flag a pull request for auto-merge simply by adding a label. The merge
+    option can also be set with a label on the pull request.
   category:
     - productivity
   license: Apache-2.0
   homepage: https://github.com/atomist-skills/auto-merge-skill
   repository: https://github.com/atomist-skills/auto-merge-skill.git
-  icon: https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/npm-512.png
+  icon: https://images.atomist.com/rug/pull-request.png
 
   package:
     - use: '@atomist/package-sdm-skill/package'
