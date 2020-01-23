@@ -19,9 +19,9 @@ skill:
   title: GitHub Auto-merge pull request
   version: 0.2.0
   author: Atomist
-  description: |
+  description: |-
     Automatically merge pull requests that pass all checks required to merge
-  documentation: |
+  documentation: |-
     Automatically merge pull requests on GitHub based on assigned labels. Required reviews
     and checks settings configured in the repository on GitHub are used as the rules for auto
     merging.
