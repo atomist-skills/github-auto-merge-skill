@@ -17,7 +17,6 @@
 import { EventHandler } from "@atomist/skill/lib/handler";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as Octokit from "@octokit/rest";
-import { ReposGetResponse } from "@octokit/rest";
 import {
     apiUrl,
     AutoMergeCheckSuccessLabel,
@@ -48,7 +47,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     }
 };
 
-function mergeMethodSettings(repoDetails: ReposGetResponse): { squash: boolean, merge: boolean, rebase: boolean } {
+function mergeMethodSettings(repoDetails: Octokit.ReposGetResponse): { squash: boolean, merge: boolean, rebase: boolean } {
     return {
         merge: repoDetails.allow_merge_commit,
         rebase: repoDetails.allow_rebase_merge,
