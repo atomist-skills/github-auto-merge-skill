@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { GitHubAppCredential } from "@atomist/skill/lib/secrets";
+import {
+    GitHubAppCredential,
+    GitHubCredential,
+} from "@atomist/skill/lib/secrets";
 import * as github from "@octokit/rest";
 import promiseRetry = require("promise-retry");
 import { PullRequest } from "./types";
@@ -29,7 +32,7 @@ export const AutoMergeMethods = ["merge", "rebase", "squash"];
 
 // tslint:disable-next-line:cyclomatic-complexity
 export async function executeAutoMerge(pr: PullRequest,
-                                       creds: GitHubAppCredential): Promise<void> {
+                                       creds: GitHubAppCredential | GitHubCredential): Promise<void> {
     if (!!pr) {
         // 1. at least one approved review if PR isn't set to merge on successful build
         if (isPrTagged(pr, AutoMergeLabel, AutoMergeTag)) {

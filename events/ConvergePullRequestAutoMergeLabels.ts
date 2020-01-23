@@ -15,10 +15,7 @@
  */
 
 import { EventHandler } from "@atomist/skill/lib/handler";
-import {
-    GitHubAppCredential,
-    gitHubAppToken,
-} from "@atomist/skill/lib/secrets";
+import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as Octokit from "@octokit/rest";
 import { ReposGetResponse } from "@octokit/rest";
 import {
@@ -34,7 +31,7 @@ import { ConvergePullRequestAutoMergeLabelsSubscription } from "./types";
 export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscription> = async ctx => {
     const repo = ctx.data.PullRequest[0].repo;
     const { owner, name } = repo;
-    const credentials = await ctx.credential.resolve<GitHubAppCredential>(gitHubAppToken({ owner, repo: name }));
+    const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
 
     const api = gitHub(credentials.token, apiUrl(repo));
     const repoDetails = (await api.repos.get({ owner, repo: name })).data;
