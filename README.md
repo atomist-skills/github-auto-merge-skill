@@ -1,4 +1,4 @@
-# `@atomist/github-auto-merge-skill`
+# `atomist/github-auto-merge-skill`
 
 Automatically merge pull requests that pass all checks required to merge.
 
