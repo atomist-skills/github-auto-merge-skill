@@ -15,7 +15,7 @@
 # 
     
 skill:
-  name: "atomist/github-auto-merge-skill"
+  name: atomist/github-auto-merge-skill
   title: GitHub Auto-merge pull request
   version: 0.2.1
   author: Atomist
@@ -37,9 +37,10 @@ skill:
   icon: https://images.atomist.com/rug/pull-request.png
 
   package:
-    - use: 'atomist/package-sdm-skill/package'
+    - use: atomist/package-sdm-skill/package
       parameters:
-        main: 'node_modules/@atomist/skill/lib/function.js'
+        main: node_modules/@atomist/skill/lib/function.js
+        dependencies: keep
 
   runtime:
     memory: 1024
