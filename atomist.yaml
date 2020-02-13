@@ -64,6 +64,7 @@ parameters:
         - name: On successful status checks
           value: on-checks
       default_value: on-approve
+      required: false
   - single_choice:
       name: mergeMethod
       display_name: Default Auto-merge Method
