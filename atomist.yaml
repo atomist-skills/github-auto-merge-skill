@@ -76,7 +76,7 @@ parameters:
           value: merge
         - name: Squash and Merge
           value: squash
-        - name: Rebase
+        - name: Rebase and Merge
           value: rebase
       default_value: merge
       required: false
