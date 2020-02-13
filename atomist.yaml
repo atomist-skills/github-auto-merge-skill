@@ -46,3 +46,36 @@ skill:
     memory: 1024
     name: nodejs10
     entry_point: entryPoint
+
+parameters:
+  - repo_filter:
+      name: repos
+      display_name: Repositories
+      description: Select for which repositories pull request auto-merging should be available
+      required: false
+  - single_choice:
+      name: mergeOn
+      display_name: Default Auto-merge Policy
+      description: |-
+        Policy to use when auto-merging pull requests
+      options:
+        - name: On successful reviews
+          value: on-approve
+        - name: On successful status checks
+          value: on-checks
+      default_value: on-approve
+  - single_choice:
+      name: mergeMethod
+      display_name: Default Auto-merge Method
+      description: |-
+        Merge method to use when auto-merging the pull request and the pull request isn't labelled with an explicit
+        merge label
+      options:
+        - name: Merge Commit
+          value: merge
+        - name: Squash and Merge
+          value: squash
+        - name: Rebase
+          value: rebase
+      default_value: merge
+      required: false

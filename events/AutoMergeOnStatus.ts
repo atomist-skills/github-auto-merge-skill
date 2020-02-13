@@ -16,14 +16,17 @@
 
 import { EventHandler } from "@atomist/skill/lib/handler";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
-import { executeAutoMerge } from "./autoMerge";
+import {
+    AutoMergeConfiguration,
+    executeAutoMerge,
+} from "./autoMerge";
 import { AutoMergeOnStatusSubscription } from "./types";
 
-export const handler: EventHandler<AutoMergeOnStatusSubscription> = async ctx => {
+export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfiguration> = async ctx => {
     const prs = ctx.data.Status[0].commit.pullRequests;
     for (const pr of prs) {
         const { owner, name } = pr.repo;
         const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
-        await executeAutoMerge(pr, credentials);
+        await executeAutoMerge(pr, ctx.configuration?.parameters, credentials);
     }
 };

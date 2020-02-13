@@ -19,8 +19,8 @@ import {
     GitHubCredential,
 } from "@atomist/skill/lib/secrets";
 import * as github from "@octokit/rest";
-import promiseRetry = require("promise-retry");
 import { PullRequest } from "./types";
+import promiseRetry = require("promise-retry");
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
@@ -30,8 +30,14 @@ export const AutoMergeCheckSuccessTag = `[${AutoMergeCheckSuccessLabel}]`;
 export const AutoMergeMethodLabel = "auto-merge-method:";
 export const AutoMergeMethods = ["merge", "rebase", "squash"];
 
+export interface AutoMergeConfiguration {
+    mergeOn?: "on-approve" | "on-check-success";
+    mergeMethod?: "merge" | "rebase" | "squash";
+}
+
 // tslint:disable-next-line:cyclomatic-complexity
 export async function executeAutoMerge(pr: PullRequest,
+                                       configuration: AutoMergeConfiguration,
                                        creds: GitHubAppCredential | GitHubCredential): Promise<void> {
     if (!!pr) {
         // 1. at least one approved review if PR isn't set to merge on successful build
@@ -72,7 +78,7 @@ export async function executeAutoMerge(pr: PullRequest,
                             owner: pr.repo.owner,
                             repo: pr.repo.name,
                             pull_number: pr.number,
-                            merge_method: mergeMethod(pr),
+                            merge_method: mergeMethod(pr, configuration),
                             sha: pr.head.sha,
                             commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
                         });
@@ -87,15 +93,9 @@ export async function executeAutoMerge(pr: PullRequest,
                             issue_number: pr.number,
                             body,
                         });
-                        await api.git.deleteRef({
-                            owner: pr.repo.owner,
-                            repo: pr.repo.name,
-                            ref: `heads/${pr.branch.name.trim()}`,
-                        });
                     } else {
                         console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
                     }
-
                 },
                 {
                     retries: 5,
@@ -139,7 +139,7 @@ function isPrTagged(pr: PullRequest,
     return false;
 }
 
-function mergeMethod(pr: PullRequest): "merge" | "rebase" | "squash" {
+function mergeMethod(pr: PullRequest, configuration: AutoMergeConfiguration): "merge" | "rebase" | "squash" {
     const methodLabel = pr.labels.find(l => l.name.startsWith(AutoMergeMethodLabel));
     if (methodLabel && methodLabel.name.includes(":")) {
         const method = methodLabel.name.split(":")[1].toLowerCase() as any;
@@ -147,7 +147,7 @@ function mergeMethod(pr: PullRequest): "merge" | "rebase" | "squash" {
             return method;
         }
     }
-    return "merge";
+    return configuration?.mergeMethod || "merge";
 }
 
 function isTagged(msg: string, tag: string): boolean {

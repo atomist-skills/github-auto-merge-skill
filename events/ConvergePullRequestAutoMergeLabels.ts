@@ -20,6 +20,7 @@ import * as Octokit from "@octokit/rest";
 import {
     apiUrl,
     AutoMergeCheckSuccessLabel,
+    AutoMergeConfiguration,
     AutoMergeLabel,
     AutoMergeMethodLabel,
     AutoMergeMethods,
@@ -27,8 +28,9 @@ import {
 } from "./autoMerge";
 import { ConvergePullRequestAutoMergeLabelsSubscription } from "./types";
 
-export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscription> = async ctx => {
-    const repo = ctx.data.PullRequest[0].repo;
+export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscription, AutoMergeConfiguration> = async ctx => {
+    const pr = ctx.data.PullRequest[0];
+    const repo = pr.repo;
     const { owner, name } = repo;
     const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
 
@@ -44,6 +46,16 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
         } else {
             await removeLabel(`${AutoMergeMethodLabel}${label}`, owner, name, api);
         }
+    }
+
+    // Add the default labels to the PR
+    if (!!ctx.configuration?.parameters?.mergeMethod && !!ctx.configuration?.parameters?.mergeOn) {
+        await api.issues.addLabels({
+            issue_number: pr.number,
+            owner: repo.owner,
+            repo: repo.name,
+            labels: [`auto-merge:${ctx.configuration.parameters.mergeOn}`, `auto-merge-method:${ctx.configuration.parameters.mergeMethod}`],
+        });
     }
 };
 
