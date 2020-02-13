@@ -49,14 +49,12 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     }
 
     // Add the default labels to the PR
-    if (!!ctx.configuration?.parameters?.mergeMethod && !!ctx.configuration?.parameters?.mergeOn) {
-        await api.issues.addLabels({
-            issue_number: pr.number,
-            owner: repo.owner,
-            repo: repo.name,
-            labels: [`auto-merge:${ctx.configuration.parameters.mergeOn}`, `auto-merge-method:${ctx.configuration.parameters.mergeMethod}`],
-        });
-    }
+    await api.issues.addLabels({
+        issue_number: pr.number,
+        owner: repo.owner,
+        repo: repo.name,
+        labels: [`auto-merge:${ctx.configuration?.parameters?.mergeOn || "on-approve"}`, `auto-merge-method:${ctx.configuration?.parameters?.mergeMethod || "merge"}`],
+    });
 };
 
 function mergeMethodSettings(repoDetails: Octokit.ReposGetResponse): { squash: boolean, merge: boolean, rebase: boolean } {
