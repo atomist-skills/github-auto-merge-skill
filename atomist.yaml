@@ -59,9 +59,9 @@ parameters:
       description: |-
         Policy to use when auto-merging pull requests
       options:
-        - name: On successful reviews
+        - text: On successful reviews
           value: on-approve
-        - name: On successful status checks
+        - text: On successful status checks
           value: on-checks
       default_value: on-approve
       required: false
@@ -72,11 +72,11 @@ parameters:
         Merge method to use when auto-merging the pull request and the pull request isn't labelled with an explicit
         merge label
       options:
-        - name: Merge Commit
+        - text: Merge Commit
           value: merge
-        - name: Squash and Merge
+        - text: Squash and Merge
           value: squash
-        - name: Rebase and Merge
+        - text: Rebase and Merge
           value: rebase
       default_value: merge
       required: false
