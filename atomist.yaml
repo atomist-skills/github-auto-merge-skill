@@ -17,7 +17,7 @@
 skill:
   name: atomist/github-auto-merge-skill
   title: GitHub Auto-merge pull request
-  version: 0.2.1
+  version: 1.0.0
   author: Atomist
   description: |-
     Automatically merge pull requests that pass all checks required to merge
@@ -69,8 +69,8 @@ parameters:
       name: mergeMethod
       display_name: Default Auto-merge Method
       description: |-
-        Merge method to use when auto-merging the pull request and the pull request isn't labelled with an explicit
-        merge label
+        Merge method to use when auto-merging pull requests and no method has been set on pull requests
+        explicity via a label
       options:
         - text: Merge Commit
           value: merge
