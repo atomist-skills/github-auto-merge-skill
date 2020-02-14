@@ -48,12 +48,20 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
         }
     }
 
+    const labels = [];
+    if (!pr.labels.some(l => l.name.startsWith("auto-merge:"))) {
+        labels.push(`auto-merge:${ctx.configuration?.parameters?.mergeOn || "on-approve"}`);
+    }
+    if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
+        labels.push(`auto-merge-method:${ctx.configuration?.parameters?.mergeMethod || "merge"}`);
+    }
+
     // Add the default labels to the PR
     await api.issues.addLabels({
         issue_number: pr.number,
         owner: repo.owner,
         repo: repo.name,
-        labels: [`auto-merge:${ctx.configuration?.parameters?.mergeOn || "on-approve"}`, `auto-merge-method:${ctx.configuration?.parameters?.mergeMethod || "merge"}`],
+        labels,
     });
 
     return {

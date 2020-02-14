@@ -11,5 +11,8 @@ subscription ConvergePullRequestAutoMergeLabels {
                 }
             }
         }
+        labels {
+            name
+        }
     }
 }
