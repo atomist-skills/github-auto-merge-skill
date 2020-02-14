@@ -35,6 +35,6 @@ export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfi
     }
     return {
         code: results.filter(r => !!r.code).some(r => r.code !== 0) ? 1 : 0,
-        reason: results.filter(r => !!r.reason).join("\n"),
+        reason: results.filter(r => !!r.reason).map(r => r.reason).join("\n"),
     };
 };
