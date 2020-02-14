@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { HandlerStatus } from "@atomist/skill/lib/handler";
 import {
     GitHubAppCredential,
     GitHubCredential,
@@ -38,24 +39,36 @@ export interface AutoMergeConfiguration {
 // tslint:disable-next-line:cyclomatic-complexity
 export async function executeAutoMerge(pr: PullRequest,
                                        configuration: AutoMergeConfiguration,
-                                       creds: GitHubAppCredential | GitHubCredential): Promise<void> {
+                                       creds: GitHubAppCredential | GitHubCredential): Promise<HandlerStatus> {
     if (!!pr) {
         // 1. at least one approved review if PR isn't set to merge on successful build
         if (isPrTagged(pr, AutoMergeLabel, AutoMergeTag)) {
             if (!pr.reviews || pr.reviews.length === 0) {
-                return;
+                return {
+                    code: 0,
+                    reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because no approved reviews`,
+                };
             } else if (pr.reviews.some(r => r.state !== "approved")) {
-                return;
+                return {
+                    code: 0,
+                    reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because unapproved reviews`,
+                };
             }
         }
 
         // 2. all status checks are successful and there is at least one check
         if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
             if (pr.head.statuses.some(s => s.state !== "success")) {
-                return;
+                return {
+                    code: 0,
+                    reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because unsuccessful or pending status checks`,
+                };
             }
         } else {
-            return;
+            return {
+                code: 0,
+                reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because no status checks`,
+            };
         }
 
         if (isPrAutoMergeEnabled(pr)) {
@@ -93,8 +106,16 @@ export async function executeAutoMerge(pr: PullRequest,
                             issue_number: pr.number,
                             body,
                         });
+                        return {
+                            code: 0,
+                            reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} auto-merged`,
+                        };
                     } else {
                         console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
+                        return {
+                            code: 0,
+                            reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because it can't be merged at this time`,
+                        };
                     }
                 },
                 {
@@ -106,6 +127,10 @@ export async function executeAutoMerge(pr: PullRequest,
                 });
         }
     }
+    return {
+        code: 0,
+        reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged`,
+    };
 }
 
 export function isPrAutoMergeEnabled(pr: PullRequest): boolean {

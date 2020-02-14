@@ -55,6 +55,11 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
         repo: repo.name,
         labels: [`auto-merge:${ctx.configuration?.parameters?.mergeOn || "on-approve"}`, `auto-merge-method:${ctx.configuration?.parameters?.mergeMethod || "merge"}`],
     });
+
+    return {
+        code: 0,
+        reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} labelled with auto-merged labels`,
+    };
 };
 
 function mergeMethodSettings(repoDetails: Octokit.ReposGetResponse): { squash: boolean, merge: boolean, rebase: boolean } {
