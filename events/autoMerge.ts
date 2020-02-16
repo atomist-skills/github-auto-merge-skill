@@ -74,16 +74,20 @@ export async function executeAutoMerge(pr: PullRequest,
         if (isPrAutoMergeEnabled(pr)) {
             const api = gitHub(creds.token, apiUrl(pr.repo));
 
-            return promiseRetry(async () => {
-
-                    const gpr = await api.pulls.get({
-                        owner: pr.repo.owner,
-                        repo: pr.repo.name,
-                        pull_number: pr.number,
-                    });
+            return promiseRetry(async retry => {
+                    let gpr;
+                    try {
+                        gpr = await api.pulls.get({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            pull_number: pr.number,
+                        });
+                    } catch (e) {
+                        retry(e);
+                    }
 
                     if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
-                        throw new Error("GitHub PR mergeable state not available. Retrying...");
+                        retry(new Error("GitHub PR mergeable state not available. Retrying..."));
                     }
 
                     if (!!gpr.data.mergeable) {
