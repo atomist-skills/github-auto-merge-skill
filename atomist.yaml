@@ -60,7 +60,6 @@ parameters:
           value: on-approve
         - text: On successful status checks
           value: on-checks
-      default_value: on-approve
       required: false
   - single_choice:
       name: mergeMethod
@@ -75,7 +74,6 @@ parameters:
           value: squash
         - text: Rebase and Merge
           value: rebase
-      default_value: merge
       required: false
   - repo_filter:
     name: repos
