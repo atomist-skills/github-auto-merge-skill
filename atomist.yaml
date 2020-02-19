@@ -16,7 +16,7 @@
     
 skill:
   name: atomist/github-auto-merge-skill
-  title: GitHub Auto-merge pull request
+  title: Auto-merge pull request
   version: 1.0.5
   author: Atomist
   description: |-
@@ -25,16 +25,16 @@ skill:
     Automatically merge pull requests on GitHub based on assigned labels. Required reviews
     and checks settings configured in the repository on GitHub are used as the rules for auto
     merging.
-
+    <br>
     This approach makes is easy for pull request authors, or anyone with permissions in the
     repository, to flag a pull request for auto-merge simply by adding a label. The merge
     option can also be set with a label on the pull request.
   category:
-    - productivity
+    - CODE_REVIEW
+    - DEV_EX
   license: Apache-2.0
   homepage: https://github.com/atomist-skills/auto-merge-skill
   repository: https://github.com/atomist-skills/auto-merge-skill.git
-  #icon: https://images.atomist.com/rug/pull-request.png
   icon: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiB2aWV3Qm94PSIwIDAgMTIgMTYiPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTExIDExLjI4VjVjLS4wMy0uNzgtLjM0LTEuNDctLjk0LTIuMDZDOS40NiAyLjM1IDguNzggMi4wMyA4IDJIN1YwTDQgM2wzIDNWNGgxYy4yNy4wMi40OC4xMS42OS4zMS4yMS4yLjMuNDIuMzEuNjl2Ni4yOEExLjk5MyAxLjk5MyAwIDAgMCAxMCAxNWExLjk5MyAxLjk5MyAwIDAgMCAxLTMuNzJ6bS0xIDIuOTJjLS42NiAwLTEuMi0uNTUtMS4yLTEuMiAwLS42NS41NS0xLjIgMS4yLTEuMi42NSAwIDEuMi41NSAxLjIgMS4yIDAgLjY1LS41NSAxLjItMS4yIDEuMnpNNCAzYzAtMS4xMS0uODktMi0yLTJhMS45OTMgMS45OTMgMCAwIDAtMSAzLjcydjYuNTZBMS45OTMgMS45OTMgMCAwIDAgMiAxNWExLjk5MyAxLjk5MyAwIDAgMCAxLTMuNzJWNC43MmMuNTktLjM0IDEtLjk4IDEtMS43MnptLS44IDEwYzAgLjY2LS41NSAxLjItMS4yIDEuMi0uNjUgMC0xLjItLjU1LTEuMi0xLjIgMC0uNjUuNTUtMS4yIDEuMi0xLjIuNjUgMCAxLjIuNTUgMS4yIDEuMnpNMiA0LjJDMS4zNCA0LjIuOCAzLjY1LjggM2MwLS42NS41NS0xLjIgMS4yLTEuMi42NSAwIDEuMi41NSAxLjIgMS4yIDAgLjY1LS41NSAxLjItMS4yIDEuMnoiLz48L3N2Zz4=
 
   package:
@@ -49,28 +49,22 @@ skill:
     entry_point: entryPoint
 
 parameters:
-  - repo_filter:
-      name: repos
-      display_name: Repositories
-      description: Select for which repositories pull request auto-merging should be available
-      required: false
   - single_choice:
       name: mergeOn
       display_name: Default Auto-merge Policy
       description: |-
-        Policy to use when auto-merging pull requests
+        Select the policy to use when auto-merging pull requests
       options:
-        - text: On successful reviews
+        - text: On successful reviews and status checks
           value: on-approve
         - text: On successful status checks
           value: on-checks
-      default_value: on-approve
       required: false
   - single_choice:
       name: mergeMethod
       display_name: Default Auto-merge Method
       description: |-
-        Merge method to use when auto-merging pull requests and no method has been set on pull requests
+        Select how you want to auto-merge when no method has been set on a pull request
         explicity via a label
       options:
         - text: Merge Commit
@@ -79,5 +73,9 @@ parameters:
           value: squash
         - text: Rebase and Merge
           value: rebase
-      default_value: merge
+      required: false
+  - repo_filter:
+      name: repos
+      display_name: Which repositories
+      description: ''
       required: false
