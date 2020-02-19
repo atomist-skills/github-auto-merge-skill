@@ -78,4 +78,5 @@ parameters:
   - repo_filter:
     name: repos
     display_name: Which repositories
+    description:
     required: false
