@@ -16,7 +16,7 @@
     
 skill:
   name: atomist/github-auto-merge-skill
-  title: GitHub Auto-merge pull request
+  title: Auto-merge pull request
   version: 1.0.5
   author: Atomist
   description: |-
@@ -25,12 +25,13 @@ skill:
     Automatically merge pull requests on GitHub based on assigned labels. Required reviews
     and checks settings configured in the repository on GitHub are used as the rules for auto
     merging.
-
+    <br>
     This approach makes is easy for pull request authors, or anyone with permissions in the
     repository, to flag a pull request for auto-merge simply by adding a label. The merge
     option can also be set with a label on the pull request.
   category:
-    - productivity
+    - CODE_REVIEW
+    - DEV_EX
   license: Apache-2.0
   homepage: https://github.com/atomist-skills/auto-merge-skill
   repository: https://github.com/atomist-skills/auto-merge-skill.git
@@ -49,18 +50,13 @@ skill:
     entry_point: entryPoint
 
 parameters:
-  - repo_filter:
-      name: repos
-      display_name: Repositories
-      description: Select for which repositories pull request auto-merging should be available
-      required: false
   - single_choice:
       name: mergeOn
       display_name: Default Auto-merge Policy
       description: |-
-        Policy to use when auto-merging pull requests
+        Select the policy to use when auto-merging pull requests
       options:
-        - text: On successful reviews
+        - text: On successful reviews and status checks
           value: on-approve
         - text: On successful status checks
           value: on-checks
@@ -70,7 +66,7 @@ parameters:
       name: mergeMethod
       display_name: Default Auto-merge Method
       description: |-
-        Merge method to use when auto-merging pull requests and no method has been set on pull requests
+        Select how you want to auto-merge when no method has been set on a pull request
         explicity via a label
       options:
         - text: Merge Commit
@@ -81,3 +77,7 @@ parameters:
           value: rebase
       default_value: merge
       required: false
+  - repo_filter:
+    name: repos
+    display_name: Which repositories
+    required: false
