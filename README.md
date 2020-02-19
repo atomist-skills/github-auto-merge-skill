@@ -1,3 +1,11 @@
+# `atomist/github-auto-merge-skill`
+
+Automatically merge pull requests that pass all checks required to merge.
+
+## Overview
+
+<!---atomist-skill-readme:start--->
+
 Automatically merge pull requests on GitHub based on assigned labels. Required reviews 
 and checks settings configured in the repository on GitHub are used as the rules for auto 
 merging. 
@@ -17,7 +25,8 @@ To enable auto-merging, one the following labels needs to be assigned to the pul
 
 ### Default Auto-merge Policy
 
-To set the default policy to use when auto-merging pull requests when no explicit auto-merge label is applied to the pull request, select one of the options.
+To set the default policy to use when auto-merging pull requests when no explicit auto-merge label is applied to the 
+pull request, select one of the options.
 
 ### Default Auto-merge Method
 
@@ -37,3 +46,13 @@ choose organization(s) and repositories.
 
 The labels are automatically added to and removed from the repository depending on its settings.
 For example, disabling the _rebase_ merge method in the repository settings will automatically remove the label.
+
+<!---atomist-skill-readme:end--->
+
+---
+
+Created by [Atomist][atomist].
+Need Help?  [Join our Slack workspace][slack].
+
+[atomist]: https://atomist.com/ (Atomist - How Teams Deliver Software)
+[slack]: https://join.atomist.com/ (Atomist Community Slack) 

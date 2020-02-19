@@ -35,7 +35,6 @@ skill:
   license: Apache-2.0
   homepage: https://github.com/atomist-skills/auto-merge-skill
   repository: https://github.com/atomist-skills/auto-merge-skill.git
-  #icon: https://images.atomist.com/rug/pull-request.png
   icon: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTYwIiB2aWV3Qm94PSIwIDAgMTIgMTYiPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTExIDExLjI4VjVjLS4wMy0uNzgtLjM0LTEuNDctLjk0LTIuMDZDOS40NiAyLjM1IDguNzggMi4wMyA4IDJIN1YwTDQgM2wzIDNWNGgxYy4yNy4wMi40OC4xMS42OS4zMS4yMS4yLjMuNDIuMzEuNjl2Ni4yOEExLjk5MyAxLjk5MyAwIDAgMCAxMCAxNWExLjk5MyAxLjk5MyAwIDAgMCAxLTMuNzJ6bS0xIDIuOTJjLS42NiAwLTEuMi0uNTUtMS4yLTEuMiAwLS42NS41NS0xLjIgMS4yLTEuMi42NSAwIDEuMi41NSAxLjIgMS4yIDAgLjY1LS41NSAxLjItMS4yIDEuMnpNNCAzYzAtMS4xMS0uODktMi0yLTJhMS45OTMgMS45OTMgMCAwIDAtMSAzLjcydjYuNTZBMS45OTMgMS45OTMgMCAwIDAgMiAxNWExLjk5MyAxLjk5MyAwIDAgMCAxLTMuNzJWNC43MmMuNTktLjM0IDEtLjk4IDEtMS43MnptLS44IDEwYzAgLjY2LS41NSAxLjItMS4yIDEuMi0uNjUgMC0xLjItLjU1LTEuMi0xLjIgMC0uNjUuNTUtMS4yIDEuMi0xLjIuNjUgMCAxLjIuNTUgMS4yIDEuMnpNMiA0LjJDMS4zNCA0LjIuOCAzLjY1LjggM2MwLS42NS41NS0xLjIgMS4yLTEuMi42NSAwIDEuMi41NSAxLjIgMS4yIDAgLjY1LS41NSAxLjItMS4yIDEuMnoiLz48L3N2Zz4=
 
   package:
@@ -76,7 +75,7 @@ parameters:
           value: rebase
       required: false
   - repo_filter:
-    name: repos
-    display_name: Which repositories
-    description:
-    required: false
+      name: repos
+      display_name: Which repositories
+      description: ''
+      required: false
