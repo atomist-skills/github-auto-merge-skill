@@ -60,7 +60,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     }
     if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
         const method = ctx.configuration?.parameters?.mergeMethod || "merge";
-        if (!repoDetails[method]) {
+        if (!mergeMethodSettings(repoDetails)[method]) {
             await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} can't be labelled with auto-merge labels because configured merge method '${method}' is not available on this repository`);
             return {
                 code: 1,
