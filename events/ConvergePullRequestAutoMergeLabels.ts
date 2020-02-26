@@ -37,22 +37,36 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     const api = gitHub(credentials.token, apiUrl(repo));
     const repoDetails = (await api.repos.get({ owner, repo: name })).data;
 
+    await ctx.audit.log(`Converging auto-merge labels based on repository's merge configuration`);
+
     await addLabel(AutoMergeLabel, "277D7D", owner, name, api);
     await addLabel(AutoMergeCheckSuccessLabel, "277D7D", owner, name, api);
 
     for (const label of AutoMergeMethods) {
         if (mergeMethodSettings(repoDetails)[label]) {
+            await ctx.audit.log(`Adding ${AutoMergeMethodLabel}${label} label to repository`);
             await addLabel(`${AutoMergeMethodLabel}${label}`, "1C334B", owner, name, api);
         } else {
+            await ctx.audit.log(`Removing ${AutoMergeMethodLabel}${label} label from repository`);
             await removeLabel(`${AutoMergeMethodLabel}${label}`, owner, name, api);
         }
     }
+
+    await ctx.audit.log(`Labelling pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} with configured auto-merge policy and method`);
 
     const labels = [];
     if (!pr.labels.some(l => l.name.startsWith("auto-merge:"))) {
         labels.push(`auto-merge:${ctx.configuration?.parameters?.mergeOn || "on-approve"}`);
     }
     if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
+        const method = ctx.configuration?.parameters?.mergeMethod || "merge";
+        if (!repoDetails[method]) {
+            await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} can't be labelled with auto-merge labels because configured merge method '${method}' is not available on this repository`);
+            return {
+                code: 1,
+                reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) can't be labelled with auto-merge labels`,
+            };
+        }
         labels.push(`auto-merge-method:${ctx.configuration?.parameters?.mergeMethod || "merge"}`);
     }
 
@@ -64,9 +78,11 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
         labels,
     });
 
+    await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} labelled with: ${labels.join(", ")}`);
+
     return {
         code: 0,
-        reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} labelled with auto-merged labels`,
+        reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) labelled with auto-merged labels`,
     };
 };
 

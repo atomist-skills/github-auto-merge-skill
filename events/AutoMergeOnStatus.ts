@@ -28,7 +28,7 @@ export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfi
     for (const pr of prs) {
         const { owner, name } = pr.repo;
         const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
-        const result = await executeAutoMerge(pr, ctx.configuration?.parameters, credentials);
+        const result = await executeAutoMerge(pr, ctx, credentials);
         if (!!result) {
             results.push(result);
         }

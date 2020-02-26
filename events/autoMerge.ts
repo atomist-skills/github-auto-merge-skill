@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { HandlerStatus } from "@atomist/skill/lib/handler";
+import {
+    EventContext,
+    HandlerStatus,
+} from "@atomist/skill/lib/handler";
 import {
     GitHubAppCredential,
     GitHubCredential,
@@ -38,102 +41,131 @@ export interface AutoMergeConfiguration {
 
 // tslint:disable-next-line:cyclomatic-complexity
 export async function executeAutoMerge(pr: PullRequest,
-                                       configuration: AutoMergeConfiguration,
+                                       ctx: EventContext<any, AutoMergeConfiguration>,
                                        creds: GitHubAppCredential | GitHubCredential): Promise<HandlerStatus> {
-    if (!!pr) {
-        // 1. at least one approved review if PR isn't set to merge on successful build
-        if (isPrTagged(pr, AutoMergeLabel, AutoMergeTag)) {
-            if (!pr.reviews || pr.reviews.length === 0) {
-                return {
-                    code: 0,
-                    reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because no approved reviews`,
-                };
-            } else if (pr.reviews.some(r => r.state !== "approved")) {
-                return {
-                    code: 0,
-                    reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because unapproved reviews`,
-                };
-            }
-        }
+    if (!pr) {
+        return {
+            code: 1,
+            reason: "Pull request missing in incoming event",
+        };
+    }
 
-        // 2. all status checks are successful and there is at least one check
-        if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
-            if (pr.head.statuses.some(s => s.state !== "success")) {
-                return {
-                    code: 0,
-                    reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because unsuccessful or pending status checks`,
-                };
-            }
-        } else {
+    const slug = `${pr.repo.owner}/${pr.repo.name}#${pr.number}`;
+    const link = `[${slug}](${pr.url})`;
+
+    if (!isPrAutoMergeEnabled(pr)) {
+        await ctx.audit.log(`Pull request auto-merge not requested for ${slug}`);
+        return {
+            code: 0,
+            reason: `Pull request ${link} not auto-merged`,
+        };
+    }
+
+    const autoMergeOnApprove = isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
+
+    await ctx.audit.log(`Starting auto-merge processing for pull request ${slug} with labels: ${pr.labels.map(l => l.name).join(", ")}`);
+
+    // 1. at least one approved review if PR isn't set to merge on successful build
+    if (autoMergeOnApprove) {
+        if (!pr.reviews || pr.reviews.length === 0) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because no approved reviews`);
             return {
                 code: 0,
-                reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because no status checks`,
+                reason: `Pull request ${link} not auto-merged because no approved reviews`,
+            };
+        } else if (pr.reviews.some(r => r.state !== "approved")) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because of unapproved reviews`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because of unapproved reviews`,
             };
         }
+    }
 
-        if (isPrAutoMergeEnabled(pr)) {
-            const api = gitHub(creds.token, apiUrl(pr.repo));
+    // 2. all status checks are successful and there is at least one check
+    if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
+        if (pr.head.statuses.some(s => s.state !== "success")) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because of unsuccessful or pending status checks`,
+            };
+        }
+    } else if (!autoMergeOnApprove) {
+        await ctx.audit.log(`Pull request ${slug} not auto-merged because of no status checks`);
+        return {
+            code: 0,
+            reason: `Pull request ${link} not auto-merged because of no status checks`,
+        };
+    }
 
-            return promiseRetry(async retry => {
-                    let gpr;
-                    try {
-                        gpr = await api.pulls.get({
-                            owner: pr.repo.owner,
-                            repo: pr.repo.name,
-                            pull_number: pr.number,
-                        });
-                    } catch (e) {
-                        retry(e);
-                    }
+    if (isPrAutoMergeEnabled(pr)) {
+        await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
+        const api = gitHub(creds.token, apiUrl(pr.repo));
 
-                    if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
-                        retry(new Error("GitHub PR mergeable state not available. Retrying..."));
-                    }
+        return promiseRetry(async retry => {
+                let gpr;
+                try {
+                    gpr = await api.pulls.get({
+                        owner: pr.repo.owner,
+                        repo: pr.repo.name,
+                        pull_number: pr.number,
+                    });
+                } catch (e) {
+                    retry(e);
+                }
 
-                    if (!!gpr.data.mergeable) {
-                        await api.pulls.merge({
-                            owner: pr.repo.owner,
-                            repo: pr.repo.name,
-                            pull_number: pr.number,
-                            merge_method: mergeMethod(pr, configuration),
-                            sha: pr.head.sha,
-                            commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
-                        });
-                        const body = `Pull request auto merged by Atomist.
+                if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
+                    retry(new Error("GitHub PR mergeable state not available. Retrying..."));
+                }
+
+                if (!!gpr.data.mergeable) {
+                    await api.pulls.merge({
+                        owner: pr.repo.owner,
+                        repo: pr.repo.name,
+                        pull_number: pr.number,
+                        merge_method: mergeMethod(pr, ctx.configuration?.parameters),
+                        sha: pr.head.sha,
+                        commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
+                    });
+                    await ctx.audit.log(`Pull request ${slug} auto-merged`);
+                    const body = `Pull request auto merged by Atomist.
 
 * ${reviewComment(pr)}
 * ${statusComment(pr)}`;
 
-                        await api.issues.createComment({
-                            owner: pr.repo.owner,
-                            repo: pr.repo.name,
-                            issue_number: pr.number,
-                            body,
-                        });
-                        return {
-                            code: 0,
-                            reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} auto-merged`,
-                        };
-                    } else {
-                        console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
-                        return {
-                            code: 0,
-                            reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged because it can't be merged at this time`,
-                        };
-                    }
-                },
-                {
-                    retries: 5,
-                    factor: 3,
-                    minTimeout: 1 * 500,
-                    maxTimeout: 5 * 1000,
-                    randomize: true,
-                });
-        }
+                    await api.issues.createComment({
+                        owner: pr.repo.owner,
+                        repo: pr.repo.name,
+                        issue_number: pr.number,
+                        body,
+                    });
+                    await ctx.audit.log(`Pull request auto-merge comment created`);
+
+                    return {
+                        code: 0,
+                        reason: `Pull request ${link} auto-merged`,
+                    };
+                } else {
+                    console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
+                    await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
+                    return {
+                        code: 0,
+                        reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
+                    };
+                }
+            },
+            {
+                retries: 5,
+                factor: 3,
+                minTimeout: 1 * 500,
+                maxTimeout: 5 * 1000,
+                randomize: true,
+            });
     }
     return {
         code: 0,
-        reason: `Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not auto-merged`,
+        reason: `Pull request ${link} not auto-merged`,
     };
 }
 

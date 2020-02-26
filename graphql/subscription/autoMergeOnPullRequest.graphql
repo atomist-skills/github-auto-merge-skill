@@ -1,5 +1,6 @@
 subscription AutoMergeOnPullRequest {
   PullRequest {
+    url
     number
     body
     title

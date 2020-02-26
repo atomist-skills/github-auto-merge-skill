@@ -2,6 +2,7 @@ subscription AutoMergeOnStatus {
   Status {
     commit {
       pullRequests {
+        url
         number
         body
         title

@@ -26,5 +26,5 @@ export const handler: EventHandler<AutoMergeOnPullRequestSubscription, AutoMerge
     const pr = ctx.data.PullRequest[0];
     const { owner, name } = pr.repo;
     const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
-    return executeAutoMerge(pr, ctx.configuration?.parameters, credentials);
+    return executeAutoMerge(pr, ctx, credentials);
 };
