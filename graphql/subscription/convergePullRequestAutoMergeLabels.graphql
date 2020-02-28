@@ -1,5 +1,5 @@
 subscription ConvergePullRequestAutoMergeLabels {
-    PullRequest(actions: [created, opened]) {
+    PullRequest(action: opened) {
         url
         number
         action
