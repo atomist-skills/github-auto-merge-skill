@@ -52,6 +52,24 @@ By default, this skill will be enabled for all repositories in all organizations
 To restrict the organizations or specific repositories on which the skill will run, you can explicitly
 choose organization(s) and repositories.
 
+## Integrations
+
+---
+
+**GitHub**
+
+The Atomist GitHub integration must be configured to used this skill. At least one repository must be selected.
+
+**Slack**
+
+If the Atomist Slack integration is configured, this skill will send a notification message to the configured Slack channel when a pull request is created, updated and auto-merged.
+
+## Related skills
+
+---
+
+This skill works well with the **GitHub Notifications** and **Auto-rebase pull request** skills.
+
 <!---atomist-skill-readme:end--->
 
 ---
