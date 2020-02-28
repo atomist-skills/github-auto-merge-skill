@@ -34,12 +34,12 @@ import {
 export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscription, AutoMergeConfiguration> = async ctx => {
     const pr = ctx.data.PullRequest[0];
 
-    if (pr.action === PullRequestAction.Opened) {
-        await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not opened`);
+    if (pr.action !== PullRequestAction.Opened) {
+        await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not opened. Ignoring...`);
 
         return {
             code: 0,
-            reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not opened`,
+            reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not opened. Ignoring...`,
         };
     }
 
