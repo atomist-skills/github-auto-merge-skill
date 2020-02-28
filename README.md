@@ -6,46 +6,51 @@ Automatically merge pull requests that pass all checks required to merge.
 
 <!---atomist-skill-readme:start--->
 
-Automatically merge pull requests on GitHub based on assigned labels. Required reviews 
-and checks settings configured in the repository on GitHub are used as the rules for auto 
-merging. 
+When a new pull request is created, this skill will automatically apply the default auto-merge policy and method labels, if set. The labels can be changed on the pull request to modify the policy or merge method for auto-merge.
 
-This approach makes is easy for pull request authors, or anyone with permissions in the 
-repository, to flag a pull request for auto-merge simply by adding a label. The merge 
-option can also be set with a label on the pull request.
+Once the requirements for auto-merging have been met, the pull request will be merged with the merge method defined for the pull request.
+
+### **Enabling auto-merge**
+
+To enable auto-merging, one of the auto-merge policy labels must be added to the pull request. Set the default auto-merge policy and method in order for this skill to automatically apply the labels to new pull requests raised.
+
+**Auto-merge policy labels:**
+
+- `auto-merge:on-approve`
+- `auto-merge:on-check-success`
+
+**Auto-merge method labels:**
+
+- `auto-merge-method:merge`
+- `auto-merge-method:rebase`
+- `auto-merge-method:squash`
+
+The labels are automatically added to and removed from the repository depending on its settings. For example, disabling the *rebase* merge method in the repository settings on GitHub will automatically remove the label.
 
 ## Configuration
 
-### Enable Auto-Merge
+---
 
-To enable auto-merging, one the following labels needs to be assigned to the pull request:
+### Default auto-merge policy
 
- * `auto-merge:on-approve` triggers auto-merge if all requested reviews are approved and all status checks are green
- * `auto-merge:on-check-success` triggers auto-merge if all status checks are green 
+To set the default policy to use when auto-merging pull requests when no explicit auto-merge label is applied to the pull request, select one of the options.
 
-### Default Auto-merge Policy
+- **On successful reviews and status checks** — Triggers auto-merge if all requested reviews are approved and all status checks are green. Note: there must be at least one check in order for this auto-merge policy to be met.
+- **On successful status checks** — Triggers auto-merge if all status checks are green.
 
-To set the default policy to use when auto-merging pull requests when no explicit auto-merge label is applied to the 
-pull request, select one of the options.
+### Default auto-merge method
 
-### Default Auto-merge Method
+To specify the default merge method, select one of the these labels:
 
-To specify the desired merge method, one of the following optional labels can be used:
+- **Merge commit**
+- **Squash and merge**
+- **Rebase and merge**
 
- * `auto-merge-method:merge`
- * `auto-merge-method:rebase`
- * `auto-merge-method:squash`
+### Which repositories
 
-### Repositories
-
-By default, this skill will be enabled for all repositories in all organizations you have connected. 
-To restrict the organizations or specific repositories on which the skill will run, you can explicitly 
+By default, this skill will be enabled for all repositories in all organizations you have connected.
+To restrict the organizations or specific repositories on which the skill will run, you can explicitly
 choose organization(s) and repositories.
-
-### Label Management
-
-The labels are automatically added to and removed from the repository depending on its settings.
-For example, disabling the _rebase_ merge method in the repository settings will automatically remove the label.
 
 <!---atomist-skill-readme:end--->
 
