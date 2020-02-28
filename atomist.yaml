@@ -25,9 +25,9 @@ skill:
     Automatically merge pull requests on GitHub based on assigned labels. Required reviews
     and checks settings configured in the repository on GitHub are used as the rules for auto
     merging.
-    <br>
-    This approach makes is easy for pull request authors, or anyone with permissions in the
-    repository, to flag a pull request for auto-merge simply by adding a label. The merge
+    
+    This approach makes is easy for pull request authors or anyone with permissions in the
+    repository to flag a pull request for auto-merge simply by adding a label. The merge
     option can also be set with a label on the pull request.
   category:
     - CODE_REVIEW
@@ -51,9 +51,9 @@ skill:
 parameters:
   - single_choice:
       name: mergeOn
-      display_name: Default Auto-merge Policy
+      display_name: Default auto-merge policy
       description: |-
-        Select the policy to use when auto-merging pull requests
+        Select the default policy to use when auto-merging pull requests
       options:
         - text: On successful reviews and status checks
           value: on-approve
@@ -62,16 +62,15 @@ parameters:
       required: false
   - single_choice:
       name: mergeMethod
-      display_name: Default Auto-merge Method
+      display_name: Default auto-merge method
       description: |-
-        Select how you want to auto-merge when no method has been set on a pull request
-        explicity via a label
+        Select the default merge method to use when auto-merging pull requests
       options:
-        - text: Merge Commit
+        - text: Merge commit
           value: merge
-        - text: Squash and Merge
+        - text: Squash and merge
           value: squash
-        - text: Rebase and Merge
+        - text: Rebase and merge
           value: rebase
       required: false
   - repo_filter:
