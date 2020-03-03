@@ -1,7 +1,7 @@
 subscription AutoMergeOnStatus {
   Status {
-    commit {
-      pullRequests {
+    commit @required {
+      pullRequests @required {
         url
         number
         body
@@ -9,8 +9,8 @@ subscription AutoMergeOnStatus {
         branch {
           name
         }
-        labels {
-          name
+        labels @required {
+          name @matches(re: "^auto-merge:.*$")
         }
         head {
           sha

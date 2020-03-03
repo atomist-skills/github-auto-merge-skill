@@ -35,11 +35,11 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     const pr = ctx.data.PullRequest[0];
 
     if (pr.action !== PullRequestAction.Opened) {
-        await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not opened. Ignoring...`);
+        await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} action not opened. Ignoring...`);
 
         return {
             code: 0,
-            reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not opened. Ignoring...`,
+            reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) action not opened. Ignoring...`,
         };
     }
 

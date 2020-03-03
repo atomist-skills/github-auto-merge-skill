@@ -1,12 +1,12 @@
 subscription AutoMergeOnBuild {
   Build {
-    pullRequest {
+    pullRequest @required {
       url
       number
       body
       title
-      labels {
-        name
+      labels @required {
+        name @matches(re: "^auto-merge:.*$")
       }
       branch {
         name
