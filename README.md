@@ -29,14 +29,14 @@ The labels are automatically added to and removed from the repository depending 
 
 ## Configuration
 
----
-
 ### Default auto-merge policy
 
 To set the default policy to use when auto-merging pull requests when no explicit auto-merge label is applied to the pull request, select one of the options.
 
-- **On successful reviews and status checks** — Triggers auto-merge if all requested reviews are approved and all status checks are green. Note: there must be at least one check in order for this auto-merge policy to be met.
+- **On successful reviews and status checks** — Triggers auto-merge if all requested reviews are approved and all commit status checks are green.
 - **On successful status checks** — Triggers auto-merge if all status checks are green.
+
+> Note: there must be at least one [commit status check](https://developer.github.com/v3/repos/statuses/) in order for the auto-merge policy to be met. This skill support [commit status checks](https://developer.github.com/v3/repos/statuses/); it does *not* currently support the [GitHub Checks API](https://developer.github.com/v3/checks/), so if your CI or build tool uses the Checks API, you will need to explicitly add a commit status update to your CI or build step in order for auto-merge to work.
 
 ### Default auto-merge method
 
@@ -54,8 +54,6 @@ choose organization(s) and repositories.
 
 ## Integrations
 
----
-
 **GitHub**
 
 The Atomist GitHub integration must be configured to used this skill. At least one repository must be selected.
@@ -65,8 +63,6 @@ The Atomist GitHub integration must be configured to used this skill. At least o
 If the Atomist Slack integration is configured, this skill will send a notification message to the configured Slack channel when a pull request is created, updated and auto-merged.
 
 ## Related skills
-
----
 
 This skill works well with the **GitHub Notifications** and **Auto-rebase pull request** skills.
 
