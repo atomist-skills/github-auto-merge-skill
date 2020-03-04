@@ -62,10 +62,6 @@ The Atomist GitHub integration must be configured to used this skill. At least o
 
 If the Atomist Slack integration is configured, this skill will send a notification message to the configured Slack channel when a pull request is created, updated and auto-merged.
 
-## Related skills
-
-This skill works well with the **GitHub Notifications** and **Auto-rebase pull request** skills.
-
 <!---atomist-skill-readme:end--->
 
 ---
