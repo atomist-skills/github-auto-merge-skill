@@ -20,7 +20,7 @@ To enable auto-merging, one of the auto-merge policy labels must be added to the
 - `auto-merge:on-check-success`
 
 **Auto-merge method labels:**
-
+ 
 - `auto-merge-method:merge`
 - `auto-merge-method:rebase`
 - `auto-merge-method:squash`
