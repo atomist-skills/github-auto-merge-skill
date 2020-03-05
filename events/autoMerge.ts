@@ -126,7 +126,7 @@ export async function executeAutoMerge(pr: PullRequest,
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
                         pull_number: pr.number,
-                        merge_method: mergeMethod(pr, ctx.configuration?.parameters),
+                        merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters),
                         sha: pr.head.sha,
                         commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
                     });

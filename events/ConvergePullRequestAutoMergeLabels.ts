@@ -70,10 +70,10 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
 
     const labels = [];
     if (!pr.labels.some(l => l.name.startsWith("auto-merge:"))) {
-        labels.push(`auto-merge:${ctx.configuration?.parameters?.mergeOn || "on-approve"}`);
+        labels.push(`auto-merge:${ctx.configuration[0]?.parameters?.mergeOn || "on-approve"}`);
     }
     if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
-        const method = ctx.configuration?.parameters?.mergeMethod || "merge";
+        const method = ctx.configuration[0]?.parameters?.mergeMethod || "merge";
         if (!mergeMethodSettings(repoDetails)[method]) {
             await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} can't be labelled with auto-merge labels because configured merge method '${method}' is not available on this repository`);
             return {
@@ -81,7 +81,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
                 reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) can't be labelled with auto-merge labels`,
             };
         }
-        labels.push(`auto-merge-method:${ctx.configuration?.parameters?.mergeMethod || "merge"}`);
+        labels.push(`auto-merge-method:${ctx.configuration[0]?.parameters?.mergeMethod || "merge"}`);
     }
 
     // Add the default labels to the PR
