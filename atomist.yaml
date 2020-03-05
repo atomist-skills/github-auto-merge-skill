@@ -59,7 +59,7 @@ parameters:
         - text: On successful reviews and status checks
           value: on-approve
         - text: On successful status checks
-          value: on-checks
+          value: on-check-success
       required: false
   - single_choice:
       name: mergeMethod
