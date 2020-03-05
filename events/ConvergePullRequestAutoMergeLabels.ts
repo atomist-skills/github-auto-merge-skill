@@ -38,6 +38,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
         await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} action not opened. Ignoring...`);
 
         return {
+            visibility: "hidden",
             code: 0,
             reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) action not opened. Ignoring...`,
         };
