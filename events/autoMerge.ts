@@ -32,7 +32,7 @@ export const AutoMergeTag = `[${AutoMergeLabel}]`;
 export const AutoMergeCheckSuccessTag = `[${AutoMergeCheckSuccessLabel}]`;
 
 export const AutoMergeMethodLabel = "auto-merge-method:";
-export const AutoMergeMethods = ["merge", "rebase", "squash"];
+export const AutoMergeMethods: Array<AutoMergeConfiguration["mergeMethod"]> = ["merge", "rebase", "squash"];
 
 export interface AutoMergeConfiguration {
     mergeOn?: "on-approve" | "on-check-success";
@@ -51,7 +51,7 @@ export async function executeAutoMerge(pr: PullRequest,
         };
     }
 
-    const slug = `${pr.repo.owner}/${pr.repo.name}#${pr.number}`;
+    const slug = `${pr?.repo?.owner}/${pr?.repo?.name}#${pr.number}`;
     const link = `[${slug}](${pr.url})`;
 
     if (!isPrAutoMergeEnabled(pr)) {

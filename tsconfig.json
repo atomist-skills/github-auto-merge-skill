@@ -11,7 +11,8 @@
     "lib": [
       "DOM"
     ],
-    "strict": false,
+    "strict": true,
+    "strictNullChecks":false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
