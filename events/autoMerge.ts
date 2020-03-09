@@ -23,8 +23,8 @@ import {
     GitHubCredential,
 } from "@atomist/skill/lib/secrets";
 import * as github from "@octokit/rest";
-import { PullRequest } from "./types";
 import promiseRetry = require("promise-retry");
+import { PullRequest } from "./types";
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
