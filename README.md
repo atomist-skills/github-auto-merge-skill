@@ -4,6 +4,8 @@ Automatically merge pull requests that pass all checks required to merge.
 
 <!---atomist-skill-readme:start--->
 
+[Code](https://github.com/atomist-skills/github-auto-merge-skill) - [Issues](https://github.com/atomist-skills/github-auto-merge-skill/issues)
+
 # What it's useful for
 
 With this skill you can automatically merge pull requests on GitHub based on assigned labels. Required reviews and 
