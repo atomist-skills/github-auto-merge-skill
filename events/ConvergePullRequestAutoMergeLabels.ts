@@ -86,7 +86,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
 
     // Add the default labels to the PR
     await api.issues.addLabels({
-        issue_number: pr.number,
+        issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
         owner: repo.owner,
         repo: repo.name,
         labels,
@@ -100,7 +100,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     };
 };
 
-function mergeMethodSettings(repoDetails: Octokit.ReposGetResponse): { squash: boolean, merge: boolean, rebase: boolean } {
+function mergeMethodSettings(repoDetails: Octokit.ReposGetResponse): { squash: boolean; merge: boolean; rebase: boolean } {
     return {
         merge: repoDetails.allow_merge_commit,
         rebase: repoDetails.allow_rebase_merge,

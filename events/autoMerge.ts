@@ -111,7 +111,7 @@ export async function executeAutoMerge(pr: PullRequest,
                     gpr = await api.pulls.get({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
-                        pull_number: pr.number,
+                        pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
                     });
                 } catch (e) {
                     retry(e);
@@ -121,14 +121,14 @@ export async function executeAutoMerge(pr: PullRequest,
                     retry(new Error("GitHub PR mergeable state not available. Retrying..."));
                 }
 
-                if (!!gpr.data.mergeable) {
+                if (gpr.data.mergeable) {
                     await api.pulls.merge({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
-                        pull_number: pr.number,
-                        merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters),
+                        pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
+                        merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters), // eslint-disable-line @typescript-eslint/camelcase
                         sha: pr.head.sha,
-                        commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
+                        commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`, // eslint-disable-line @typescript-eslint/camelcase
                     });
                     await ctx.audit.log(`Pull request ${slug} auto-merged`);
                     const body = `Pull request auto merged by Atomist.
@@ -139,7 +139,7 @@ export async function executeAutoMerge(pr: PullRequest,
                     await api.issues.createComment({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
-                        issue_number: pr.number,
+                        issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
                         body,
                     });
                     await ctx.audit.log(`Pull request auto-merge comment created`);
@@ -254,7 +254,7 @@ export function gitHub(token: string, url: string = DefaultGitHubApiUrl): github
         auth: `token ${token}`,
         baseUrl: url.endsWith("/") ? url.slice(0, -1) : url,
         throttle: {
-            onRateLimit: (retryAfter: any, options: any) => {
+            onRateLimit: (retryAfter: any, options: any): boolean => {
                 console.warn(`Request quota exhausted for request '${options.method} ${options.url}'`);
 
                 if (options.request.retryCount === 0) { // only retries once
@@ -263,7 +263,7 @@ export function gitHub(token: string, url: string = DefaultGitHubApiUrl): github
                 }
                 return false;
             },
-            onAbuseLimit: (retryAfter: any, options: any) => {
+            onAbuseLimit: (retryAfter: any, options: any): void => {
                 console.warn(`Abuse detected for request '${options.method} ${options.url}'`);
             },
         },
