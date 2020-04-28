@@ -2,8 +2,6 @@
 
 Automatically merge pull requests that pass all checks required to merge.
 
-## Overview
-
 <!---atomist-skill-readme:start--->
 
 # What it's useful for
