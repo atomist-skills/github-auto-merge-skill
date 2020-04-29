@@ -4,8 +4,6 @@ Automatically merge pull requests that pass all checks required to merge.
 
 <!---atomist-skill-readme:start--->
 
-[Code](https://github.com/atomist-skills/github-auto-merge-skill) - [Issues](https://github.com/atomist-skills/github-auto-merge-skill/issues)
-
 # What it's useful for
 
 With this skill you can automatically merge pull requests on GitHub based on assigned labels. Required reviews and 
@@ -29,14 +27,12 @@ Connect and configure these integrations:
 1. **GitHub**
 2. **Slack**
 
-**GitHub** must be configured to use this skill. At least one repository must be selected. We recommend connecting the
+The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected. We recommend connecting the
 **Slack** integration.
 
 # How to configure
 
 1. **Select the default policy to use when auto-merging pull requests**
-
-    ![Default auto-merge policy](docs/images/default-auto-merge-policy.png)
 
     ![Default auto-merge policy expanded](docs/images/default-auto-merge-policy-expanded.png)
 
@@ -50,13 +46,13 @@ Connect and configure these integrations:
     the auto-merge policy to be met. This skill supports [commit status checks](https://developer.github.com/v3/repos/statuses/);
     it does *not* currently support the [GitHub Checks API](https://developer.github.com/v3/checks/), so if your CI or
     build tool uses the Checks API, you will need to explicitly add a commit status update to your CI or build step in
-    order for auto-merge to work. The work for supporting GitHub Checks is tracked in issue [#6](https://github.com/atomist-skills/github-auto-merge-skill/issues/6).
+    order for auto-merge to work. Adding support for GitHub Checks is tracked in issue [#6](https://github.com/atomist-skills/github-auto-merge-skill/issues/6).
 
-2. **Specify the default merge method by selecting a label**
+2. **Specify the default merge method**
 
     ![Default auto-merge method](docs/images/default-auto-merge-method.png)
 
-    Select one of the these labels:
+    Select one of these methods:
 
     - **Merge commit**
     - **Squash and merge**
@@ -71,7 +67,7 @@ Connect and configure these integrations:
     To restrict the organizations or specific repositories on which the skill will run, you can explicitly choose 
     organization(s) and repositories.
 
-# How to use Pull Request auto-merging
+# How to use Pull Request auto-merge
 
 1. **Configure skill, set default auto-merge policy and method** 
 
@@ -95,6 +91,8 @@ Connect and configure these integrations:
     Note: the labels are automatically added to and removed from the repository depending on its settings. 
     For example, disabling the *rebase* merge method in the repository settings on GitHub will automatically remove 
     the label.
+    
+To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/github-auto-merge-skill/issues). See the [code](https://github.com/atomist-skills/github-auto-merge-skill) for the skill.
 
 <!---atomist-skill-readme:end--->
 
