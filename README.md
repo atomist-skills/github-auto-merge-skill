@@ -3,7 +3,7 @@
 Automatically merge pull requests that pass all checks required to merge.
 
 <!---atomist-skill-readme:start--->
-
+ 
 # What it's useful for
 
 With this skill you can automatically merge pull requests on GitHub based on assigned labels. Required reviews and 
