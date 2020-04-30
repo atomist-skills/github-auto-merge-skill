@@ -71,8 +71,6 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
 1. **Configure skill, set default auto-merge policy and method** 
 
-    ![Configuration](docs/images/configuration.png)
-
 2. **For every new pull request raised, this skill will automatically apply the following labels when relevant:**
 
     **Auto-merge policy labels**
