@@ -17,7 +17,7 @@
 skill:
   name: atomist/github-auto-merge-skill
   title: Auto-merge pull request
-  version: 2.0.1
+  version: 2.0.2
   author: Atomist
   description: |-
     Automatically merge pull requests that pass all checks required to merge
