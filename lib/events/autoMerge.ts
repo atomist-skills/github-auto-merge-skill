@@ -18,13 +18,14 @@ import {
     EventContext,
     HandlerStatus,
 } from "@atomist/skill/lib/handler";
+import { gitHubComRepository } from "@atomist/skill/lib/project";
+import { gitHub } from "@atomist/skill/lib/project/github";
 import {
     GitHubAppCredential,
     GitHubCredential,
 } from "@atomist/skill/lib/secrets";
-import * as github from "@octokit/rest";
 import promiseRetry = require("promise-retry");
-import { PullRequest } from "./types";
+import { PullRequest } from "../typings/types";
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
@@ -42,7 +43,7 @@ export interface AutoMergeConfiguration {
 // tslint:disable-next-line:cyclomatic-complexity
 export async function executeAutoMerge(pr: PullRequest,
                                        ctx: EventContext<any, AutoMergeConfiguration>,
-                                       creds: GitHubAppCredential | GitHubCredential): Promise<HandlerStatus> {
+                                       credential: GitHubAppCredential | GitHubCredential): Promise<HandlerStatus> {
     if (!pr) {
         return {
             visibility: "hidden",
@@ -103,7 +104,7 @@ export async function executeAutoMerge(pr: PullRequest,
 
     if (isPrAutoMergeEnabled(pr)) {
         await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
-        const api = gitHub(creds.token, apiUrl(pr.repo));
+        const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
 
         return promiseRetry(async retry => {
                 let gpr;
@@ -233,39 +234,4 @@ function statusComment(pr: PullRequest): string {
     } else {
         return "No checks";
     }
-}
-
-export const DefaultGitHubApiUrl = "https://api.github.com/";
-
-export function apiUrl(repo: any): string {
-    if (repo.org && repo.org.provider && repo.org.provider.apiUrl) {
-        let providerUrl = repo.org.provider.apiUrl;
-        if (providerUrl.slice(-1) === "/") {
-            providerUrl = providerUrl.slice(0, -1);
-        }
-        return providerUrl;
-    } else {
-        return DefaultGitHubApiUrl;
-    }
-}
-
-export function gitHub(token: string, url: string = DefaultGitHubApiUrl): github {
-    return new github({
-        auth: `token ${token}`,
-        baseUrl: url.endsWith("/") ? url.slice(0, -1) : url,
-        throttle: {
-            onRateLimit: (retryAfter: any, options: any): boolean => {
-                console.warn(`Request quota exhausted for request '${options.method} ${options.url}'`);
-
-                if (options.request.retryCount === 0) { // only retries once
-                    console.debug(`Retrying after ${retryAfter} seconds!`);
-                    return true;
-                }
-                return false;
-            },
-            onAbuseLimit: (retryAfter: any, options: any): void => {
-                console.warn(`Abuse detected for request '${options.method} ${options.url}'`);
-            },
-        },
-    });
 }

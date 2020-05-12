@@ -20,7 +20,7 @@ import {
     AutoMergeConfiguration,
     executeAutoMerge,
 } from "./autoMerge";
-import { AutoMergeOnBuildSubscription } from "./types";
+import { AutoMergeOnBuildSubscription } from "../typings/types";
 
 export const handler: EventHandler<AutoMergeOnBuildSubscription, AutoMergeConfiguration> = async ctx => {
     const pr = ctx.data.Build[0].pullRequest;

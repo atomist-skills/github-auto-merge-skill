@@ -20,7 +20,7 @@ import {
     AutoMergeConfiguration,
     executeAutoMerge,
 } from "./autoMerge";
-import { AutoMergeOnReviewSubscription } from "./types";
+import { AutoMergeOnReviewSubscription } from "../typings/types";
 
 export const handler: EventHandler<AutoMergeOnReviewSubscription, AutoMergeConfiguration> = async ctx => {
     const pr = ctx.data.Review[0].pullRequest;

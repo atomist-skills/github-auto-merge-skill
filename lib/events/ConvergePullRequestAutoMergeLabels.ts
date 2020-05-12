@@ -15,21 +15,21 @@
  */
 
 import { EventHandler } from "@atomist/skill/lib/handler";
+import { gitHubComRepository } from "@atomist/skill/lib/project";
+import { gitHub } from "@atomist/skill/lib/project/github";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
-import * as Octokit from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
 import {
-    apiUrl,
     AutoMergeCheckSuccessLabel,
     AutoMergeConfiguration,
     AutoMergeLabel,
     AutoMergeMethodLabel,
     AutoMergeMethods,
-    gitHub,
 } from "./autoMerge";
 import {
     ConvergePullRequestAutoMergeLabelsSubscription,
     PullRequestAction,
-} from "./types";
+} from "../typings/types";
 
 export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscription, AutoMergeConfiguration> = async ctx => {
     const pr = ctx.data.PullRequest[0];
@@ -46,9 +46,9 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
 
     const repo = pr.repo;
     const { owner, name } = repo;
-    const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+    const credential = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
 
-    const api = gitHub(credentials.token, apiUrl(repo));
+    const api = gitHub(gitHubComRepository({ owner, repo: name, credential }));
     const repoDetails = (await api.repos.get({ owner, repo: name })).data;
 
     await ctx.audit.log(`Converging auto-merge labels based on repository's merge configuration`);
@@ -100,7 +100,7 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
     };
 };
 
-function mergeMethodSettings(repoDetails: Octokit.ReposGetResponse): { squash: boolean; merge: boolean; rebase: boolean } {
+function mergeMethodSettings(repoDetails: any): { squash: boolean; merge: boolean; rebase: boolean } {
     return {
         merge: repoDetails.allow_merge_commit,
         rebase: repoDetails.allow_rebase_merge,
