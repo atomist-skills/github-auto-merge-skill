@@ -1,5 +1,7 @@
 # `@atomist/github-auto-merge-skill`
 
+`@atomist/github-auto-merge-skill` is licensed under Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 This page details all runtime OSS dependencies of `@atomist/github-auto-merge-skill`.
 
 ## Licenses
@@ -334,3 +336,5 @@ Need Help?  [Join our Slack team][slack].
 
 [atomist]: https://atomist.com/ (Atomist - Development Automation)
 [slack]: https://join.atomist.com/ (Atomist Community Slack)
+
+<!---atomist/npm-license-usage-skill@0.1.0-19--->
