@@ -47,7 +47,7 @@ export async function executeAutoMerge(pr: PullRequest,
     if (!pr) {
         return {
             visibility: "hidden",
-            code: 1,
+            code: 0,
             reason: "Pull request missing in incoming event",
         };
     }
@@ -73,13 +73,13 @@ export async function executeAutoMerge(pr: PullRequest,
         if (!pr.reviews || pr.reviews.length === 0) {
             await ctx.audit.log(`Pull request ${slug} not auto-merged because no approved reviews`);
             return {
-                code: 1,
+                code: 0,
                 reason: `Pull request ${link} not auto-merged because no approved reviews`,
             };
         } else if (pr.reviews.some(r => r.state !== "approved")) {
             await ctx.audit.log(`Pull request ${slug} not auto-merged because of unapproved reviews`);
             return {
-                code: 1,
+                code: 0,
                 reason: `Pull request ${link} not auto-merged because of unapproved reviews`,
             };
         }
@@ -90,14 +90,14 @@ export async function executeAutoMerge(pr: PullRequest,
         if (pr.head.statuses.some(s => s.state !== "success")) {
             await ctx.audit.log(`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`);
             return {
-                code: 1,
+                code: 0,
                 reason: `Pull request ${link} not auto-merged because of unsuccessful or pending status checks`,
             };
         }
     } else if (!autoMergeOnApprove) {
         await ctx.audit.log(`Pull request ${slug} not auto-merged because of no status checks`);
         return {
-            code: 1,
+            code: 0,
             reason: `Pull request ${link} not auto-merged because of no status checks`,
         };
     }
@@ -153,7 +153,7 @@ export async function executeAutoMerge(pr: PullRequest,
                     console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
                     await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
                     return {
-                        code: 1,
+                        code: 0,
                         reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
                     };
                 }
