@@ -336,5 +336,3 @@ Need Help?  [Join our Slack team][slack].
 
 [atomist]: https://atomist.com/ (Atomist - Development Automation)
 [slack]: https://join.atomist.com/ (Atomist Community Slack)
-
-<!---atomist/npm-license-usage-skill@0.1.0-21--->
