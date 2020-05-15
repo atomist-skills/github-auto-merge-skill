@@ -25,7 +25,12 @@ import {
     GitHubCredential,
 } from "@atomist/skill/lib/secrets";
 import promiseRetry = require("promise-retry");
-import { PullRequest } from "../typings/types";
+import {
+    CheckRunConclusion,
+    CheckRunStatus,
+    PullRequest,
+    StatusState,
+} from "../typings/types";
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
@@ -86,8 +91,9 @@ export async function executeAutoMerge(pr: PullRequest,
     }
 
     // 2. all status checks are successful and there is at least one check
-    if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
-        if (pr.head.statuses.some(s => s.state !== "success")) {
+    if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
+        const checks = aggregateChecksAndStatus(pr);
+        if (checks.some(s => s.state !== StatusState.Success)) {
             await ctx.audit.log(`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`);
             return {
                 code: 0,
@@ -178,6 +184,66 @@ export function isPrAutoMergeEnabled(pr: PullRequest): boolean {
         || isPrTagged(pr, AutoMergeCheckSuccessLabel, AutoMergeCheckSuccessTag);
 }
 
+export interface Check {
+    name: string;
+    description: string;
+    state: StatusState;
+    url: string;
+    detailsUrl: string;
+}
+
+function aggregateChecksAndStatus(pr: PullRequest): Check[] {
+    const allChecks: Check[] = [];
+
+    // First statuses
+    pr.head?.statuses?.forEach(s => {
+        allChecks.push({
+            name: s.context,
+            description: s.description,
+            url: s.targetUrl,
+            state: s.state,
+            detailsUrl: undefined,
+        });
+    });
+    // Second checks
+    pr.head?.checkSuites?.forEach(c => {
+        const app = c.appSlug;
+        c.checkRuns?.forEach(r => {
+            let state;
+            switch (r.status) {
+                case CheckRunStatus.InProgress:
+                case CheckRunStatus.Queued:
+                    state = StatusState.Pending;
+                    break;
+                case CheckRunStatus.Completed:
+                    switch (r.conclusion) {
+                        case CheckRunConclusion.Success:
+                        case CheckRunConclusion.Neutral:
+                        case CheckRunConclusion.Skipped:
+                            state = StatusState.Success;
+                            break;
+                        case undefined:
+                        case null:
+                            state = StatusState.Success;
+                            break;
+                        default:
+                            state = StatusState.Failure;
+                            break;
+                    }
+                    break;
+            }
+            allChecks.push({
+                name: `${app}/${r.name}`,
+                description: r.outputTitle,
+                url: r.htmlUrl,
+                state,
+                detailsUrl: r.detailsUrl,
+            });
+        });
+    });
+    return allChecks;
+}
+
 function isPrTagged(pr: PullRequest,
                     label: string = AutoMergeLabel,
                     tag: string = AutoMergeTag): boolean {
@@ -229,8 +295,9 @@ function reviewComment(pr: PullRequest): string {
 }
 
 function statusComment(pr: PullRequest): string {
-    if (pr.head && pr.head.statuses && pr.head.statuses.length > 0) {
-        return `${pr.head.statuses.length} successful ${pr.head.statuses.length > 1 ? "checks" : "check"}`;
+    if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
+        const checks = aggregateChecksAndStatus(pr);
+        return `${checks.length} successful ${checks.length === 1 ? "check" : "checks"}`;
     } else {
         return "No checks";
     }

@@ -44,9 +44,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
     Note: there must be at least one [commit status check](https://developer.github.com/v3/repos/statuses/) in order for
     the auto-merge policy to be met. This skill supports [commit status checks](https://developer.github.com/v3/repos/statuses/);
-    it does *not* currently support the [GitHub Checks API](https://developer.github.com/v3/checks/), so if your CI or
-    build tool uses the Checks API, you will need to explicitly add a commit status update to your CI or build step in
-    order for auto-merge to work. Adding support for GitHub Checks is tracked in issue [#6](https://github.com/atomist-skills/github-auto-merge-skill/issues/6).
+    and [GitHub Checks API](https://developer.github.com/v3/checks/).
 
 2. **Specify the default merge method**
 

@@ -1,0 +1,61 @@
+subscription AutoMergeOnCheck {
+    CheckRun {
+        checkSuite {
+            pullRequests @required {
+                url
+                number
+                body
+                title
+                branch {
+                    name
+                }
+                labels @required {
+                    name @matches(re: "^auto-merge:.*$")
+                }
+                head {
+                    sha
+                    statuses {
+                        state
+                        context
+                        description
+                        targetUrl
+                    }
+                    checkSuites {
+                        appSlug
+                        checkRuns {
+                            name
+                            conclusion
+                            status
+                            detailsUrl
+                            startedAt
+                            completedAt
+                            htmlUrl
+                            outputTitle
+                        }
+                    }
+                }
+                reviews {
+                    state
+                    by {
+                        login
+                    }
+                }
+                commits {
+                    message
+                }
+                repo {
+                    name
+                    owner
+                    org {
+                        provider {
+                            apiUrl
+                        }
+                    }
+                }
+                comments {
+                    body
+                }
+            }
+        }
+    }
+}

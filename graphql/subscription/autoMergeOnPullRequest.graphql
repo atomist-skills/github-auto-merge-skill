@@ -18,6 +18,19 @@ subscription AutoMergeOnPullRequest {
         description
         targetUrl
       }
+      checkSuites {
+        appSlug
+        checkRuns {
+          name
+          conclusion
+          status
+          detailsUrl
+          startedAt
+          completedAt
+          htmlUrl
+          outputTitle
+        }
+      }
     }
     reviews {
       state
