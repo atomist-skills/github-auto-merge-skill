@@ -60,6 +60,15 @@ export async function executeAutoMerge(pr: PullRequest,
     const slug = `${pr?.repo?.owner}/${pr?.repo?.name}#${pr.number}`;
     const link = `[${slug}](${pr.url})`;
 
+    if (pr.state !== "open") {
+        await ctx.audit.log(`Pull request auto-merge ignoring closed ${slug}`);
+        return {
+            visibility: "hidden",
+            code: 0,
+            reason: `Pull request auto-merge ignoring closed ${slug}`,
+        };
+    }
+
     if (!isPrAutoMergeEnabled(pr)) {
         await ctx.audit.log(`Pull request auto-merge not requested for ${slug}`);
         return {

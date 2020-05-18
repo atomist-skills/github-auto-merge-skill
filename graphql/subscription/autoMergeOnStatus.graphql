@@ -6,6 +6,7 @@ subscription AutoMergeOnStatus {
         number
         body
         title
+        state
         branch {
           name
         }

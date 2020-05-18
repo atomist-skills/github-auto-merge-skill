@@ -4,6 +4,7 @@ subscription AutoMergeOnPullRequest {
     number
     body
     title
+    state
     labels @required {
       name @matches(re: "^auto-merge:.*$")
     }
