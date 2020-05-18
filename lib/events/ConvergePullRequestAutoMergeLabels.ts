@@ -32,7 +32,7 @@ import {
 } from "../typings/types";
 
 export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscription, AutoMergeConfiguration> = async ctx => {
-    const pr = ctx.data.PullRequest[0];
+    const pr = ctx.event.PullRequest[0];
 
     if (pr.action !== PullRequestAction.Opened) {
         await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} action not opened. Ignoring...`);

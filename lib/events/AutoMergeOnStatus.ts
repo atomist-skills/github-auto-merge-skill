@@ -23,7 +23,7 @@ import {
 import { AutoMergeOnStatusSubscription } from "../typings/types";
 
 export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfiguration> = async ctx => {
-    const prs = ctx.data.Status[0].commit.pullRequests;
+    const prs = ctx.event.Status[0].commit.pullRequests as any;
     const results = [];
     for (const pr of prs) {
         const { owner, name } = pr.repo;

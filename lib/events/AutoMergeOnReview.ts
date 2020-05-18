@@ -23,7 +23,7 @@ import {
 import { AutoMergeOnReviewSubscription } from "../typings/types";
 
 export const handler: EventHandler<AutoMergeOnReviewSubscription, AutoMergeConfiguration> = async ctx => {
-    const pr = ctx.data.Review[0].pullRequest;
+    const pr = ctx.event.Review[0].pullRequest as any;
     const { owner, name } = pr.repo;
     const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
     return executeAutoMerge(pr, ctx, credentials);

@@ -18,13 +18,14 @@ import {
     EventContext,
     HandlerStatus,
 } from "@atomist/skill/lib/handler";
+import { info } from "@atomist/skill/lib/log";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
 import { gitHub } from "@atomist/skill/lib/project/github";
 import {
     GitHubAppCredential,
     GitHubCredential,
 } from "@atomist/skill/lib/secrets";
-import promiseRetry = require("promise-retry");
+import * as retry from "p-retry";
 import {
     CheckRunConclusion,
     CheckRunStatus,
@@ -45,7 +46,6 @@ export interface AutoMergeConfiguration {
     mergeMethod?: "merge" | "rebase" | "squash";
 }
 
-// tslint:disable-next-line:cyclomatic-complexity
 export async function executeAutoMerge(pr: PullRequest,
                                        ctx: EventContext<any, AutoMergeConfiguration>,
                                        credential: GitHubAppCredential | GitHubCredential): Promise<HandlerStatus> {
@@ -118,65 +118,69 @@ export async function executeAutoMerge(pr: PullRequest,
         await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
         const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
 
-        return promiseRetry(async retry => {
-                let gpr;
-                try {
-                    gpr = await api.pulls.get({
+        try {
+            return retry(async () => {
+                    const gpr = await api.pulls.get({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
                         pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
                     });
-                } catch (e) {
-                    retry(e);
-                }
 
-                if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
-                    retry(new Error("GitHub PR mergeable state not available. Retrying..."));
-                }
+                    info(`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`);
 
-                if (gpr.data.mergeable) {
-                    await api.pulls.merge({
-                        owner: pr.repo.owner,
-                        repo: pr.repo.name,
-                        pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
-                        merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters), // eslint-disable-line @typescript-eslint/camelcase
-                        sha: pr.head.sha,
-                        commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`, // eslint-disable-line @typescript-eslint/camelcase
-                    });
-                    await ctx.audit.log(`Pull request ${slug} auto-merged`);
-                    const body = `Pull request auto merged by Atomist.
+                    if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
+                        throw new Error("GitHub PR mergeable state not available. Retrying...");
+                    }
+
+                    if (gpr.data.mergeable) {
+                        await api.pulls.merge({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
+                            merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters), // eslint-disable-line @typescript-eslint/camelcase
+                            sha: pr.head.sha,
+                            commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`, // eslint-disable-line @typescript-eslint/camelcase
+                        });
+                        await ctx.audit.log(`Pull request ${slug} auto-merged`);
+                        const body = `Pull request auto merged by Atomist.
 
 * ${reviewComment(pr)}
 * ${statusComment(pr)}`;
 
-                    await api.issues.createComment({
-                        owner: pr.repo.owner,
-                        repo: pr.repo.name,
-                        issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
-                        body,
-                    });
-                    await ctx.audit.log(`Pull request auto-merge comment created`);
+                        await api.issues.createComment({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
+                            body,
+                        });
+                        await ctx.audit.log(`Pull request auto-merge comment created`);
 
-                    return {
-                        code: 0,
-                        reason: `Pull request ${link} auto-merged`,
-                    };
-                } else {
-                    console.info("GitHub returned PR as not mergeable: '%j'", gpr.data);
-                    await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
-                    return {
-                        code: 0,
-                        reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
-                    };
-                }
-            },
-            {
-                retries: 5,
-                factor: 3,
-                minTimeout: 1 * 500,
-                maxTimeout: 5 * 1000,
-                randomize: true,
-            });
+                        return {
+                            code: 0,
+                            reason: `Pull request ${link} auto-merged`,
+                        };
+                    } else {
+                        await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
+                        return {
+                            code: 0,
+                            reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
+                        };
+                    }
+                },
+                {
+                    retries: 5,
+                    factor: 3,
+                    minTimeout: 1 * 500,
+                    maxTimeout: 5 * 1000,
+                    randomize: true,
+                });
+        } catch (e) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
+            };
+        }
     }
     return {
         visibility: "hidden",

@@ -23,7 +23,7 @@ import {
 } from "./autoMerge";
 
 export const handler: EventHandler<AutoMergeOnCheckSubscription, AutoMergeConfiguration> = async ctx => {
-    const prs = ctx.data.CheckRun[0].checkSuite.pullRequests;
+    const prs = ctx.event.CheckRun[0].checkSuite.pullRequests as any;
     const results = [];
     for (const pr of prs) {
         const { owner, name } = pr.repo;
