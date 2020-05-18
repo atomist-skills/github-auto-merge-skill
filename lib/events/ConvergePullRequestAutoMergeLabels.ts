@@ -84,20 +84,30 @@ export const handler: EventHandler<ConvergePullRequestAutoMergeLabelsSubscriptio
         labels.push(`auto-merge-method:${ctx.configuration[0]?.parameters?.mergeMethod || "merge"}`);
     }
 
-    // Add the default labels to the PR
-    await api.issues.addLabels({
-        issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
-        owner: repo.owner,
-        repo: repo.name,
-        labels,
-    });
+    if (labels.length > 0) {
+        // Add the default labels to the PR
+        await api.issues.addLabels({
+            issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
+            owner: repo.owner,
+            repo: repo.name,
+            labels,
+        });
 
-    await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} labelled with: ${labels.join(", ")}`);
+        await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} labelled with: ${labels.join(", ")}`);
 
-    return {
-        code: 0,
-        reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) labelled with auto-merged labels`,
-    };
+        return {
+            code: 0,
+            reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) labelled with auto-merged labels`,
+        };
+    } else {
+        await ctx.audit.log(`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} labelled with: ${labels.join(", ")}`);
+
+        return {
+            code: 0,
+            visibility: "hidden",
+            reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not labelled with auto-merged labels because labels already present`,
+        };
+    }
 };
 
 function mergeMethodSettings(repoDetails: any): { squash: boolean; merge: boolean; rebase: boolean } {
