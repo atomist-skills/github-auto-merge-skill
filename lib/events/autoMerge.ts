@@ -93,7 +93,7 @@ export async function executeAutoMerge(pr: PullRequest,
     // 2. all status checks are successful and there is at least one check
     if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
         const checks = aggregateChecksAndStatus(pr);
-        if (checks.some(s => s.state !== StatusState.Success)) {
+        if (checks?.length === 0 || checks?.some(s => s.state !== StatusState.Success)) {
             await ctx.audit.log(`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`);
             return {
                 code: 0,
