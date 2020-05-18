@@ -18,7 +18,10 @@ import {
     EventContext,
     HandlerStatus,
 } from "@atomist/skill/lib/handler";
-import { info } from "@atomist/skill/lib/log";
+import {
+    debug,
+    info,
+} from "@atomist/skill/lib/log";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
 import { gitHub } from "@atomist/skill/lib/project/github";
 import {
@@ -128,7 +131,7 @@ export async function executeAutoMerge(pr: PullRequest,
         const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
 
         try {
-            return retry(async () => {
+            const result = await retry(async () => {
                     const gpr = await api.pulls.get({
                         owner: pr.repo.owner,
                         repo: pr.repo.name,
@@ -183,6 +186,10 @@ export async function executeAutoMerge(pr: PullRequest,
                     maxTimeout: 5 * 1000,
                     randomize: true,
                 });
+
+            debug(`Pull request ${slug} auto-merge retry resulted: ${result.reason}`);
+
+            return result;
         } catch (e) {
             await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
             return {
