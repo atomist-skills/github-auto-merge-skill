@@ -1,4 +1,4 @@
-subscription AutoMergeOnCheck {
+subscription autoMergeOnCheck {
     CheckRun {
         checkSuite {
             pullRequests @required {

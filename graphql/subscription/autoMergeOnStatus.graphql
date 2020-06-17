@@ -1,4 +1,4 @@
-subscription AutoMergeOnStatus {
+subscription autoMergeOnStatus {
   Status {
     commit @required {
       pullRequests @required {

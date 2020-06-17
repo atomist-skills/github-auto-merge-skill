@@ -16,14 +16,12 @@
 
 import { EventHandler } from "@atomist/skill/lib/handler";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
-import {
-    AutoMergeConfiguration,
-    executeAutoMerge,
-} from "./autoMerge";
+import { executeAutoMerge } from "../autoMerge";
+import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnStatusSubscription } from "../typings/types";
 
 export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfiguration> = async ctx => {
-    const prs = ctx.event.Status[0].commit.pullRequests as any;
+    const prs = ctx.data.Status[0].commit.pullRequests as any;
     const results = [];
     for (const pr of prs) {
         const { owner, name } = pr.repo;
@@ -35,6 +33,9 @@ export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfi
     }
     return {
         code: results.filter(r => !!r.code).some(r => r.code !== 0) ? 1 : 0,
-        reason: results.filter(r => !!r.reason).map(r => r.reason).join("\n"),
+        reason: results
+            .filter(r => !!r.reason)
+            .map(r => r.reason)
+            .join("\n"),
     };
 };

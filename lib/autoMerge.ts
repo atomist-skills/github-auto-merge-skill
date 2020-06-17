@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 
-import {
-    EventContext,
-    HandlerStatus,
-} from "@atomist/skill/lib/handler";
-import {
-    debug,
-    info,
-} from "@atomist/skill/lib/log";
+import { EventContext, HandlerStatus } from "@atomist/skill/lib/handler";
+import { debug, info } from "@atomist/skill/lib/log";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
 import { gitHub } from "@atomist/skill/lib/project/github";
-import {
-    GitHubAppCredential,
-    GitHubCredential,
-} from "@atomist/skill/lib/secrets";
+import { GitHubAppCredential, GitHubCredential } from "@atomist/skill/lib/secrets";
 import * as retry from "p-retry";
-import {
-    CheckRunConclusion,
-    CheckRunStatus,
-    PullRequest,
-    StatusState,
-} from "../typings/types";
+import { AutoMergeConfiguration } from "./configuration";
+import { CheckRunConclusion, CheckRunStatus, PullRequest, StatusState } from "./typings/types";
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
@@ -43,171 +30,45 @@ export const AutoMergeCheckSuccessTag = `[${AutoMergeCheckSuccessLabel}]`;
 
 export const AutoMergeMethodLabel = "auto-merge-method:";
 export const AutoMergeMethods: Array<AutoMergeConfiguration["mergeMethod"]> = ["merge", "rebase", "squash"];
+export const AutoMergeMethodLabels = {
+    merge: "Auto-merge with merge commit",
+    rebase: "Auto-merge with rebase and merge",
+    squash: "Auto-merge with squash and merge",
+};
 
-export interface AutoMergeConfiguration {
-    mergeOn?: "on-approve" | "on-check-success";
-    mergeMethod?: "merge" | "rebase" | "squash";
+function isTagged(msg: string, tag: string): boolean {
+    return msg && msg.indexOf(tag) >= 0;
 }
 
-export async function executeAutoMerge(pr: PullRequest,
-                                       ctx: EventContext<any, AutoMergeConfiguration>,
-                                       credential: GitHubAppCredential | GitHubCredential): Promise<HandlerStatus> {
-    if (!pr) {
-        return {
-            visibility: "hidden",
-            code: 0,
-            reason: "Pull request missing in incoming event",
-        };
+function isPrTagged(pr: PullRequest, label: string = AutoMergeLabel, tag: string = AutoMergeTag): boolean {
+    // 0. check labels
+    if (pr.labels && pr.labels.some(l => l.name === label)) {
+        return true;
     }
 
-    const slug = `${pr?.repo?.owner}/${pr?.repo?.name}#${pr.number}`;
-    const link = `[${slug}](${pr.url})`;
-
-    if (pr.state !== "open") {
-        await ctx.audit.log(`Pull request auto-merge ignoring closed ${slug}`);
-        return {
-            visibility: "hidden",
-            code: 0,
-            reason: `Pull request auto-merge ignoring closed ${slug}`,
-        };
+    // 1. check body and title for auto merge marker
+    if (isTagged(pr.title, tag) || isTagged(pr.body, tag)) {
+        return true;
     }
 
-    if (!isPrAutoMergeEnabled(pr)) {
-        await ctx.audit.log(`Pull request auto-merge not requested for ${slug}`);
-        return {
-            visibility: "hidden",
-            code: 0,
-            reason: `Pull request ${link} not auto-merged`,
-        };
+    // 2. PR comment that contains the merger
+    if (pr.comments && pr.comments.some(c => isTagged(c.body, tag))) {
+        return true;
     }
 
-    const autoMergeOnApprove = isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
-
-    await ctx.audit.log(`Starting auto-merge processing for pull request ${slug} with labels: ${pr.labels.map(l => l.name).join(", ")}`);
-
-    // 1. at least one approved review if PR isn't set to merge on successful build
-    if (autoMergeOnApprove) {
-        if (!pr.reviews || pr.reviews.length === 0) {
-            await ctx.audit.log(`Pull request ${slug} not auto-merged because no approved reviews`);
-            return {
-                code: 0,
-                reason: `Pull request ${link} not auto-merged because no approved reviews`,
-            };
-        } else if (pr.reviews.some(r => r.state !== "approved")) {
-            await ctx.audit.log(`Pull request ${slug} not auto-merged because of unapproved reviews`);
-            return {
-                code: 0,
-                reason: `Pull request ${link} not auto-merged because of unapproved reviews`,
-            };
-        }
+    // 3. Commit message containing the auto merge marker
+    if (pr.commits && pr.commits.some(c => isTagged(c.message, tag))) {
+        return true;
     }
 
-    // 2. all status checks are successful and there is at least one check
-    if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
-        const checks = aggregateChecksAndStatus(pr);
-        if (checks?.length === 0) {
-            await ctx.audit.log(`Pull request ${slug} not auto-merged because of no successful status checks`);
-            return {
-                code: 0,
-                reason: `Pull request ${link} not auto-merged because of no successful status checks`,
-            };
-        } else if (checks?.some(s => s.state !== StatusState.Success)) {
-            await ctx.audit.log(`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`);
-            return {
-                code: 0,
-                reason: `Pull request ${link} not auto-merged because of unsuccessful or pending status checks`,
-            };
-        }
-    } else if (!autoMergeOnApprove) {
-        await ctx.audit.log(`Pull request ${slug} not auto-merged because of no status checks`);
-        return {
-            code: 0,
-            reason: `Pull request ${link} not auto-merged because of no status checks`,
-        };
-    }
-
-    if (isPrAutoMergeEnabled(pr)) {
-        await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
-        const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
-
-        try {
-            const result = await retry(async () => {
-                    const gpr = await api.pulls.get({
-                        owner: pr.repo.owner,
-                        repo: pr.repo.name,
-                        pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
-                    });
-
-                    info(`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`);
-
-                    if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
-                        throw new Error("GitHub PR mergeable state not available. Retrying...");
-                    }
-
-                    if (gpr.data.mergeable) {
-                        await api.pulls.merge({
-                            owner: pr.repo.owner,
-                            repo: pr.repo.name,
-                            pull_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
-                            merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters), // eslint-disable-line @typescript-eslint/camelcase
-                            sha: pr.head.sha,
-                            commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`, // eslint-disable-line @typescript-eslint/camelcase
-                        });
-                        await ctx.audit.log(`Pull request ${slug} auto-merged`);
-                        const body = `Pull request auto merged by Atomist.
-
-* ${reviewComment(pr)}
-* ${statusComment(pr)}`;
-
-                        await api.issues.createComment({
-                            owner: pr.repo.owner,
-                            repo: pr.repo.name,
-                            issue_number: pr.number, // eslint-disable-line @typescript-eslint/camelcase
-                            body,
-                        });
-                        await ctx.audit.log(`Pull request auto-merge comment created`);
-
-                        return {
-                            code: 0,
-                            reason: `Pull request ${link} auto-merged`,
-                        };
-                    } else {
-                        await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
-                        return {
-                            code: 0,
-                            reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
-                        };
-                    }
-                },
-                {
-                    retries: 5,
-                    factor: 3,
-                    minTimeout: 1 * 500,
-                    maxTimeout: 5 * 1000,
-                    randomize: true,
-                });
-
-            debug(`Pull request ${slug} auto-merge retry resulted: ${result.reason}`);
-
-            return result;
-        } catch (e) {
-            await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
-            return {
-                code: 0,
-                reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
-            };
-        }
-    }
-    return {
-        visibility: "hidden",
-        code: 0,
-        reason: `Pull request ${link} not auto-merged`,
-    };
+    return false;
 }
 
 export function isPrAutoMergeEnabled(pr: PullRequest): boolean {
-    return isPrTagged(pr, AutoMergeLabel, AutoMergeTag)
-        || isPrTagged(pr, AutoMergeCheckSuccessLabel, AutoMergeCheckSuccessTag);
+    return (
+        isPrTagged(pr, AutoMergeLabel, AutoMergeTag) ||
+        isPrTagged(pr, AutoMergeCheckSuccessLabel, AutoMergeCheckSuccessTag)
+    );
 }
 
 export interface Check {
@@ -270,32 +131,6 @@ function aggregateChecksAndStatus(pr: PullRequest): Check[] {
     return allChecks;
 }
 
-function isPrTagged(pr: PullRequest,
-                    label: string = AutoMergeLabel,
-                    tag: string = AutoMergeTag): boolean {
-    // 0. check labels
-    if (pr.labels && pr.labels.some(l => l.name === label)) {
-        return true;
-    }
-
-    // 1. check body and title for auto merge marker
-    if (isTagged(pr.title, tag) || isTagged(pr.body, tag)) {
-        return true;
-    }
-
-    // 2. PR comment that contains the merger
-    if (pr.comments && pr.comments.some(c => isTagged(c.body, tag))) {
-        return true;
-    }
-
-    // 3. Commit message containing the auto merge marker
-    if (pr.commits && pr.commits.some(c => isTagged(c.message, tag))) {
-        return true;
-    }
-
-    return false;
-}
-
 function mergeMethod(pr: PullRequest, configuration: AutoMergeConfiguration): "merge" | "rebase" | "squash" {
     const methodLabel = pr.labels.find(l => l.name.startsWith(AutoMergeMethodLabel));
     if (methodLabel && methodLabel.name.includes(":")) {
@@ -307,14 +142,11 @@ function mergeMethod(pr: PullRequest, configuration: AutoMergeConfiguration): "m
     return configuration?.mergeMethod || "merge";
 }
 
-function isTagged(msg: string, tag: string): boolean {
-    return msg && msg.indexOf(tag) >= 0;
-}
-
 function reviewComment(pr: PullRequest): string {
     if (pr.reviews && pr.reviews.length > 0) {
-        return `${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews.map(
-            r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}`;
+        return `${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews
+            .map(r => `${r.by.map(b => `@${b.login}`).join(", ")}`)
+            .join(", ")}`;
     } else {
         return "No reviews";
     }
@@ -327,4 +159,170 @@ function statusComment(pr: PullRequest): string {
     } else {
         return "No checks";
     }
+}
+
+export async function executeAutoMerge(
+    pr: PullRequest,
+    ctx: EventContext<any, AutoMergeConfiguration>,
+    credential: GitHubAppCredential | GitHubCredential,
+): Promise<HandlerStatus> {
+    if (!pr) {
+        return {
+            visibility: "hidden",
+            code: 0,
+            reason: "Pull request missing in incoming event",
+        };
+    }
+
+    const slug = `${pr?.repo?.owner}/${pr?.repo?.name}#${pr.number}`;
+    const link = `[${slug}](${pr.url})`;
+
+    if (pr.state !== "open") {
+        await ctx.audit.log(`Pull request auto-merge ignoring closed ${slug}`);
+        return {
+            visibility: "hidden",
+            code: 0,
+            reason: `Pull request auto-merge ignoring closed ${slug}`,
+        };
+    }
+
+    if (!isPrAutoMergeEnabled(pr)) {
+        await ctx.audit.log(`Pull request auto-merge not requested for ${slug}`);
+        return {
+            visibility: "hidden",
+            code: 0,
+            reason: `Pull request ${link} not auto-merged`,
+        };
+    }
+
+    const autoMergeOnApprove = isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
+
+    await ctx.audit.log(
+        `Starting auto-merge processing for pull request ${slug} with labels: ${pr.labels.map(l => l.name).join(", ")}`,
+    );
+
+    // 1. at least one approved review if PR isn't set to merge on successful build
+    if (autoMergeOnApprove) {
+        if (!pr.reviews || pr.reviews.length === 0) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because no approved reviews`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because no approved reviews`,
+            };
+        } else if (pr.reviews.some(r => r.state !== "approved")) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because of unapproved reviews`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because of unapproved reviews`,
+            };
+        }
+    }
+
+    // 2. all status checks are successful and there is at least one check
+    if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
+        const checks = aggregateChecksAndStatus(pr);
+        if (checks?.length === 0) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because of no successful status checks`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because of no successful status checks`,
+            };
+        } else if (checks?.some(s => s.state !== StatusState.Success)) {
+            await ctx.audit.log(
+                `Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`,
+            );
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because of unsuccessful or pending status checks`,
+            };
+        }
+    } else if (!autoMergeOnApprove) {
+        await ctx.audit.log(`Pull request ${slug} not auto-merged because of no status checks`);
+        return {
+            code: 0,
+            reason: `Pull request ${link} not auto-merged because of no status checks`,
+        };
+    }
+
+    if (isPrAutoMergeEnabled(pr)) {
+        await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
+        const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
+
+        try {
+            const result = await retry(
+                async () => {
+                    const gpr = await api.pulls.get({
+                        owner: pr.repo.owner,
+                        repo: pr.repo.name,
+                        pull_number: pr.number,
+                    });
+
+                    info(`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`);
+
+                    if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
+                        throw new Error("GitHub PR mergeable state not available. Retrying...");
+                    }
+
+                    if (gpr.data.mergeable) {
+                        await api.pulls.merge({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            pull_number: pr.number,
+                            merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters),
+                            sha: pr.head.sha,
+                            commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
+                        });
+                        await ctx.audit.log(`Pull request ${slug} auto-merged`);
+                        const body = `Pull request auto merged by Atomist.
+
+* ${reviewComment(pr)}
+* ${statusComment(pr)}`;
+
+                        await api.issues.createComment({
+                            owner: pr.repo.owner,
+                            repo: pr.repo.name,
+                            issue_number: pr.number,
+                            body,
+                        });
+                        await ctx.audit.log(`Pull request auto-merge comment created`);
+
+                        return {
+                            code: 0,
+                            reason: `Pull request ${link} auto-merged`,
+                        };
+                    } else {
+                        await ctx.audit.log(
+                            `Pull request ${slug} not auto-merged because it can't be merged at this time`,
+                        );
+                        return {
+                            code: 0,
+                            reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
+                        };
+                    }
+                },
+                {
+                    retries: 5,
+                    factor: 3,
+                    minTimeout: 1 * 500,
+                    maxTimeout: 5 * 1000,
+                    randomize: true,
+                },
+            );
+
+            debug(`Pull request ${slug} auto-merge retry resulted: ${result.reason}`);
+
+            return result;
+        } catch (e) {
+            await ctx.audit.log(`Pull request ${slug} not auto-merged because it can't be merged at this time`);
+            return {
+                code: 0,
+                reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
+            };
+        }
+    }
+    return {
+        visibility: "hidden",
+        code: 0,
+        reason: `Pull request ${link} not auto-merged`,
+    };
 }

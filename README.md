@@ -1,6 +1,27 @@
 # `atomist/github-auto-merge-skill`
 
+<!---atomist-skill-description:start--->
+
 Automatically merge pull requests that pass all checks required to merge.
+
+<!---atomist-skill-description:end--->
+
+---
+
+<!---atomist-skill-long_description:start--->
+
+Automatically merge pull requests on GitHub based on assigned labels. 
+Required reviews and checks settings configured in the repository on
+GitHub are used as the rules for auto merging.
+    
+This approach makes is easy for pull request authors or anyone with 
+permissions in the repository to flag a pull request for auto-merge
+simply by adding a label. The merge option can also be set with a
+label on the pull request.
+
+<!---atomist-skill-long_description:end--->
+
+---
 
 <!---atomist-skill-readme:start--->
  
@@ -25,7 +46,7 @@ the pull request.
 Connect and configure these integrations:
 
 1. **GitHub**
-2. **Slack**
+1. **Slack**
 
 The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected. We recommend connecting the
 **Slack** integration.
@@ -46,7 +67,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
     the auto-merge policy to be met. This skill supports [commit status checks](https://developer.github.com/v3/repos/statuses/);
     and [GitHub Checks API](https://developer.github.com/v3/checks/).
 
-2. **Specify the default merge method**
+1. **Specify the default merge method**
 
     ![Default auto-merge method](docs/images/default-auto-merge-method.png)
 
@@ -56,7 +77,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
     - **Squash and merge**
     - **Rebase and merge**
 
-3. **Determine repository scope**
+1. **Determine repository scope**
 
     ![Repository filter](docs/images/repo-filter.png)
 
@@ -69,7 +90,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
 1. **Configure skill, set default auto-merge policy and method** 
 
-2. **For every new pull request raised, this skill will automatically apply the following labels when relevant:**
+1. **For every new pull request raised, this skill will automatically apply the following labels when relevant:**
 
     **Auto-merge policy labels**
 
@@ -82,7 +103,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
     - `auto-merge-method:rebase`
     - `auto-merge-method:squash`
 
-3. **Enjoy not having to ask if this pull request is ready to merge!**
+1. **Enjoy not having to ask if this pull request is ready to merge!**
 
     Note: the labels are automatically added to and removed from the repository depending on its settings. 
     For example, disabling the *rebase* merge method in the repository settings on GitHub will automatically remove 
