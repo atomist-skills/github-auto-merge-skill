@@ -1,6 +1,6 @@
 {
   "name": "@atomist/github-auto-merge-skill",
-  "description": "Auto-merge pull request",
+  "description": "Auto-merge Pull Request",
   "author": {
     "name": "Atomist",
     "email": "oss@atommist.com"
