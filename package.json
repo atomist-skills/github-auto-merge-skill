@@ -76,9 +76,5 @@
     "skill:bundle": "atm-skill bundle --minify --source-map",
     "skill:package": "atm-skill package",
     "skill:register": "atm-skill register"
-  },
-  "engines": {
-    "node": ">=8.2.0",
-    "npm": ">=5.0.0"
   }
 }
