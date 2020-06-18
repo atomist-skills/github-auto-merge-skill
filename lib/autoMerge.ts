@@ -17,7 +17,7 @@
 import { EventContext, HandlerStatus } from "@atomist/skill/lib/handler";
 import { debug, info } from "@atomist/skill/lib/log";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
-import { gitHub } from "@atomist/skill/lib/project/github";
+import { formatMarkers, gitHub } from "@atomist/skill/lib/project/github";
 import { GitHubAppCredential, GitHubCredential } from "@atomist/skill/lib/secrets";
 import * as retry from "p-retry";
 import { AutoMergeConfiguration } from "./configuration";
@@ -162,6 +162,30 @@ function statusComment(pr: PullRequest): string {
     }
 }
 
+function commitDetails(method: string, pr: PullRequest): { title: string; message: string } {
+    let title;
+    let message = "";
+    switch (method) {
+        case "merge":
+            title = `Auto-merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`;
+            message = pr.title;
+            break;
+        case "squash":
+            title = `${pr.title} (#${pr.number})`;
+            message = `${pr.commits.map(c => ` * ${c.message}`).join("\n")}`;
+            break;
+        case "rebase":
+            break;
+    }
+    message = `${message}
+    
+Pull request auto merged:
+
+* ${reviewComment(pr)}
+* ${statusComment(pr)}`;
+    return { title, message };
+}
+
 export async function executeAutoMerge(
     pr: PullRequest,
     ctx: EventContext<any, AutoMergeConfiguration>,
@@ -278,19 +302,21 @@ export async function executeAutoMerge(
 
                     if (gpr.data.mergeable) {
                         const method = mergeMethod(pr, ctx.configuration[0]?.parameters);
+                        const details = commitDetails(method, pr);
                         await api.pulls.merge({
                             owner: pr.repo.owner,
                             repo: pr.repo.name,
                             pull_number: pr.number,
                             merge_method: method,
-                            sha: pr.head.sha,
-                            commit_title: method !== "merge" ? `Auto merge pull request #${pr.number}` : undefined,
+                            commit_title: details.title,
+                            commit_message: details.message,
                         });
                         await ctx.audit.log(`Pull request ${slug} auto-merged`);
-                        const body = `Pull request auto merged by Atomist.
+                        const body = `Pull request auto merged:
 
 * ${reviewComment(pr)}
-* ${statusComment(pr)}`;
+* ${statusComment(pr)}
+${formatMarkers(ctx)}`;
 
                         await api.issues.createComment({
                             owner: pr.repo.owner,
