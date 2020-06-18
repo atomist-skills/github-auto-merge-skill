@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { EventHandler, gitHubAppToken } from "@atomist/skill";
 import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnStatusSubscription } from "../typings/types";

@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-import { EventContext, HandlerStatus } from "@atomist/skill/lib/handler";
-import { debug, info } from "@atomist/skill/lib/log";
-import { gitHubComRepository } from "@atomist/skill/lib/project";
-import { gitHub } from "@atomist/skill/lib/project/github";
-import { GitHubAppCredential, GitHubCredential } from "@atomist/skill/lib/secrets";
+import {
+    debug,
+    EventContext,
+    GitHubAppCredential,
+    gitHubComRepository,
+    GitHubCredential,
+    HandlerStatus,
+    info,
+    github,
+} from "@atomist/skill";
 import * as retry from "p-retry";
 import { AutoMergeConfiguration } from "./configuration";
 import { CheckRunConclusion, CheckRunStatus, PullRequest, StatusState } from "./typings/types";
@@ -246,7 +251,7 @@ export async function executeAutoMerge(
 
     if (isPrAutoMergeEnabled(pr)) {
         await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
-        const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
+        const api = github.api(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
 
         try {
             const result = await retry(

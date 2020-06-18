@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { gitHubResourceProvider, slackResourceProvider } from "@atomist/skill/lib/resource_providers";
-import { ParameterType, repoFilter, skill } from "@atomist/skill/lib/skill";
+import { gitHubResourceProvider, ParameterType, repoFilter, skill, slackResourceProvider } from "@atomist/skill";
 import { AutoMergeConfiguration } from "./lib/configuration";
 
 export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
