@@ -71,5 +71,5 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 
     subscriptions: [
         "file://graphql/subscription/*.graphql"
-    ],
+    ], 
 });
