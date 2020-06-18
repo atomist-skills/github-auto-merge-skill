@@ -21,7 +21,7 @@ import { gitHub } from "@atomist/skill/lib/project/github";
 import { GitHubAppCredential, GitHubCredential } from "@atomist/skill/lib/secrets";
 import * as retry from "p-retry";
 import { AutoMergeConfiguration } from "./configuration";
-import { CheckRunConclusion, CheckRunStatus, PullRequest, StatusState } from "./typings/types";
+import { CheckRunConclusion, CheckRunStatus, PullRequest, ReviewState, StatusState } from "./typings/types";
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
@@ -143,10 +143,11 @@ function mergeMethod(pr: PullRequest, configuration: AutoMergeConfiguration): "m
 }
 
 function reviewComment(pr: PullRequest): string {
-    if (pr.reviews && pr.reviews.length > 0) {
-        return `${pr.reviews.length} approved ${pr.reviews.length > 1 ? "reviews" : "review"} by ${pr.reviews
-            .map(r => `${r.by.map(b => `@${b.login}`).join(", ")}`)
-            .join(", ")}`;
+    const approvedReviews = pr.reviews?.filter(p => p.state === ReviewState.Approved);
+    if (approvedReviews.length > 0) {
+        return `${approvedReviews.length} approved ${
+            approvedReviews.length > 1 ? "reviews" : "review"
+        } by ${approvedReviews.map(r => `${r.by.map(b => `@${b.login}`).join(", ")}`).join(", ")}`;
     } else {
         return "No reviews";
     }
