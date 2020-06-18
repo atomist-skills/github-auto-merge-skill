@@ -186,6 +186,19 @@ export async function executeAutoMerge(
         };
     }
 
+    const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
+
+    // We filter the labels to limit executions, we have to get all labels back in
+    // Remove once https://github.com/atomisthq/automation-api/issues/930 is fixed
+    const ghPr = (
+        await api.pulls.get({
+            owner: pr.repo.owner,
+            repo: pr.repo.name,
+            pull_number: pr.number,
+        })
+    ).data;
+    pr.labels = ghPr?.labels?.map(l => ({ name: l.name })) || pr.labels;
+
     if (!isPrAutoMergeEnabled(pr)) {
         await ctx.audit.log(`Pull request auto-merge not requested for ${slug}`);
         return {
@@ -246,7 +259,6 @@ export async function executeAutoMerge(
 
     if (isPrAutoMergeEnabled(pr)) {
         await ctx.audit.log(`Pull request auto-merge enabled for ${slug}. Attempting to merge...`);
-        const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
 
         try {
             const result = await retry(
