@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.5...HEAD)
 
+### Changed
+
+-   Improve commit title and message for merge commits. [8bfa7e3](https://github.com/atomist-skills/github-auto-merge-skill/commit/8bfa7e3e9661478623cd0be02170d6ba0bf5f1bd)
+
 ## [2.0.5](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.4...2.0.5) - 2020-06-18
 
 ### Changed
