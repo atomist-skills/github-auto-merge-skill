@@ -277,13 +277,17 @@ export async function executeAutoMerge(
                     }
 
                     if (gpr.data.mergeable) {
+                        const method = mergeMethod(pr, ctx.configuration[0]?.parameters);
                         await api.pulls.merge({
                             owner: pr.repo.owner,
                             repo: pr.repo.name,
                             pull_number: pr.number,
-                            merge_method: mergeMethod(pr, ctx.configuration[0]?.parameters),
+                            merge_method: method,
                             sha: pr.head.sha,
-                            commit_title: `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`,
+                            commit_title:
+                                method !== "merge"
+                                    ? `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`
+                                    : undefined,
                         });
                         await ctx.audit.log(`Pull request ${slug} auto-merged`);
                         const body = `Pull request auto merged by Atomist.
