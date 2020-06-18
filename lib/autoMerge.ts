@@ -284,10 +284,7 @@ export async function executeAutoMerge(
                             pull_number: pr.number,
                             merge_method: method,
                             sha: pr.head.sha,
-                            commit_title:
-                                method !== "merge"
-                                    ? `Auto merge pull request #${pr.number} from ${pr.repo.owner}/${pr.repo.name}`
-                                    : undefined,
+                            commit_title: method !== "merge" ? `Auto merge pull request #${pr.number}` : undefined,
                         });
                         await ctx.audit.log(`Pull request ${slug} auto-merged`);
                         const body = `Pull request auto merged by Atomist.
