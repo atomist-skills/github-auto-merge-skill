@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import { EventContext, HandlerStatus } from "@atomist/skill/lib/handler";
-import { debug, info } from "@atomist/skill/lib/log";
-import { gitHubComRepository } from "@atomist/skill/lib/project";
-import { formatMarkers, gitHub } from "@atomist/skill/lib/project/github";
-import { GitHubAppCredential, GitHubCredential } from "@atomist/skill/lib/secrets";
+import { EventContext, github, HandlerStatus, log, repository, secret } from "@atomist/skill";
 import * as retry from "p-retry";
 import { AutoMergeConfiguration } from "./configuration";
 import { CheckRunConclusion, CheckRunStatus, PullRequest, ReviewState, StatusState } from "./typings/types";
@@ -189,7 +185,7 @@ Pull request auto merged:
 export async function executeAutoMerge(
     pr: PullRequest,
     ctx: EventContext<any, AutoMergeConfiguration>,
-    credential: GitHubAppCredential | GitHubCredential,
+    credential: secret.GitHubAppCredential | secret.GitHubCredential,
 ): Promise<HandlerStatus> {
     if (!pr) {
         return {
@@ -211,7 +207,7 @@ export async function executeAutoMerge(
         };
     }
 
-    const api = gitHub(gitHubComRepository({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
+    const api = github.api(repository.gitHub({ owner: pr.repo.owner, repo: pr.repo.name, credential }));
 
     // We filter the labels to limit executions, we have to get all labels back in
     // Remove once https://github.com/atomisthq/automation-api/issues/930 is fixed
@@ -294,7 +290,7 @@ export async function executeAutoMerge(
                         pull_number: pr.number,
                     });
 
-                    info(`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`);
+                    log.info(`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`);
 
                     if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
                         throw new Error("GitHub PR mergeable state not available. Retrying...");
@@ -316,7 +312,7 @@ export async function executeAutoMerge(
 
 * ${reviewComment(pr)}
 * ${statusComment(pr)}
-${formatMarkers(ctx)}`;
+${github.formatMarkers(ctx)}`;
 
                         await api.issues.createComment({
                             owner: pr.repo.owner,
@@ -349,7 +345,7 @@ ${formatMarkers(ctx)}`;
                 },
             );
 
-            debug(`Pull request ${slug} auto-merge retry resulted: ${result.reason}`);
+            log.debug(`Pull request ${slug} auto-merge retry resulted: ${result.reason}`);
 
             return result;
         } catch (e) {

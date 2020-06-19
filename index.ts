@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { gitHubResourceProvider, slackResourceProvider } from "@atomist/skill/lib/resource_providers";
-import { ParameterType, repoFilter, skill } from "@atomist/skill/lib/skill";
+import { parameter, ParameterType, resourceProvider, skill } from "@atomist/skill";
 import { AutoMergeConfiguration } from "./lib/configuration";
 
 export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
@@ -25,8 +24,8 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
     },
 
     resourceProviders: {
-        github: gitHubResourceProvider({ minRequired: 1 }),
-        slack: slackResourceProvider({ minRequired: 0 }),
+        github: resourceProvider.gitHub({ minRequired: 1 }),
+        slack: resourceProvider.slack({ minRequired: 0 }),
     },
 
     parameters: {
@@ -66,7 +65,7 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
             ],
             required: false,
         },
-        repos: repoFilter({ required: false }),
+        repos: parameter.repoFilter({ required: false }),
     },
 
     subscriptions: ["file://graphql/subscription/*.graphql"],
