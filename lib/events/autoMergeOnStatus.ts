@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { EventHandler, secret } from "@atomist/skill";
 import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnStatusSubscription } from "../typings/types";
@@ -25,7 +24,7 @@ export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfi
     const results = [];
     for (const pr of prs) {
         const { owner, name } = pr.repo;
-        const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+        const credentials = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
         const result = await executeAutoMerge(pr, ctx, credentials);
         if (result) {
             results.push(result);

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { EventHandler, secret } from "@atomist/skill";
+import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnBuildSubscription } from "../typings/types";
-import { executeAutoMerge } from "../autoMerge";
 
 export const handler: EventHandler<AutoMergeOnBuildSubscription, AutoMergeConfiguration> = async ctx => {
     const pr = ctx.data.Build[0].pullRequest as any;
     const { owner, name } = pr.repo;
-    const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+    const credentials = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
     return executeAutoMerge(pr, ctx, credentials);
 };

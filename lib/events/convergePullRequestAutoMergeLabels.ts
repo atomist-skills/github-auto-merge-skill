@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { gitHubComRepository } from "@atomist/skill/lib/project";
-import { convergeLabel, gitHub, removeLabel } from "@atomist/skill/lib/project/github";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { EventHandler, github, repository, secret } from "@atomist/skill";
 import {
     AutoMergeCheckSuccessLabel,
     AutoMergeLabel,
@@ -56,24 +53,28 @@ export const handler: EventHandler<
 
     const repo = pr.repo;
     const { owner, name } = repo;
-    const credential = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+    const credential = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
 
-    const id = gitHubComRepository({ owner, repo: name, credential });
-    const api = gitHub(id);
+    const id = repository.gitHub({ owner, repo: name, credential });
+    const api = github.api(id);
     const repoDetails = (await api.repos.get({ owner, repo: name })).data;
 
     await ctx.audit.log(`Converging auto-merge labels based on repository's merge configuration`);
 
-    await convergeLabel(id, AutoMergeLabel, "277D7D", "Auto-merge on review approvals");
-    await convergeLabel(id, AutoMergeCheckSuccessLabel, "277D7D", "Auto-merge on successful checks");
+    await github.convergeLabel(id, AutoMergeLabel, "277D7D", "Auto-merge on review approvals");
+    await github.convergeLabel(id, AutoMergeCheckSuccessLabel, "277D7D", "Auto-merge on successful checks");
 
     for (const label of AutoMergeMethods) {
         if (mergeMethodSettings(repoDetails)[label]) {
             await ctx.audit.log(`Adding ${AutoMergeMethodLabel}${label} label to repository`);
-            await convergeLabel(id, `${AutoMergeMethodLabel}${label}`, "1C334B", AutoMergeMethodLabels[label]);
+            await github.convergeLabel(id, `${AutoMergeMethodLabel}${label}`, "1C334B", AutoMergeMethodLabels[label]);
         } else {
             await ctx.audit.log(`Removing ${AutoMergeMethodLabel}${label} label from repository`);
-            await removeLabel(id, `${AutoMergeMethodLabel}${label}`);
+            await api.issues.deleteLabel({
+                owner: id.owner,
+                repo: id.repo,
+                name: `${AutoMergeMethodLabel}${label}`,
+            });
         }
     }
 
