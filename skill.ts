@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-import { parameter, ParameterType, resourceProvider, skill } from "@atomist/skill";
+import { Category, parameter, ParameterType, resourceProvider, skill } from "@atomist/skill";
 import { AutoMergeConfiguration } from "./lib/configuration";
 
 export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
+    name: "github-auto-merge-skill",
+    namespace: "atomsit",
+    description: "Auto-merge Pull Request",
+    author: "Atomist",
+    categories: [Category.CodeReview, Category.DevEx],
+    homepageUrl: "https://github.com/atomist-skills/github-auto-merge-skill",
+    repositoryUrl: "https://github.com/atomist-skills/github-auto-merge-skill.git",
+    iconUrl: "file://docs/images/icon.svg",
+    license: "Apache-2.0",
+
     runtime: {
         memory: 1024,
         timeout: 540,
