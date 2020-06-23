@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Include link to skill execution in PR comment. [325af7e](https://github.com/atomist-skills/github-auto-merge-skill/commit/325af7ea0ea32aeff9932e89ee6c6fbe8364e655)
 
+### Changed
+
+-   Move to skill.ts. [7e24553](https://github.com/atomist-skills/github-auto-merge-skill/commit/7e2455346fe5c7203d4202d35aec3b374c3722b0)
+
 ## [2.0.6](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.5...2.0.6) - 2020-06-19
 
 ### Changed
