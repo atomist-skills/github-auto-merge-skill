@@ -2,7 +2,7 @@
 
 <!---atomist-skill-description:start--->
 
-Automatically merge pull requests that pass all checks required to merge
+Merge pull requests that pass all checks required to merge
 
 <!---atomist-skill-description:end--->
 
