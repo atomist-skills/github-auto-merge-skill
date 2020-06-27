@@ -20,7 +20,7 @@ import { AutoMergeConfiguration } from "./lib/configuration";
 export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
     name: "github-auto-merge-skill",
     namespace: "atomist",
-    displayName: "Auto-merge Pull Request",
+    displayName: "Auto-Merge Pull Request",
     author: "Atomist",
     categories: [Category.CodeReview, Category.DevEx],
     homepageUrl: "https://github.com/atomist-skills/github-auto-merge-skill",
