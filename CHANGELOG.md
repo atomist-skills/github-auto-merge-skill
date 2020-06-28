@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   Update description. [c57f1f1](https://github.com/atomist-skills/github-auto-merge-skill/commit/c57f1f155c65f3119ba2a3023af928a9b5004480)
+-   Update displayName. [af564fa](https://github.com/atomist-skills/github-auto-merge-skill/commit/af564fa9c845c3f9c70d9097562cb302cd792fe5)
 
 ## [2.0.8](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.7...2.0.8) - 2020-06-23
 
