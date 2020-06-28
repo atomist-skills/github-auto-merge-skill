@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Add different chat providers. [769f535](https://github.com/atomist-skills/github-auto-merge-skill/commit/769f53546f3ea760c92bbb73f518a912a9cfbd04)
 
+### Changed
+
+-   Update description. [c57f1f1](https://github.com/atomist-skills/github-auto-merge-skill/commit/c57f1f155c65f3119ba2a3023af928a9b5004480)
+
 ## [2.0.8](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.7...2.0.8) - 2020-06-23
 
 ### Fixed
