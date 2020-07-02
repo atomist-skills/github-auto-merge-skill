@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.9...HEAD)
 
+### Changed
+
+-   Move to plural in description. [044acd7](https://github.com/atomist-skills/github-auto-merge-skill/commit/044acd751dccc3c7333acdc907b71b20710ac08c)
+
 ## [2.0.9](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.8...2.0.9) - 2020-06-29
 
 ### Added
