@@ -13,7 +13,7 @@ Merge pull requests that pass all checks required to merge
 Automatically merge pull requests on GitHub based on assigned labels.
 Required reviews and checks settings configured in the repository on
 GitHub are used as the rules for auto merging.
-  
+
 This approach makes is easy for pull request authors or anyone with
 permissions in the repository to flag a pull request for auto-merge
 simply by adding a label. The merge option can also be set with a
