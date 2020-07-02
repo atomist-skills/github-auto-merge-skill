@@ -1,19 +1,19 @@
 subscription convergePullRequestAutoMergeLabels {
-    PullRequest {
-        url
-        number
-        action
-        repo {
-            owner
-            name
-            org {
-                provider {
-                    apiUrl
-                }
-            }
+  PullRequest {
+    url
+    number
+    action
+    repo {
+      owner
+      name
+      org {
+        provider {
+          apiUrl
         }
-        labels {
-            name
-        }
+      }
     }
+    labels {
+      name
+    }
+  }
 }
