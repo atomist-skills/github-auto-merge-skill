@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.10...HEAD)
 
+### Changed
+
+-   Hide markers in PR comments. [673d428](https://github.com/atomist-skills/github-auto-merge-skill/commit/673d428b116b3f5614fcb3c88b9649afd0e2c6bb)
+
 ## [2.0.10](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.9...2.0.10) - 2020-07-02
 
 ### Changed
