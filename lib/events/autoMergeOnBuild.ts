@@ -19,9 +19,14 @@ import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnBuildSubscription } from "../typings/types";
 
-export const handler: EventHandler<AutoMergeOnBuildSubscription, AutoMergeConfiguration> = async ctx => {
-    const pr = ctx.data.Build[0].pullRequest as any;
-    const { owner, name } = pr.repo;
-    const credentials = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
-    return executeAutoMerge(pr, ctx, credentials);
+export const handler: EventHandler<
+	AutoMergeOnBuildSubscription,
+	AutoMergeConfiguration
+> = async ctx => {
+	const pr = ctx.data.Build[0].pullRequest as any;
+	const { owner, name } = pr.repo;
+	const credentials = await ctx.credential.resolve(
+		secret.gitHubAppToken({ owner, repo: name }),
+	);
+	return executeAutoMerge(pr, ctx, credentials);
 };
