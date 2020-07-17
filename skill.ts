@@ -14,69 +14,78 @@
  * limitations under the License.
  */
 
-import { Category, parameter, ParameterType, resourceProvider, skill } from "@atomist/skill";
+import {
+	Category,
+	parameter,
+	ParameterType,
+	resourceProvider,
+	skill,
+} from "@atomist/skill";
 import { AutoMergeConfiguration } from "./lib/configuration";
 
 export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
-    name: "github-auto-merge-skill",
-    namespace: "atomist",
-    displayName: "Auto-Merge Pull Requests",
-    author: "Atomist",
-    categories: [Category.CodeReview, Category.DevEx],
-    homepageUrl: "https://github.com/atomist-skills/github-auto-merge-skill",
-    repositoryUrl: "https://github.com/atomist-skills/github-auto-merge-skill.git",
-    iconUrl: "file://docs/images/icon.svg",
-    license: "Apache-2.0",
+	name: "github-auto-merge-skill",
+	namespace: "atomist",
+	displayName: "Auto-Merge Pull Requests",
+	author: "Atomist",
+	categories: [Category.CodeReview, Category.DevEx],
+	homepageUrl: "https://github.com/atomist-skills/github-auto-merge-skill",
+	repositoryUrl:
+		"https://github.com/atomist-skills/github-auto-merge-skill.git",
+	iconUrl: "file://docs/images/icon.svg",
+	license: "Apache-2.0",
 
-    runtime: {
-        memory: 1024,
-        timeout: 540,
-    },
+	runtime: {
+		memory: 1024,
+		timeout: 540,
+	},
 
-    resourceProviders: {
-        github: resourceProvider.gitHub({ minRequired: 1 }),
-        slack: resourceProvider.chat({ minRequired: 0 }),
-    },
+	resourceProviders: {
+		github: resourceProvider.gitHub({ minRequired: 1 }),
+		slack: resourceProvider.chat({ minRequired: 0 }),
+	},
 
-    parameters: {
-        mergeOn: {
-            type: ParameterType.SingleChoice,
-            displayName: "Default auto-merge policy",
-            description: "Select the default policy to use when auto-merging pull requests",
-            options: [
-                {
-                    text: "On successful reviews and status checks",
-                    value: "on-approve",
-                },
-                {
-                    text: "On successful status checks",
-                    value: "on-check-success",
-                },
-            ],
-            required: false,
-        },
-        mergeMethod: {
-            type: ParameterType.SingleChoice,
-            displayName: "Default auto-merge method",
-            description: "Select the default merge method to use when auto-merging pull requests",
-            options: [
-                {
-                    text: "Merge commit",
-                    value: "merge",
-                },
-                {
-                    text: "Squash and merge",
-                    value: "squash",
-                },
-                {
-                    text: "Rebase and merge",
-                    value: "rebase",
-                },
-            ],
-            required: false,
-        },
-        repos: parameter.repoFilter({ required: false }),
-    },
+	parameters: {
+		mergeOn: {
+			type: ParameterType.SingleChoice,
+			displayName: "Default auto-merge policy",
+			description:
+				"Select the default policy to use when auto-merging pull requests",
+			options: [
+				{
+					text: "On successful reviews and status checks",
+					value: "on-approve",
+				},
+				{
+					text: "On successful status checks",
+					value: "on-check-success",
+				},
+			],
+			required: false,
+		},
+		mergeMethod: {
+			type: ParameterType.SingleChoice,
+			displayName: "Default auto-merge method",
+			description:
+				"Select the default merge method to use when auto-merging pull requests",
+			options: [
+				{
+					text: "Merge commit",
+					value: "merge",
+				},
+				{
+					text: "Squash and merge",
+					value: "squash",
+				},
+				{
+					text: "Rebase and merge",
+					value: "rebase",
+				},
+			],
+			required: false,
+		},
+		repos: parameter.repoFilter({ required: false }),
+	},
 
-    subscriptions: ["file://graphql/subscription/*.graphql"],
+	subscriptions: ["file://graphql/subscription/*.graphql"],
 });

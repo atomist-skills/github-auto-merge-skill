@@ -19,22 +19,27 @@ import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnStatusSubscription } from "../typings/types";
 
-export const handler: EventHandler<AutoMergeOnStatusSubscription, AutoMergeConfiguration> = async ctx => {
-    const prs = ctx.data.Status[0].commit.pullRequests as any;
-    const results = [];
-    for (const pr of prs) {
-        const { owner, name } = pr.repo;
-        const credentials = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
-        const result = await executeAutoMerge(pr, ctx, credentials);
-        if (result) {
-            results.push(result);
-        }
-    }
-    return {
-        code: results.filter(r => !!r.code).some(r => r.code !== 0) ? 1 : 0,
-        reason: results
-            .filter(r => !!r.reason)
-            .map(r => r.reason)
-            .join("\n"),
-    };
+export const handler: EventHandler<
+	AutoMergeOnStatusSubscription,
+	AutoMergeConfiguration
+> = async ctx => {
+	const prs = ctx.data.Status[0].commit.pullRequests as any;
+	const results = [];
+	for (const pr of prs) {
+		const { owner, name } = pr.repo;
+		const credentials = await ctx.credential.resolve(
+			secret.gitHubAppToken({ owner, repo: name }),
+		);
+		const result = await executeAutoMerge(pr, ctx, credentials);
+		if (result) {
+			results.push(result);
+		}
+	}
+	return {
+		code: results.filter(r => !!r.code).some(r => r.code !== 0) ? 1 : 0,
+		reason: results
+			.filter(r => !!r.reason)
+			.map(r => r.reason)
+			.join("\n"),
+	};
 };
