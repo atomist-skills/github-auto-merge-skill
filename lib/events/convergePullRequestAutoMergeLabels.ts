@@ -113,7 +113,9 @@ export const handler: EventHandler<
 	const labels = [];
 	if (!pr.labels.some(l => l.name.startsWith("auto-merge:"))) {
 		labels.push(
-			`auto-merge:${ctx.configuration[0]?.parameters?.mergeOn || "on-approve"}`,
+			`auto-merge:${
+				ctx.configuration[0]?.parameters?.mergeOn || "on-approve"
+			}`,
 		);
 	}
 	if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
