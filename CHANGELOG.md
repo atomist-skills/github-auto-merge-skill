@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.11...HEAD)
+## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.12...HEAD)
+
+## [2.0.12](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.11...2.0.12) - 2020-07-28
 
 ### Changed
 
