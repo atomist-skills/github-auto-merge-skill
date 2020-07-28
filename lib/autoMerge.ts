@@ -243,7 +243,11 @@ export async function executeAutoMerge(
 	}
 
 	const api = github.api(
-		repository.gitHub({ owner: pr.repo.owner, repo: pr.repo.name, credential }),
+		repository.gitHub({
+			owner: pr.repo.owner,
+			repo: pr.repo.name,
+			credential,
+		}),
 	);
 
 	// We filter the labels to limit executions, we have to get all labels back in
@@ -258,7 +262,9 @@ export async function executeAutoMerge(
 	pr.labels = ghPr?.labels?.map(l => ({ name: l.name })) || pr.labels;
 
 	if (!isPrAutoMergeEnabled(pr)) {
-		await ctx.audit.log(`Pull request auto-merge not requested for ${slug}`);
+		await ctx.audit.log(
+			`Pull request auto-merge not requested for ${slug}`,
+		);
 		return {
 			visibility: "hidden",
 			code: 0,
@@ -343,14 +349,20 @@ export async function executeAutoMerge(
 						`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`,
 					);
 
-					if (gpr.data.mergeable === undefined || gpr.data.mergeable === null) {
+					if (
+						gpr.data.mergeable === undefined ||
+						gpr.data.mergeable === null
+					) {
 						throw new Error(
 							"GitHub PR mergeable state not available. Retrying...",
 						);
 					}
 
 					if (gpr.data.mergeable) {
-						const method = mergeMethod(pr, ctx.configuration[0]?.parameters);
+						const method = mergeMethod(
+							pr,
+							ctx.configuration[0]?.parameters,
+						);
 						const details = commitDetails(method, pr);
 						await api.pulls.merge({
 							owner: pr.repo.owner,
@@ -373,7 +385,9 @@ ${github.formatMarkers(ctx)}`;
 							issue_number: pr.number,
 							body,
 						});
-						await ctx.audit.log(`Pull request auto-merge comment created`);
+						await ctx.audit.log(
+							`Pull request auto-merge comment created`,
+						);
 
 						return {
 							code: 0,
