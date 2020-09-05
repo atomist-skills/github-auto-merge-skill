@@ -29,10 +29,6 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 	displayName: "Auto-Merge Pull Requests",
 	author: "Atomist",
 	categories: [Category.CodeReview, Category.ProjectManagement],
-	homepageUrl: "https://github.com/atomist-skills/github-auto-merge-skill",
-	repositoryUrl:
-		"https://github.com/atomist-skills/github-auto-merge-skill.git",
-	iconUrl: "file://docs/images/icon.svg",
 	license: "Apache-2.0",
 
 	runtime: {
@@ -86,6 +82,4 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 		},
 		repos: parameter.repoFilter({ required: false }),
 	},
-
-	subscriptions: ["file://graphql/subscription/*.graphql"],
 });
