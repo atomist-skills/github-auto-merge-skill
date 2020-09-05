@@ -21,6 +21,7 @@ import {
 	log,
 	repository,
 	secret,
+	status,
 } from "@atomist/skill";
 import * as retry from "p-retry";
 import { AutoMergeConfiguration } from "./configuration";
@@ -265,11 +266,7 @@ export async function executeAutoMerge(
 		await ctx.audit.log(
 			`Pull request auto-merge not requested for ${slug}`,
 		);
-		return {
-			visibility: "hidden",
-			code: 0,
-			reason: `Pull request ${link} not auto-merged`,
-		};
+		return status.success(`Pull request ${link} not auto-merged`).hidden();
 	}
 
 	const autoMergeOnApprove = isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
@@ -280,156 +277,199 @@ export async function executeAutoMerge(
 			.join(", ")}`,
 	);
 
-	// 1. at least one approved review if PR isn't set to merge on successful build
-	if (autoMergeOnApprove) {
-		if (!pr.reviews || pr.reviews.length === 0) {
-			await ctx.audit.log(
-				`Pull request ${slug} not auto-merged because no approved reviews`,
-			);
-			return {
-				code: 0,
-				reason: `Pull request ${link} not auto-merged because no approved reviews`,
-			};
-		} else if (pr.reviews.some(r => r.state !== "approved")) {
-			await ctx.audit.log(
-				`Pull request ${slug} not auto-merged because of unapproved reviews`,
-			);
-			return {
-				code: 0,
-				reason: `Pull request ${link} not auto-merged because of unapproved reviews`,
-			};
-		}
+	// 0. check for branch protection rules and use those if configured
+	let bpr;
+	try {
+		bpr = (
+			await api.repos.getBranchProtection({
+				owner: pr.repo.owner,
+				repo: pr.repo.name,
+				branch: pr.baseBranchName,
+			})
+		).data;
+	} catch (e) {
+		// Ignore because it means there are no branch protection rules
 	}
 
-	// 2. all status checks are successful and there is at least one check
-	if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
-		const checks = aggregateChecksAndStatus(pr);
-		if (checks?.length === 0) {
-			await ctx.audit.log(
-				`Pull request ${slug} not auto-merged because of no successful status checks`,
-			);
-			return {
-				code: 0,
-				reason: `Pull request ${link} not auto-merged because of no successful status checks`,
-			};
-		} else if (checks?.some(s => s.state !== StatusState.Success)) {
-			await ctx.audit.log(
-				`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`,
-			);
-			return {
-				code: 0,
-				reason: `Pull request ${link} not auto-merged because of unsuccessful or pending status checks`,
-			};
-		}
-	} else if (!autoMergeOnApprove) {
-		await ctx.audit.log(
-			`Pull request ${slug} not auto-merged because of no status checks`,
-		);
-		return {
-			code: 0,
-			reason: `Pull request ${link} not auto-merged because of no status checks`,
-		};
-	}
-
-	if (isPrAutoMergeEnabled(pr)) {
-		await ctx.audit.log(
-			`Pull request auto-merge enabled for ${slug}. Attempting to merge...`,
-		);
-
-		try {
-			const result = await retry(
-				async () => {
-					const gpr = await api.pulls.get({
+	if (bpr) {
+		const autoMerge = await retry(
+			async () => {
+				const gpr = (
+					await api.pulls.get({
 						owner: pr.repo.owner,
 						repo: pr.repo.name,
 						pull_number: pr.number,
-					});
+					})
+				).data;
 
-					log.info(
-						`GitHub indicates that pull request is mergeable: ${gpr.data.mergeable}`,
+				log.info(
+					`GitHub indicates that pull request is mergeable: ${gpr.mergeable_state}`,
+				);
+
+				if (gpr.mergeable_state === "unknown") {
+					throw new Error(
+						"GitHub PR mergeable_state not available. Retrying...",
 					);
+				} else if (
+					["clean", "unstable", "has_hooks" /* GHE only */].includes(
+						gpr.mergeable_state,
+					)
+				) {
+					return true;
+				}
+				return false;
+			},
+			{
+				retries: 5,
+				factor: 3,
+				minTimeout: 1 * 500,
+				maxTimeout: 5 * 1000,
+				randomize: true,
+			},
+		);
+		if (!autoMerge) {
+			await ctx.audit.log(
+				`Pull request ${slug} not auto-merged because blocked by branch protection rule`,
+			);
+			return status.success(
+				`Pull request ${link} not auto-merged because blocked by branch protection rule`,
+			);
+		}
+	} else {
+		if (autoMergeOnApprove) {
+			// 1. at least one approved review if PR isn't set to merge on successful build
+			if (!pr.reviews || pr.reviews.length === 0) {
+				await ctx.audit.log(
+					`Pull request ${slug} not auto-merged because no approved reviews`,
+				);
+				return status.success(
+					`Pull request ${link} not auto-merged because no approved reviews`,
+				);
+			} else if (pr.reviews.some(r => r.state !== "approved")) {
+				await ctx.audit.log(
+					`Pull request ${slug} not auto-merged because of unapproved reviews`,
+				);
+				return status.success(
+					`Pull request ${link} not auto-merged because of unapproved reviews`,
+				);
+			}
+		}
 
-					if (
-						gpr.data.mergeable === undefined ||
-						gpr.data.mergeable === null
-					) {
-						throw new Error(
-							"GitHub PR mergeable state not available. Retrying...",
-						);
-					}
+		// 2. all status checks are successful and there is at least one check
+		if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
+			const checks = aggregateChecksAndStatus(pr);
+			if (checks?.length === 0) {
+				await ctx.audit.log(
+					`Pull request ${slug} not auto-merged because of no successful status checks`,
+				);
+				return status.success(
+					`Pull request ${link} not auto-merged because of no successful status checks`,
+				);
+			} else if (checks?.some(s => s.state !== StatusState.Success)) {
+				await ctx.audit.log(
+					`Pull request ${slug} not auto-merged because of unsuccessful or pending status checks`,
+				);
+				return status.success(
+					`Pull request ${link} not auto-merged because of unsuccessful or pending status checks`,
+				);
+			}
+		} else if (!autoMergeOnApprove) {
+			await ctx.audit.log(
+				`Pull request ${slug} not auto-merged because of no status checks`,
+			);
+			return status.success(
+				`Pull request ${link} not auto-merged because of no status checks`,
+			);
+		}
+	}
 
-					if (gpr.data.mergeable) {
-						const method = mergeMethod(
-							pr,
-							ctx.configuration[0]?.parameters,
-						);
-						const details = commitDetails(method, pr);
-						await api.pulls.merge({
-							owner: pr.repo.owner,
-							repo: pr.repo.name,
-							pull_number: pr.number,
-							merge_method: method,
-							commit_title: details.title,
-							commit_message: details.message,
-						});
-						await ctx.audit.log(`Pull request ${slug} auto-merged`);
-						const body = `Pull request auto merged:
+	await ctx.audit.log(
+		`Pull request auto-merge enabled for ${slug}. Attempting to merge...`,
+	);
+
+	try {
+		const result = await retry(
+			async () => {
+				const gpr = (
+					await api.pulls.get({
+						owner: pr.repo.owner,
+						repo: pr.repo.name,
+						pull_number: pr.number,
+					})
+				).data;
+
+				log.info(
+					`GitHub indicates that pull request is mergeable: ${gpr.mergeable}`,
+				);
+
+				if (gpr.mergeable === undefined || gpr.mergeable === null) {
+					throw new Error(
+						"GitHub PR mergeable state not available. Retrying...",
+					);
+				}
+
+				if (gpr.mergeable) {
+					const method = mergeMethod(
+						pr,
+						ctx.configuration[0]?.parameters,
+					);
+					const details = commitDetails(method, pr);
+					await api.pulls.merge({
+						owner: pr.repo.owner,
+						repo: pr.repo.name,
+						pull_number: pr.number,
+						merge_method: method,
+						commit_title: details.title,
+						commit_message: details.message,
+					});
+					await ctx.audit.log(`Pull request ${slug} auto-merged`);
+					const body = `Pull request auto merged:
 
 * ${reviewComment(pr)}
 * ${statusComment(pr)}
 ${github.formatMarkers(ctx)}`;
 
-						await api.issues.createComment({
-							owner: pr.repo.owner,
-							repo: pr.repo.name,
-							issue_number: pr.number,
-							body,
-						});
-						await ctx.audit.log(
-							`Pull request auto-merge comment created`,
-						);
+					await api.issues.createComment({
+						owner: pr.repo.owner,
+						repo: pr.repo.name,
+						issue_number: pr.number,
+						body,
+					});
+					await ctx.audit.log(
+						`Pull request auto-merge comment created`,
+					);
 
-						return {
-							code: 0,
-							reason: `Pull request ${link} auto-merged`,
-						};
-					} else {
-						await ctx.audit.log(
-							`Pull request ${slug} not auto-merged because it can't be merged at this time`,
-						);
-						return {
-							code: 0,
-							reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
-						};
-					}
-				},
-				{
-					retries: 5,
-					factor: 3,
-					minTimeout: 1 * 500,
-					maxTimeout: 5 * 1000,
-					randomize: true,
-				},
-			);
+					return status.success(`Pull request ${link} auto-merged`);
+				} else {
+					await ctx.audit.log(
+						`Pull request ${slug} not auto-merged because it can't be merged at this time`,
+					);
+					return status.success(
+						`Pull request ${link} not auto-merged because it can't be merged at this time`,
+					);
+				}
+			},
+			{
+				retries: 5,
+				factor: 3,
+				minTimeout: 1 * 500,
+				maxTimeout: 5 * 1000,
+				randomize: true,
+			},
+		);
 
-			log.debug(
-				`Pull request ${slug} auto-merge retry resulted: ${result.reason}`,
-			);
+		log.debug(
+			`Pull request ${slug} auto-merge retry resulted: ${result.reason}`,
+		);
 
-			return result;
-		} catch (e) {
-			await ctx.audit.log(
-				`Pull request ${slug} not auto-merged because it can't be merged at this time`,
-			);
-			return {
-				code: 0,
-				reason: `Pull request ${link} not auto-merged because it can't be merged at this time`,
-			};
-		}
+		return result;
+	} catch (e) {
+		await ctx.audit.log(
+			`Pull request ${slug} not auto-merged because it can't be merged at this time`,
+		);
+		return status.success(
+			`Pull request ${link} not auto-merged because it can't be merged at this time`,
+		);
 	}
-	return {
-		visibility: "hidden",
-		code: 0,
-		reason: `Pull request ${link} not auto-merged`,
-	};
+	return status.success(`Pull request ${link} not auto-merged`).hidden();
 }
