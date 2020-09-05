@@ -269,8 +269,6 @@ export async function executeAutoMerge(
 		return status.success(`Pull request ${link} not auto-merged`).hidden();
 	}
 
-	const autoMergeOnApprove = isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
-
 	await ctx.audit.log(
 		`Starting auto-merge processing for pull request ${slug} with labels: ${pr.labels
 			.map(l => l.name)
@@ -280,13 +278,11 @@ export async function executeAutoMerge(
 	// 0. check for branch protection rules and use those if configured
 	let bpr;
 	try {
-		bpr = (
-			await api.repos.getBranchProtection({
-				owner: pr.repo.owner,
-				repo: pr.repo.name,
-				branch: pr.baseBranchName,
-			})
-		).data;
+		bpr = await api.repos.getBranchProtection({
+			owner: pr.repo.owner,
+			repo: pr.repo.name,
+			branch: pr.baseBranchName,
+		});
 	} catch (e) {
 		// Ignore because it means there are no branch protection rules
 	}
@@ -336,6 +332,7 @@ export async function executeAutoMerge(
 			);
 		}
 	} else {
+		const autoMergeOnApprove = isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
 		if (autoMergeOnApprove) {
 			// 1. at least one approved review if PR isn't set to merge on successful build
 			if (!pr.reviews || pr.reviews.length === 0) {
