@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   Support auto merge for protected branches. [cef1acd](https://github.com/atomist-skills/github-auto-merge-skill/commit/cef1acd5705ff92a2c20bde0823a57e5d6ca0767)
+-   Support auto merge for protected branches. [bc40a65](https://github.com/atomist-skills/github-auto-merge-skill/commit/bc40a658e431050bfff9c162c017dd1a16038b1a)
 
 ## [2.0.12](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.11...2.0.12) - 2020-07-28
 
