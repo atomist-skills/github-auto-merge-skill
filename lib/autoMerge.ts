@@ -288,6 +288,9 @@ export async function executeAutoMerge(
 	}
 
 	if (bpr) {
+		await ctx.audit.log(
+			`Branch ${pr.baseBranchName} is protected. Checking for mergeable state`,
+		);
 		const autoMerge = await retry(
 			async () => {
 				const gpr = (
