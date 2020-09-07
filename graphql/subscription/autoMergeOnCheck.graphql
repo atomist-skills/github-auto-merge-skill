@@ -2,6 +2,7 @@ subscription autoMergeOnCheck {
   CheckRun {
     checkSuite {
       pullRequests @required {
+        baseBranchName
         url
         number
         body

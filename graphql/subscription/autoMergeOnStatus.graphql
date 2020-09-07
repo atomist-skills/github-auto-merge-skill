@@ -2,6 +2,7 @@ subscription autoMergeOnStatus {
   Status {
     commit @required {
       pullRequests @required {
+        baseBranchName
         url
         number
         body

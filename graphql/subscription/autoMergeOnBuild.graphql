@@ -1,6 +1,7 @@
 subscription autoMergeOnBuild {
   Build {
     pullRequest @required {
+      baseBranchName
       url
       number
       body

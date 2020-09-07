@@ -1,6 +1,7 @@
 subscription autoMergeOnReview {
   Review {
     pullRequest @required {
+      baseBranchName
       url
       number
       body

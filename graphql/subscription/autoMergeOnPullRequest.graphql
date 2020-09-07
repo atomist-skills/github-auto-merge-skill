@@ -1,5 +1,6 @@
 subscription autoMergeOnPullRequest {
   PullRequest {
+    baseBranchName
     url
     number
     body
