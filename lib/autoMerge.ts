@@ -23,6 +23,7 @@ import {
 	secret,
 	status,
 } from "@atomist/skill";
+import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types";
 import * as retry from "p-retry";
 import { AutoMergeConfiguration } from "./configuration";
 import {
@@ -276,7 +277,7 @@ export async function executeAutoMerge(
 	);
 
 	// 0. check for branch protection rules and use those if configured
-	let bpr;
+	let bpr: RestEndpointMethodTypes["repos"]["getBranchProtection"]["response"];
 	try {
 		bpr = await api.repos.getBranchProtection({
 			owner: pr.repo.owner,
@@ -425,7 +426,9 @@ export async function executeAutoMerge(
 					await ctx.audit.log(`Pull request ${slug} auto-merged`);
 					const body = `Pull request auto merged:
 
-* ${reviewComment(pr)}
+${
+	bpr ? `* Branch protection rule for \`${pr.baseBranchName}\` passed\n` : ""
+}* ${reviewComment(pr)}
 * ${statusComment(pr)}
 ${github.formatMarkers(ctx)}`;
 
