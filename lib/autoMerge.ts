@@ -427,7 +427,7 @@ export async function executeAutoMerge(
 					const body = `Pull request auto merged:
 
 ${
-	bpr ? `* Branch protection rule for \`${pr.baseBranchName}\` passed\n` : ""
+	bpr ? `* Protection rule for branch \`${pr.baseBranchName}\` passed\n` : ""
 }* ${reviewComment(pr)}
 * ${statusComment(pr)}
 ${github.formatMarkers(ctx)}`;
