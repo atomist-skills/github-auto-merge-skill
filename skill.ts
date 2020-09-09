@@ -58,7 +58,7 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 				},
 				{
 					text: "On passing branch protection rule",
-					value: "on-mergeable",
+					value: "on-bpr-success",
 				},
 			],
 			required: false,

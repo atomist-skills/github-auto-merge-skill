@@ -37,10 +37,10 @@ import { Octokit } from "@octokit/rest"; // eslint-disable-line @typescript-esli
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";
-export const AutoMergeMergeableLabel = "auto-merge:on-mergeable";
+export const AutoMergeBprSuccessLabel = "auto-merge:on-bpr-success";
 export const AutoMergeTag = `[${AutoMergeLabel}]`;
 export const AutoMergeCheckSuccessTag = `[${AutoMergeCheckSuccessLabel}]`;
-export const AutoMergeMergeableTag = `[${AutoMergeMergeableLabel}]`;
+export const AutoMergeBprSuccessTag = `[${AutoMergeBprSuccessLabel}]`;
 
 export const AutoMergeMethodLabel = "auto-merge-method:";
 export const AutoMergeMethods: Array<AutoMergeConfiguration["mergeMethod"]> = [
@@ -90,7 +90,7 @@ export function isPrAutoMergeEnabled(pr: PullRequest): boolean {
 	return (
 		isPrTagged(pr, AutoMergeLabel, AutoMergeTag) ||
 		isPrTagged(pr, AutoMergeCheckSuccessLabel, AutoMergeCheckSuccessTag) ||
-		isPrTagged(pr, AutoMergeMergeableLabel, AutoMergeMergeableTag)
+		isPrTagged(pr, AutoMergeBprSuccessLabel, AutoMergeBprSuccessTag)
 	);
 }
 
@@ -164,8 +164,8 @@ const BranchProtectionAutoMergeRule: AutoMergeRule = {
 	check: async (pr, api) => {
 		const bprAutoMergeRequested = isPrTagged(
 			pr,
-			AutoMergeMergeableLabel,
-			AutoMergeMergeableTag,
+			AutoMergeBprSuccessLabel,
+			AutoMergeBprSuccessTag,
 		);
 		let bpr: RestEndpointMethodTypes["repos"]["getBranchProtection"]["response"];
 		try {

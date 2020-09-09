@@ -18,7 +18,7 @@ import { EventHandler, github, repository, secret } from "@atomist/skill";
 import {
 	AutoMergeCheckSuccessLabel,
 	AutoMergeLabel,
-	AutoMergeMergeableLabel,
+	AutoMergeBprSuccessLabel,
 	AutoMergeMethodLabel,
 	AutoMergeMethodLabels,
 	AutoMergeMethods,
@@ -81,11 +81,11 @@ export const handler: EventHandler<
 		id,
 		AutoMergeCheckSuccessLabel,
 		"277D7D",
-		"Auto-merge on successful checks",
+		"Auto-merge on passed checks",
 	);
 	await github.convergeLabel(
 		id,
-		AutoMergeMergeableLabel,
+		AutoMergeBprSuccessLabel,
 		"277D7D",
 		"Auto-merge on passed branch protection rule",
 	);
