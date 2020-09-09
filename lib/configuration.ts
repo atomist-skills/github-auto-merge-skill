@@ -15,6 +15,6 @@
  */
 
 export interface AutoMergeConfiguration {
-	mergeOn?: "on-approve" | "on-check-success";
+	mergeOn?: "on-approve" | "on-check-success" | "on-mergeable";
 	mergeMethod?: "merge" | "rebase" | "squash";
 }
