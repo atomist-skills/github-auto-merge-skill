@@ -245,7 +245,7 @@ const CheckAutoMergeRule: AutoMergeRule = {
 				return false;
 			}
 		}
-		return !isPrTagged(
+		return isPrTagged(
 			pr,
 			AutoMergeCheckSuccessLabel,
 			AutoMergeCheckSuccessTag,
