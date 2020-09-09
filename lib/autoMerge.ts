@@ -286,7 +286,9 @@ function reviewComment(pr: PullRequest): string {
 
 function statusComment(pr: PullRequest): string {
 	if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
-		const checks = aggregateChecksAndStatus(pr);
+		const checks = aggregateChecksAndStatus(pr).filter(
+			c => c.state === StatusState.Success,
+		);
 		return `${checks.length} successful ${
 			checks.length === 1 ? "check" : "checks"
 		}`;
