@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.1.0...HEAD)
 
+### Fixed
+
+-   Fix auto-merge on checks with no checks. [dd3250a](https://github.com/atomist-skills/github-auto-merge-skill/commit/dd3250a8f5533f583dc34457a35d339d53fb344a)
+
 ## [2.1.0](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.0.12...2.1.0) - 2020-09-10
 
 ### Added
