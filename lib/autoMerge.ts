@@ -245,7 +245,11 @@ const CheckAutoMergeRule: AutoMergeRule = {
 				return false;
 			}
 		}
-		return true;
+		return !isPrTagged(
+			pr,
+			AutoMergeCheckSuccessLabel,
+			AutoMergeCheckSuccessTag,
+		);
 	},
 };
 
@@ -340,7 +344,7 @@ export async function executeAutoMerge(
 	if (pr.state !== "open") {
 		await ctx.audit.log(`Pull request auto-merge ignoring closed ${slug}`);
 		return status
-			.success(`Pull request auto-merge ignoring closed ${slug}`)
+			.success(`Pull request auto-merge ignoring closed ${link}`)
 			.hidden();
 	}
 
@@ -401,7 +405,7 @@ export async function executeAutoMerge(
 			)}`,
 		);
 		return status.success(
-			`Pull request auto-merge not enabled for ${slug}.`,
+			`Pull request auto-merge not enabled for ${link}.`,
 		);
 	}
 
