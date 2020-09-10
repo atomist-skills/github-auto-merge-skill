@@ -55,21 +55,18 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
 
 1. **Select the default policy to use when auto-merging pull requests**
 
-    ![Default auto-merge policy expanded](docs/images/default-auto-merge-policy-expanded.png)
-
     To do so when no explicit auto-merge label is applied to the pull request, you can select one of the options:
 
     - **On successful reviews and status checks** — Triggers auto-merge if all requested reviews are approved and all
       commit status checks are green.
     - **On successful status checks** — Triggers auto-merge if all status checks are green.
+    - **On passing branch protection rule** - Trigger auto-merge if a GitHub branch protection rule passes
 
     Note: there must be at least one [commit status check](https://developer.github.com/v3/repos/statuses/) in order for
     the auto-merge policy to be met. This skill supports [commit status checks](https://developer.github.com/v3/repos/statuses/);
-    and [GitHub Checks API](https://developer.github.com/v3/checks/).
+    and [GitHub Checks API](https://developer.github.com/v3/checks/) as well [GitHub Branch Protection Rules](https://docs.github.com/en/github/administering-a-repository/configuring-protected-branches).
 
 1. **Specify the default merge method**
-
-    ![Default auto-merge method](docs/images/default-auto-merge-method.png)
 
     Select one of these methods:
 
@@ -96,6 +93,7 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
 
     - `auto-merge:on-approve`
     - `auto-merge:on-check-success`
+    - `auto-merge:on-bpr-success`
 
     **Auto-merge method labels**
 
