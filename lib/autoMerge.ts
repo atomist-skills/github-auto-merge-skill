@@ -237,19 +237,13 @@ const ReviewApproveAutoMergeRule: AutoMergeRule = {
 const CheckAutoMergeRule: AutoMergeRule = {
 	name: "checks and statuses",
 	check: async (pr, api) => {
-		if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
-			const checks = aggregateChecksAndStatus(pr);
-			if (checks?.length === 0) {
-				return isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
-			} else if (checks?.some(s => s.state !== StatusState.Success)) {
-				return false;
-			}
+		const checks = aggregateChecksAndStatus(pr);
+		if (checks?.length === 0) {
+			return isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
+		} else if (checks?.some(s => s.state !== StatusState.Success)) {
+			return false;
 		}
-		return !isPrTagged(
-			pr,
-			AutoMergeCheckSuccessLabel,
-			AutoMergeCheckSuccessTag,
-		);
+		return true;
 	},
 };
 
