@@ -478,7 +478,7 @@ ${github.formatMarkers(ctx)}`;
 				}
 			},
 			{
-				retries: 5,
+				retries: 6,
 				factor: 3,
 				minTimeout: 1 * 500,
 				maxTimeout: 5 * 1000,
