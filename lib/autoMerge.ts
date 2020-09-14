@@ -451,7 +451,7 @@ export async function executeAutoMerge(
 
 ${
 	(pr as any).protectionRule
-		? `* Protection rule for branch \`${pr.baseBranchName}\` passed\n`
+		? `* Branch protection rule for branch \`${pr.baseBranchName}\` passed\n`
 		: ""
 }* ${reviewComment(pr)}
 * ${statusComment(pr)}
