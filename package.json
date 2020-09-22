@@ -1,7 +1,7 @@
 {
   "main": "node_modules/@atomist/skill/lib/function.js",
   "dependencies": {
-    "@atomist/skill": "^0.1.1-149",
+    "@atomist/skill": "^0.1.1-154",
     "lodash": "^4.17.20",
     "p-retry": "^4.2.0"
   },
