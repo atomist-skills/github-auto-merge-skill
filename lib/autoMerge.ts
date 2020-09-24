@@ -494,7 +494,7 @@ ${body}`,
 							
 ${body}
 
-To enable auto-merge on this pull request disable the dry-run mode in the [configuration](https://go.atomist.com/${
+To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](https://go.atomist.com/${
 								ctx.workspaceId
 							}/manage/skills/configure/edit/${
 								ctx.skill.namespace
