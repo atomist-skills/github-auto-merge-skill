@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.1.2...HEAD)
 
+### Added
+
+-   Add dry-run option. [#69](https://github.com/atomist-skills/github-auto-merge-skill/issues/69)
+
 ## [2.1.2](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.1.1...2.1.2) - 2020-09-11
 
 ### Fixed
