@@ -342,7 +342,8 @@ export async function executeAutoMerge(
 			.hidden();
 	}
 
-	const authors = ctx.configuration?.[0].parameters.authors || [];
+	const cfg = ctx.configuration?.[0]?.parameters;
+	const authors = cfg?.authors || [];
 	if (authors.length > 0 && !authors.includes(pr.author.login)) {
 		await ctx.audit.log(
 			`Pull request ${slug} ignored because not authored by any of the configured users`,
@@ -450,36 +451,61 @@ export async function executeAutoMerge(
 						pr,
 						(pr as any).protectionRule,
 					);
-					await api.pulls.merge({
-						owner: pr.repo.owner,
-						repo: pr.repo.name,
-						pull_number: pr.number,
-						merge_method: method,
-						commit_title: details.title,
-						commit_message: details.message,
-					});
-					await ctx.audit.log(`Pull request ${slug} auto-merged`);
-					const body = `Pull request auto merged:
 
-${
-	(pr as any).protectionRule
-		? `* Branch protection rule for branch \`${pr.baseBranchName}\` passed\n`
-		: ""
-}* ${reviewComment(pr)}
+					const body = `${
+						(pr as any).protectionRule
+							? `* Branch protection rule for branch \`${pr.baseBranchName}\` passed\n`
+							: ""
+					}* ${reviewComment(pr)}
 * ${statusComment(pr)}
 ${github.formatMarkers(ctx)}`;
 
-					await api.issues.createComment({
-						owner: pr.repo.owner,
-						repo: pr.repo.name,
-						issue_number: pr.number,
-						body,
-					});
-					await ctx.audit.log(
-						`Pull request auto-merge comment created`,
-					);
+					if (!cfg.dryRun) {
+						await api.pulls.merge({
+							owner: pr.repo.owner,
+							repo: pr.repo.name,
+							pull_number: pr.number,
+							merge_method: method,
+							commit_title: details.title,
+							commit_message: details.message,
+						});
+						await ctx.audit.log(`Pull request ${slug} auto-merged`);
 
-					return status.success(`Pull request ${link} auto-merged`);
+						await api.issues.createComment({
+							owner: pr.repo.owner,
+							repo: pr.repo.name,
+							issue_number: pr.number,
+							body: `Pull request auto merged:
+
+${body}`,
+						});
+						await ctx.audit.log(
+							`Pull request auto-merge comment created`,
+						);
+						return status.success(
+							`Pull request ${link} auto-merged`,
+						);
+					} else {
+						await api.issues.createComment({
+							owner: pr.repo.owner,
+							repo: pr.repo.name,
+							issue_number: pr.number,
+							body: `Pull request ready to be auto-merged:
+							
+${body}
+
+To enable auto-merge on this pull request disable the dry-run mode in the [configuration](https://go.atomist.com/${
+								ctx.workspaceId
+							}/manage/skills/configure/edit/${
+								ctx.skill.namespace
+							}/${ctx.skill.name}/${encodeURIComponent(
+								ctx.configuration?.[0]?.name,
+							)}).`,
+						});
+						return status.success(
+							`Pull request ${link} ready to be auto-merged`,
+						);
+					}
 				} else {
 					await ctx.audit.log(
 						`Pull request ${slug} not auto-merged because it can't be merged at this time`,
