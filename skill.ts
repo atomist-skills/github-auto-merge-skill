@@ -44,9 +44,9 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 	parameters: {
 		dryRun: {
 			type: ParameterType.Boolean,
-			displayName: "Test mode",
+			displayName: "Dry run",
 			description:
-				"Do not actually merge pull requests but leave a comment in the PR indicated when a pull request would get merged.",
+				"Do not actually merge pull requests but leave a comment in the PR indicated when a pull request would get merged",
 			defaultValue: true,
 			required: true,
 		},

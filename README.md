@@ -53,7 +53,7 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
 
 # How to configure
 
-1. **Enable dry-run mode**
+1. **Disable dry-run mode**
 
     By default, this skill will leave a comment on a PR that when it found one to auto-merge. This feature is intended
     for you to gain confidence with the skill and its configuration. Once you're happy with the configuration, you can
