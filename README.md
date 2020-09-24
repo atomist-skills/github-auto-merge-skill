@@ -53,6 +53,12 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
 
 # How to configure
 
+1. **Enable dry-run mode**
+
+    By default, this skill will leave a comment on a PR that when it found one to auto-merge. This feature is intended
+    for you to gain confidence with the skill and its configuration. Once you're happy with the configuration, you can
+    disable dry-run and have this skill merge your pull requests for real.
+
 1. **Select the default policy to use when auto-merging pull requests**
 
     To do so when no explicit auto-merge label is applied to the pull request, you can select one of the options:
@@ -73,6 +79,11 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
     - **Merge commit**
     - **Squash and merge**
     - **Rebase and merge**
+
+1. **Auto-merge pull requests from certain users only**
+
+    This configuration parameters lets you configure GitHub logins of users or bots you want to this skill to auto-merge.
+    When this is configured, pull requests from authors not in this list won't be auto-merged.
 
 1. **Determine repository scope**
 
