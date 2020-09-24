@@ -486,22 +486,47 @@ ${body}`,
 							`Pull request ${link} auto-merged`,
 						);
 					} else {
-						await api.issues.createComment({
-							owner: pr.repo.owner,
-							repo: pr.repo.name,
-							issue_number: pr.number,
-							body: `Pull request ready to be auto-merged:
+						const comment = (pr.comments || []).find(c =>
+							c.body.includes(
+								"[atomist-skill:atomist/github-auto-merge-skill]",
+							),
+						);
+						if (comment) {
+							await api.issues.updateComment({
+								owner: pr.repo.owner,
+								repo: pr.repo.name,
+								issue_number: pr.number,
+								comment_id: +comment.gitHubId,
+								body: `Pull request ready to be auto-merged:
 							
 ${body}
 
 To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](https://go.atomist.com/${
-								ctx.workspaceId
-							}/manage/skills/configure/edit/${
-								ctx.skill.namespace
-							}/${ctx.skill.name}/${encodeURIComponent(
-								ctx.configuration?.[0]?.name,
-							)}).`,
-						});
+									ctx.workspaceId
+								}/manage/skills/configure/edit/${
+									ctx.skill.namespace
+								}/${ctx.skill.name}/${encodeURIComponent(
+									ctx.configuration?.[0]?.name,
+								)}).`,
+							});
+						} else {
+							await api.issues.createComment({
+								owner: pr.repo.owner,
+								repo: pr.repo.name,
+								issue_number: pr.number,
+								body: `Pull request ready to be auto-merged:
+							
+${body}
+
+To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](https://go.atomist.com/${
+									ctx.workspaceId
+								}/manage/skills/configure/edit/${
+									ctx.skill.namespace
+								}/${ctx.skill.name}/${encodeURIComponent(
+									ctx.configuration?.[0]?.name,
+								)}).`,
+							});
+						}
 						return status.success(
 							`Pull request ${link} ready to be auto-merged`,
 						);

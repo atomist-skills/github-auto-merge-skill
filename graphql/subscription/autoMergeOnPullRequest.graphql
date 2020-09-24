@@ -1,5 +1,9 @@
 subscription autoMergeOnPullRequest {
   PullRequest {
+    comments {
+      gitHubId
+      body
+    }
     baseBranchName
     url
     number

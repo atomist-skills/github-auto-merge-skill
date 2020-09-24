@@ -1,6 +1,10 @@
 subscription autoMergeOnReview {
   Review {
     pullRequest @required {
+      comments {
+        gitHubId
+        body
+      }
       baseBranchName
       url
       number
