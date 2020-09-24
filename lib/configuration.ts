@@ -17,4 +17,5 @@
 export interface AutoMergeConfiguration {
 	mergeOn?: "on-approve" | "on-check-success" | "on-bpr-success";
 	mergeMethod?: "merge" | "rebase" | "squash";
+	authors?: string[];
 }

@@ -15,5 +15,8 @@ subscription convergePullRequestAutoMergeLabels {
     labels {
       name
     }
+    author {
+      login
+    }
   }
 }

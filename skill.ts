@@ -84,6 +84,13 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 			],
 			required: false,
 		},
+		authors: {
+			type: ParameterType.StringArray,
+			displayName: "Auto-merge authors",
+			description:
+				"Auto-merge pull requests that are authored from the following GitHub users or bots only",
+			required: false,
+		},
 		repos: parameter.repoFilter({ required: false }),
 	},
 });

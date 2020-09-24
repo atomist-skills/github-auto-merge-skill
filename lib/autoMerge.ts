@@ -342,6 +342,18 @@ export async function executeAutoMerge(
 			.hidden();
 	}
 
+	const authors = ctx.configuration?.[0].parameters.authors || [];
+	if (authors.length > 0 && !authors.includes(pr.author.login)) {
+		await ctx.audit.log(
+			`Pull request ${slug} ignored because not authored by any of the configured users`,
+		);
+		return status
+			.success(
+				`Pull request ${slug} ignored because not authored by any of the configured users`,
+			)
+			.hidden();
+	}
+
 	const api = github.api(
 		repository.gitHub({
 			owner: pr.repo.owner,

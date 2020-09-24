@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { EventHandler, github, repository, secret } from "@atomist/skill";
+import {
+	EventHandler,
+	github,
+	repository,
+	secret,
+	status,
+} from "@atomist/skill";
 import {
 	AutoMergeCheckSuccessLabel,
 	AutoMergeLabel,
@@ -50,11 +56,24 @@ export const handler: EventHandler<
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} action not opened. Ignoring...`,
 		);
 
-		return {
-			visibility: "hidden",
-			code: 0,
-			reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) action not opened. Ignoring...`,
-		};
+		return status
+			.success(
+				`Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) action not opened. Ignoring...`,
+			)
+			.hidden();
+	}
+
+	const authors = ctx.configuration?.[0].parameters.authors || [];
+	if (authors.length > 0 && !authors.includes(pr.author.login)) {
+		await ctx.audit.log(
+			`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not authored by any of the configured users. Ignoring...`,
+		);
+
+		return status
+			.success(
+				`Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not authored by any of the configured users. Ignoring...`,
+			)
+			.hidden();
 	}
 
 	const repo = pr.repo;
@@ -131,10 +150,9 @@ export const handler: EventHandler<
 			await ctx.audit.log(
 				`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} can't be labelled with auto-merge labels because configured merge method '${method}' is not available on this repository`,
 			);
-			return {
-				code: 1,
-				reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) can't be labelled with auto-merge labels`,
-			};
+			return status.failure(
+				`Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) can't be labelled with auto-merge labels`,
+			);
 		}
 		labels.push(
 			`auto-merge-method:${
@@ -158,10 +176,9 @@ export const handler: EventHandler<
 			} labelled with: ${labels.join(", ")}`,
 		);
 
-		return {
-			code: 0,
-			reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) labelled with auto-merged labels`,
-		};
+		return status.success(
+			`Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) labelled with auto-merged labels`,
+		);
 	} else {
 		await ctx.audit.log(
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${
@@ -169,10 +186,10 @@ export const handler: EventHandler<
 			} labelled with: ${labels.join(", ")}`,
 		);
 
-		return {
-			code: 0,
-			visibility: "hidden",
-			reason: `Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not labelled with auto-merged labels because labels already present`,
-		};
+		return status
+			.success(
+				`Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) not labelled with auto-merged labels because labels already present`,
+			)
+			.hidden();
 	}
 };
