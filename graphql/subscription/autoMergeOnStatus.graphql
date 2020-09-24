@@ -2,10 +2,6 @@ subscription autoMergeOnStatus {
   Status {
     commit @required {
       pullRequests @required {
-        comments {
-          gitHubId
-          body
-        }
         baseBranchName
         url
         number

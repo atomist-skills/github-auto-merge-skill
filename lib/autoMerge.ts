@@ -486,7 +486,16 @@ ${body}`,
 							`Pull request ${link} auto-merged`,
 						);
 					} else {
-						const comment = (pr.comments || []).find(c =>
+						const comments = (
+							await api.issues.listComments({
+								owner: pr.repo.owner,
+								repo: pr.repo.name,
+								issue_number: pr.number,
+								per_page: 100,
+							})
+						).data;
+
+						const comment = (comments || []).find(c =>
 							c.body.includes(
 								"[atomist-skill:atomist/github-auto-merge-skill]",
 							),
@@ -496,7 +505,7 @@ ${body}`,
 								owner: pr.repo.owner,
 								repo: pr.repo.name,
 								issue_number: pr.number,
-								comment_id: +comment.gitHubId,
+								comment_id: comment.id,
 								body: `Pull request ready to be auto-merged:
 							
 ${body}

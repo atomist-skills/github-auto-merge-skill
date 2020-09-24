@@ -2,10 +2,6 @@ subscription autoMergeOnCheck {
   CheckRun {
     checkSuite {
       pullRequests @required {
-        comments {
-          gitHubId
-          body
-        }
         baseBranchName
         url
         number

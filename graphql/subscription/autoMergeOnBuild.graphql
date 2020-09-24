@@ -1,10 +1,6 @@
 subscription autoMergeOnBuild {
   Build {
     pullRequest @required {
-      comments {
-        gitHubId
-        body
-      }
       baseBranchName
       url
       number
