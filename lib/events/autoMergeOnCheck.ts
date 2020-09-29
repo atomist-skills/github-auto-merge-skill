@@ -41,5 +41,8 @@ export const handler: EventHandler<
 			.filter(r => !!r.reason)
 			.map(r => r.reason)
 			.join("\n"),
+		visibility: results.filter(r => r.visibility === "hidden")
+			? "hidden"
+			: undefined,
 	};
 };
