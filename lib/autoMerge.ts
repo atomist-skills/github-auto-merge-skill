@@ -342,7 +342,7 @@ export async function executeAutoMerge(
 			.hidden();
 	}
 
-	const cfg = ctx.configuration?.[0]?.parameters;
+	const cfg = ctx.configuration?.parameters;
 	const authors = cfg?.authors || [];
 	if (authors.length > 0 && !authors.includes(pr.author.login)) {
 		await ctx.audit.log(
@@ -444,7 +444,7 @@ export async function executeAutoMerge(
 				if (gpr.mergeable) {
 					const method = mergeMethod(
 						pr,
-						ctx.configuration[0]?.parameters,
+						ctx.configuration?.parameters,
 					);
 					const details = commitDetails(
 						method,
@@ -510,13 +510,7 @@ ${body}`,
 							
 ${body}
 
-To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](https://go.atomist.com/${
-									ctx.workspaceId
-								}/manage/skills/configure/edit/${
-									ctx.skill.namespace
-								}/${ctx.skill.name}/${encodeURIComponent(
-									ctx.configuration?.[0]?.name,
-								)}).`,
+To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](${ctx.configuration.url}).`,
 							});
 						} else {
 							await api.issues.createComment({
@@ -527,13 +521,7 @@ To enable auto-merge on this pull request disable the dry-run mode in the [skill
 							
 ${body}
 
-To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](https://go.atomist.com/${
-									ctx.workspaceId
-								}/manage/skills/configure/edit/${
-									ctx.skill.namespace
-								}/${ctx.skill.name}/${encodeURIComponent(
-									ctx.configuration?.[0]?.name,
-								)}).`,
+To enable auto-merge on this pull request disable the dry-run mode in the [skill configuration](${ctx.configuration.url}).`,
 							});
 						}
 						return status.success(

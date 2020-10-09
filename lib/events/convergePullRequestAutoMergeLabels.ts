@@ -63,7 +63,7 @@ export const handler: EventHandler<
 			.hidden();
 	}
 
-	const authors = ctx.configuration?.[0].parameters.authors || [];
+	const authors = ctx.configuration?.parameters?.authors || [];
 	if (authors.length > 0 && !authors.includes(pr.author.login)) {
 		await ctx.audit.log(
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not authored by any of the configured users. Ignoring...`,
@@ -140,12 +140,12 @@ export const handler: EventHandler<
 	if (!pr.labels.some(l => l.name.startsWith("auto-merge:"))) {
 		labels.push(
 			`auto-merge:${
-				ctx.configuration[0]?.parameters?.mergeOn || "on-approve"
+				ctx.configuration?.parameters?.mergeOn || "on-approve"
 			}`,
 		);
 	}
 	if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
-		const method = ctx.configuration[0]?.parameters?.mergeMethod || "merge";
+		const method = ctx.configuration?.parameters?.mergeMethod || "merge";
 		if (!mergeMethodSettings(repoDetails)[method]) {
 			await ctx.audit.log(
 				`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} can't be labelled with auto-merge labels because configured merge method '${method}' is not available on this repository`,
@@ -156,7 +156,7 @@ export const handler: EventHandler<
 		}
 		labels.push(
 			`auto-merge-method:${
-				ctx.configuration[0]?.parameters?.mergeMethod || "merge"
+				ctx.configuration?.parameters?.mergeMethod || "merge"
 			}`,
 		);
 	}
