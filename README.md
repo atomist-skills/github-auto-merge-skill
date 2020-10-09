@@ -10,14 +10,13 @@ Merge pull requests that pass all checks required to merge
 
 <!---atomist-skill-long_description:start--->
 
-Automatically merge pull requests on GitHub based on assigned labels.
-Required reviews and checks settings configured in the repository on
-GitHub are used as the rules for auto merging.
+Automatically merge pull requests on GitHub based on assigned labels. Required
+reviews and checks settings configured in the repository on GitHub are used as
+the rules for auto merging.
 
-This approach makes is easy for pull request authors or anyone with
-permissions in the repository to flag a pull request for auto-merge
-simply by adding a label. The merge option can also be set with a
-label on the pull request.
+This approach makes is easy for pull request authors or anyone with permissions
+in the repository to flag a pull request for auto-merge simply by adding a
+label. The merge option can also be set with a label on the pull request.
 
 <!---atomist-skill-long_description:end--->
 
@@ -27,19 +26,23 @@ label on the pull request.
 
 # What it's useful for
 
-With this skill you can automatically merge pull requests on GitHub based on assigned labels. Required reviews and
-checks settings configured in the repository on GitHub are used as the rules for auto-merging.
+With this skill you can automatically merge pull requests on GitHub based on
+assigned labels. Required reviews and checks settings configured in the
+repository on GitHub are used as the rules for auto-merging.
 
-This approach makes it easy for pull request authors (or anyone with permissions in the repository) to flag a pull
-request for auto-merge, as well as set the merge option, simply by adding a label.
+This approach makes it easy for pull request authors (or anyone with permissions
+in the repository) to flag a pull request for auto-merge, as well as set the
+merge option, simply by adding a label.
 
-When a new pull request is created, this skill will automatically apply the default auto-merge policy and method labels
-(if set). The labels can be changed on the pull request to modify the policy or merge method for auto-merge.
+When a new pull request is created, this skill will automatically apply the
+default auto-merge policy and method labels (if set). The labels can be changed
+on the pull request to modify the policy or merge method for auto-merge.
 
-Opting out of auto-merge is a simple matter of removing the auto-merge labels from a pull request.
+Opting out of auto-merge is a simple matter of removing the auto-merge labels
+from a pull request.
 
-Once the requirements for auto-merging have been met, the pull request will be merged with the merge method defined for
-the pull request.
+Once the requirements for auto-merging have been met, the pull request will be
+merged with the merge method defined for the pull request.
 
 # Before you get started
 
@@ -48,29 +51,37 @@ Connect and configure these integrations:
 1. **GitHub**
 1. **Slack or Microsoft Teams**
 
-The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected.
-We recommend connecting the **Slack** or **Microsoft Teams** integration.
+The **GitHub** integration must be configured in order to use this skill. At
+least one repository must be selected. We recommend connecting the **Slack** or
+**Microsoft Teams** integration.
 
 # How to configure
 
 1. **Disable dry-run mode**
 
-    By default, this skill will leave a comment on a PR that when it found one to auto-merge. This feature is intended
-    for you to gain confidence with the skill and its configuration. Once you're happy with the configuration, you can
-    disable dry-run and have this skill merge your pull requests for real.
+    By default, this skill will leave a comment on a PR that when it found one
+    to auto-merge. This feature is intended for you to gain confidence with the
+    skill and its configuration. Once you're happy with the configuration, you
+    can disable dry-run and have this skill merge your pull requests for real.
 
 1. **Select the default policy to use when auto-merging pull requests**
 
-    To do so when no explicit auto-merge label is applied to the pull request, you can select one of the options:
+    To do so when no explicit auto-merge label is applied to the pull request,
+    you can select one of the options:
 
-    - **On successful reviews and status checks** — Triggers auto-merge if all requested reviews are approved and all
-      commit status checks are green.
-    - **On successful status checks** — Triggers auto-merge if all status checks are green.
-    - **On passing branch protection rule** - Trigger auto-merge if a GitHub branch protection rule passes
+    - **On successful reviews and status checks** — Triggers auto-merge if all
+      requested reviews are approved and all commit status checks are green.
+    - **On successful status checks** — Triggers auto-merge if all status checks
+      are green.
+    - **On passing branch protection rule** - Trigger auto-merge if a GitHub
+      branch protection rule passes
 
-    Note: there must be at least one [commit status check](https://developer.github.com/v3/repos/statuses/) in order for
-    the auto-merge policy to be met. This skill supports [commit status checks](https://developer.github.com/v3/repos/statuses/);
-    and [GitHub Checks API](https://developer.github.com/v3/checks/) as well [GitHub Branch Protection Rules](https://docs.github.com/en/github/administering-a-repository/configuring-protected-branches).
+    Note: there must be at least one
+    [commit status check](https://developer.github.com/v3/repos/statuses/) in
+    order for the auto-merge policy to be met. This skill supports
+    [commit status checks](https://developer.github.com/v3/repos/statuses/); and
+    [GitHub Checks API](https://developer.github.com/v3/checks/) as well
+    [GitHub Branch Protection Rules](https://docs.github.com/en/github/administering-a-repository/configuring-protected-branches).
 
 1. **Specify the default merge method**
 
@@ -82,23 +93,26 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
 
 1. **Auto-merge pull requests from certain users only**
 
-    This configuration parameters lets you configure GitHub logins of users or bots you want to this skill to auto-merge.
-    When this is configured, pull requests from authors not in this list won't be auto-merged.
+    This configuration parameters lets you configure GitHub logins of users or
+    bots you want to this skill to auto-merge. When this is configured, pull
+    requests from authors not in this list won't be auto-merged.
 
 1. **Determine repository scope**
 
     ![Repository filter](docs/images/repo-filter.png)
 
-    By default, this skill will be enabled for all repositories in all organizations you have connected.
+    By default, this skill will be enabled for all repositories in all
+    organizations you have connected.
 
-    To restrict the organizations or specific repositories on which the skill will run, you can explicitly choose
-    organization(s) and repositories.
+    To restrict the organizations or specific repositories on which the skill
+    will run, you can explicitly choose organization(s) and repositories.
 
 # How to use Pull Request auto-merge
 
 1. **Configure skill, set default auto-merge policy and method**
 
-1. **For every new pull request raised, this skill will automatically apply the following labels when relevant:**
+1. **For every new pull request raised, this skill will automatically apply the
+   following labels when relevant:**
 
     **Auto-merge policy labels**
 
@@ -114,18 +128,20 @@ We recommend connecting the **Slack** or **Microsoft Teams** integration.
 
 1. **Enjoy not having to ask if this pull request is ready to merge!**
 
-    Note: the labels are automatically added to and removed from the repository depending on its settings.
-    For example, disabling the *rebase* merge method in the repository settings on GitHub will automatically remove
-    the label.
+    Note: the labels are automatically added to and removed from the repository
+    depending on its settings. For example, disabling the *rebase* merge method
+    in the repository settings on GitHub will automatically remove the label.
 
-To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/github-auto-merge-skill/issues). See the [code](https://github.com/atomist-skills/github-auto-merge-skill) for the skill.
+To create feature requests or bug reports, create an
+[issue in the repository for this skill](https://github.com/atomist-skills/github-auto-merge-skill/issues).
+See the [code](https://github.com/atomist-skills/github-auto-merge-skill) for
+the skill.
 
 <!---atomist-skill-readme:end--->
 
 ---
 
-Created by [Atomist][atomist].
-Need Help? [Join our Slack workspace][slack].
+Created by [Atomist][atomist]. Need Help? [Join our Slack workspace][slack].
 
 [atomist]: https://atomist.com/ "Atomist - How Teams Deliver Software"
 [slack]: https://join.atomist.com/ "Atomist Community Slack"
