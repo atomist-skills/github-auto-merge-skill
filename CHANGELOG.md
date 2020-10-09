@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   Add dry-run option. [#69](https://github.com/atomist-skills/github-auto-merge-skill/issues/69)
+-   Add option to only auto merge for certain PR authors. [#70](https://github.com/atomist-skills/github-auto-merge-skill/issues/70)
 
 ### Fixed
 
