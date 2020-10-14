@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Add dry-run option. [#69](https://github.com/atomist-skills/github-auto-merge-skill/issues/69)
 -   Add option to only auto merge for certain PR authors. [#70](https://github.com/atomist-skills/github-auto-merge-skill/issues/70)
 
+### Changed
+
+-   Remove single dispatch. [9961aca](https://github.com/atomist-skills/github-auto-merge-skill/commit/9961aca519f02b244188d1ba113ccaa8b1571429)
+
 ### Fixed
 
 -   Hide messages on check for closed pull requests. [5ed064d](https://github.com/atomist-skills/github-auto-merge-skill/commit/5ed064da2b4bb2a4de47d28b33769fc0fbd1a980)
