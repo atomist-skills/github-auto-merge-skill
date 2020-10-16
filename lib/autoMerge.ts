@@ -224,7 +224,7 @@ const BranchProtectionAutoMergeRule: AutoMergeRule = {
 
 const ReviewApproveAutoMergeRule: AutoMergeRule = {
 	name: "approved reviews",
-	check: async (pr, api) => {
+	check: async pr => {
 		if (!pr.reviews || pr.reviews.length === 0) {
 			return false;
 		} else if (pr.reviews.some(r => r.state !== "approved")) {
@@ -236,7 +236,7 @@ const ReviewApproveAutoMergeRule: AutoMergeRule = {
 
 const CheckAutoMergeRule: AutoMergeRule = {
 	name: "checks and statuses",
-	check: async (pr, api) => {
+	check: async pr => {
 		const checks = aggregateChecksAndStatus(pr);
 		if (checks?.length === 0) {
 			return isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
