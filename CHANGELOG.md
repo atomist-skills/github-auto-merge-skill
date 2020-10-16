@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.2.0...HEAD)
 
+### Changed
+
+-   Update skill category. [efd82fa](https://github.com/atomist-skills/github-auto-merge-skill/commit/efd82fa550a9d8ad3d05b029334cb72c1bd3e584)
+
 ## [2.2.0](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.1.2...2.2.0) - 2020-10-14
 
 ### Added
