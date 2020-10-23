@@ -1,147 +1,81 @@
 # `atomist/github-auto-merge-skill`
 
-<!---atomist-skill-description:start--->
+Merge pull requests that pass all required checks.
 
-Merge pull requests that pass all checks required to merge
+:sparkles: [_**View this skill in the Atomist Skills Catalog**_][atomist-skill]
+to enable this skill on your repositories. :sparkles:
 
-<!---atomist-skill-description:end--->
+See the [Atomist website][atomist] for general information about Atomist Skills
+and the [Atomist documentation site][atomist-doc] for instructions on how to get
+started using Atomist Skills.
 
----
+[atomist-skill]:
+    https://go.atomist.com/catalog/skills/atomist/github-auto-merge-skill
+    "Atomist Skills Catalog - Automate All Your Software Tasks"
+[atomist-doc]: https://docs.atomist.com/ "Atomist Documentation"
 
-<!---atomist-skill-long_description:start--->
+## Contributing
 
-Automatically merge pull requests on GitHub based on assigned labels. Required
-reviews and checks settings configured in the repository on GitHub are used as
-the rules for auto merging.
+Contributions to this project from community members are encouraged and
+appreciated. Please review the [Contributing Guidelines](CONTRIBUTING.md) for
+more information. Also see the [Development](#development) section in this
+document.
 
-This approach makes is easy for pull request authors or anyone with permissions
-in the repository to flag a pull request for auto-merge simply by adding a
-label. The merge option can also be set with a label on the pull request.
+## Code of conduct
 
-<!---atomist-skill-long_description:end--->
+This project is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). You are
+expected to act in accordance with this code by participating. Please report any
+unacceptable behavior to code-of-conduct@atomist.com.
 
----
+## Connect
 
-<!---atomist-skill-readme:start--->
+Follow [@atomist][atomist-twitter] on Twitter and [The Atomist
+Blog][atomist-blog].
 
-# What it's useful for
+[atomist-twitter]: https://twitter.com/atomist "Atomist on Twitter"
+[atomist-blog]: https://blog.atomist.com/ "The Atomist Blog"
 
-With this skill you can automatically merge pull requests on GitHub based on
-assigned labels. Required reviews and checks settings configured in the
-repository on GitHub are used as the rules for auto-merging.
+## Support
 
-This approach makes it easy for pull request authors (or anyone with permissions
-in the repository) to flag a pull request for auto-merge, as well as set the
-merge option, simply by adding a label.
+General support questions should be discussed in the `#support` channel in the
+[Atomist community Slack workspace][slack].
 
-When a new pull request is created, this skill will automatically apply the
-default auto-merge policy and method labels (if set). The labels can be changed
-on the pull request to modify the policy or merge method for auto-merge.
+If you find a problem, please create an [issue](../../issues).
 
-Opting out of auto-merge is a simple matter of removing the auto-merge labels
-from a pull request.
+## Development
 
-Once the requirements for auto-merging have been met, the pull request will be
-merged with the merge method defined for the pull request.
+You will need to install [Node.js][node] to build and test this project.
 
-# Before you get started
+[node]: https://nodejs.org/ "Node.js"
 
-Connect and configure these integrations:
+### Build and test
 
-1. **GitHub**
-1. **Slack or Microsoft Teams**
+Install dependencies.
 
-The **GitHub** integration must be configured in order to use this skill. At
-least one repository must be selected. We recommend connecting the **Slack** or
-**Microsoft Teams** integration.
+```
+$ npm ci
+```
 
-# How to configure
+Use the `build` package script to compile, test, lint, and build the
+documentation.
 
-1. **Disable dry-run mode**
+```
+$ npm run build
+```
 
-    By default, this skill will leave a comment on a PR that when it found one
-    to auto-merge. This feature is intended for you to gain confidence with the
-    skill and its configuration. Once you're happy with the configuration, you
-    can disable dry-run and have this skill merge your pull requests for real.
+### Release
 
-1. **Select the default policy to use when auto-merging pull requests**
+Releases are created by pushing a release [semantic version][semver] tag to the
+repository, Atomist Skills take care of the rest.
 
-    To do so when no explicit auto-merge label is applied to the pull request,
-    you can select one of the options:
+To make this skill globally available, set its maturity to "stable" via the set
+maturity drop-down in its Atomist Community Slack channel.
 
-    - **On successful reviews and status checks** — Triggers auto-merge if all
-      requested reviews are approved and all commit status checks are green.
-    - **On successful status checks** — Triggers auto-merge if all status checks
-      are green.
-    - **On passing branch protection rule** - Trigger auto-merge if a GitHub
-      branch protection rule passes
-
-    Note: there must be at least one
-    [commit status check](https://developer.github.com/v3/repos/statuses/) in
-    order for the auto-merge policy to be met. This skill supports
-    [commit status checks](https://developer.github.com/v3/repos/statuses/); and
-    [GitHub Checks API](https://developer.github.com/v3/checks/) as well
-    [GitHub Branch Protection Rules](https://docs.github.com/en/github/administering-a-repository/configuring-protected-branches).
-
-1. **Specify the default merge method**
-
-    Select one of these methods:
-
-    - **Merge commit**
-    - **Squash and merge**
-    - **Rebase and merge**
-
-1. **Auto-merge pull requests from certain users only**
-
-    This configuration parameters lets you configure GitHub logins of users or
-    bots you want to this skill to auto-merge. When this is configured, pull
-    requests from authors not in this list won't be auto-merged.
-
-1. **Determine repository scope**
-
-    ![Repository filter](docs/images/repo-filter.png)
-
-    By default, this skill will be enabled for all repositories in all
-    organizations you have connected.
-
-    To restrict the organizations or specific repositories on which the skill
-    will run, you can explicitly choose organization(s) and repositories.
-
-# How to use Pull Request auto-merge
-
-1. **Configure skill, set default auto-merge policy and method**
-
-1. **For every new pull request raised, this skill will automatically apply the
-   following labels when relevant:**
-
-    **Auto-merge policy labels**
-
-    - `auto-merge:on-approve`
-    - `auto-merge:on-check-success`
-    - `auto-merge:on-bpr-success`
-
-    **Auto-merge method labels**
-
-    - `auto-merge-method:merge`
-    - `auto-merge-method:rebase`
-    - `auto-merge-method:squash`
-
-1. **Enjoy not having to ask if this pull request is ready to merge!**
-
-    Note: the labels are automatically added to and removed from the repository
-    depending on its settings. For example, disabling the *rebase* merge method
-    in the repository settings on GitHub will automatically remove the label.
-
-To create feature requests or bug reports, create an
-[issue in the repository for this skill](https://github.com/atomist-skills/github-auto-merge-skill/issues).
-See the [code](https://github.com/atomist-skills/github-auto-merge-skill) for
-the skill.
-
-<!---atomist-skill-readme:end--->
+[semver]: https://semver.org/ "Semantic Version"
 
 ---
 
 Created by [Atomist][atomist]. Need Help? [Join our Slack workspace][slack].
 
-[atomist]: https://atomist.com/ "Atomist - How Teams Deliver Software"
+[atomist]: https://atomist.com/ "Atomist - Automate All the Software Things"
 [slack]: https://join.atomist.com/ "Atomist Community Slack"
