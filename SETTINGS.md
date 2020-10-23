@@ -31,7 +31,7 @@ Connect and configure these integrations:
         requested reviews are approved and all commit status checks are green.
     -   **On successful status checks** — Triggers auto-merge if all status
         checks are green.
-    -   **On passing branch protection rule** - Trigger auto-merge if a GitHub
+    -   **On passing branch protection rule** — Trigger auto-merge if a GitHub
         branch protection rule passes
 
     Note: there must be at least one
@@ -47,9 +47,9 @@ Connect and configure these integrations:
 
     Select one of these methods:
 
-    -   **Merge commit**
-    -   **Squash and merge**
-    -   **Rebase and merge**
+    -   **Merge commit** — Create merge commit
+    -   **Squash and merge** — Squash all branch commits and merge
+    -   **Rebase and merge** — Rebase branch onto target branch and merge
 
 4.  **Auto-merge pull requests from certain users only**
 
