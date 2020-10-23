@@ -36,3 +36,7 @@ labels to control the merge policy and merge method.
     -   <span style="border-radius:24px;background-color:rgb(28,51,75);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">auto-merge-method:squash</span>
 
 ![Pull request labels](docs/images/pr-labels.png)
+
+### Auto-merging after policy is satisfied
+
+![Auto-merge](docs/images/auto-merge.png)
