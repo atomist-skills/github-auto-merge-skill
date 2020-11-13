@@ -50,20 +50,27 @@
     "compile:ts": "tsc --project .",
     "doc": "typedoc --mode modules --excludeExternals --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
     "gql:gen": "atm-skill gql-generate",
-    "lint": "eslint --ext .ts .",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "run-p lint:eslint lint:prettier",
+    "lint:eslint": "eslint --ext .ts .",
+    "lint:prettier": "prettier --list-different \"**/*.{graphql,json,markdown,md,yaml,yml}\"",
+    "lint:fix": "run-p lint:eslint:fix lint:prettier:fix",
+    "lint:eslint:fix": "npm run lint:eslint -- --fix",
+    "lint:prettier:fix": "prettier --write \"**/*.{graphql,json,markdown,md,yaml,yml}\"",
     "start": "functions-framework --target=sdm --signature-type=event",
     "test": "echo no tests",
     "test:one": "echo no tests",
-    "typedoc": "npm run doc",
     "skill": "run-s compile test skill:generate skill:bundle skill:package",
     "skill:generate": "atm-skill generate",
     "skill:clean": "atm-skill clean",
-    "skill:bundle": "atm-skill bundle --no-minify --no-source-map",
+    "skill:bundle": "atm-skill bundle",
     "skill:package": "atm-skill package",
     "skill:register": "atm-skill register",
     "atm:lint:prettier": "prettier --write",
     "atm:lint:eslint": "eslint --fix"
+  },
+  "engines": {
+    "node": ">=8.2.0",
+    "npm": ">=5.0.0"
   },
   "husky": {
     "hooks": {
