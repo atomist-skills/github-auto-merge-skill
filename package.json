@@ -68,10 +68,6 @@
     "atm:lint:prettier": "prettier --write",
     "atm:lint:eslint": "eslint --fix"
   },
-  "engines": {
-    "node": ">=8.2.0",
-    "npm": ">=5.0.0"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
