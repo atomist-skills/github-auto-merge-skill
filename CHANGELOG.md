@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Remove unused chat provider. [6d2d3e3](https://github.com/atomist-skills/github-auto-merge-skill/commit/6d2d3e3a3a8a82fbac73e3555748c3451b6f973d)
 
+### Fixed
+
+-   Fix package start script. [6aa1044](https://github.com/atomist-skills/github-auto-merge-skill/commit/6aa1044a48e1f74dfe040801355db0f79fc7bba9)
+
 ## [2.3.0](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.2.0...2.3.0) - 2020-10-16
 
 ### Changed
