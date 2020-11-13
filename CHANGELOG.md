@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.3.0...HEAD)
 
+### Removed
+
+-   Remove unused chat provider. [6d2d3e3](https://github.com/atomist-skills/github-auto-merge-skill/commit/6d2d3e3a3a8a82fbac73e3555748c3451b6f973d)
+
 ## [2.3.0](https://github.com/atomist-skills/github-auto-merge-skill/compare/2.2.0...2.3.0) - 2020-10-16
 
 ### Changed
