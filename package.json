@@ -1,40 +1,41 @@
 {
-  "main": "node_modules/@atomist/skill/lib/function.js",
+  "name": "@atomist/github-auto-merge-skill",
+  "author": {
+    "name": "Atomist",
+    "email": "oss@atomist.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atomist-skills/github-auto-merge-skill.git"
+  },
+  "homepage": "https://github.com/atomist-skills/github-auto-merge-skill#readme",
+  "license": "Apache-2.0",
   "dependencies": {
     "@atomist/skill": "^0.5.0",
-    "lodash": "^4.17.20",
+    "@octokit/plugin-rest-endpoint-methods": "^4.2.1",
+    "@octokit/rest": "^18.0.9",
     "p-retry": "^4.2.0"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.7.1",
-    "@graphql-codegen/cli": "^1.19.1",
-    "@graphql-codegen/typescript": "^1.17.11",
-    "@graphql-codegen/typescript-operations": "^1.17.9",
-    "@types/lodash": "^4.14.165",
-    "@types/mocha": "^8.0.4",
-    "@types/power-assert": "^1.5.3",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "espower-typescript": "^9.0.2",
-    "graphql": "^15.4.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.1",
-    "mocha": "^8.2.1",
     "npm-run-all": "^4.1.5",
-    "power-assert": "^1.6.1",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
-    "ts-node": "^9.0.0",
     "typedoc": "^0.19.2",
     "typescript": "^4.0.5"
   },
   "directories": {
     "test": "test"
   },
+  "main": "node_modules/@atomist/skill/lib/function.js",
   "scripts": {
     "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
     "build": "run-s clean compile test lint doc",
@@ -48,13 +49,12 @@
     "compile": "run-s gql:gen compile:ts",
     "compile:ts": "tsc --project .",
     "doc": "typedoc --mode modules --excludeExternals --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
-    "git:info": "atm-git-info",
-    "gql:gen": "graphql-codegen",
+    "gql:gen": "atm-skill gql-generate",
     "lint": "eslint --ext .ts .",
     "lint:fix": "npm run lint -- --fix",
     "start": "functions-framework --target=sdm --signature-type=event",
     "test": "echo no tests",
-    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
+    "test:one": "echo no tests",
     "typedoc": "npm run doc",
     "skill": "run-s compile test skill:generate skill:bundle skill:package",
     "skill:generate": "atm-skill generate",

@@ -28,9 +28,7 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 	namespace: "atomist",
 	description: "Merge pull requests that pass all required checks",
 	displayName: "Auto-Merge Pull Requests",
-	author: "Atomist",
 	categories: [Category.RepoManagement],
-	license: "Apache-2.0",
 
 	runtime: {
 		memory: 1024,
