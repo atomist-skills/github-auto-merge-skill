@@ -29,6 +29,8 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 	description: "Merge pull requests that pass all required checks",
 	displayName: "Auto-Merge Pull Requests",
 	categories: [Category.RepoManagement],
+	iconUrl:
+		"https://raw.githubusercontent.com/atomist-skills/github-auto-merge-skill/main/docs/images/icon.svg",
 
 	runtime: {
 		memory: 1024,
