@@ -24,7 +24,9 @@ import {
 	status,
 } from "@atomist/skill";
 import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types";
+import { Octokit } from "@octokit/rest"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import * as retry from "p-retry";
+
 import { AutoMergeConfiguration } from "./configuration";
 import {
 	CheckRunConclusion,
@@ -33,7 +35,6 @@ import {
 	ReviewState,
 	StatusState,
 } from "./typings/types";
-import { Octokit } from "@octokit/rest"; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export const AutoMergeLabel = "auto-merge:on-approve";
 export const AutoMergeCheckSuccessLabel = "auto-merge:on-check-success";

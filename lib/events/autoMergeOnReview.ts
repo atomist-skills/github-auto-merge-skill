@@ -15,6 +15,7 @@
  */
 
 import { EventHandler, secret } from "@atomist/skill";
+
 import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnReviewSubscription } from "../typings/types";
