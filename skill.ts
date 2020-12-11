@@ -21,6 +21,7 @@ import {
 	resourceProvider,
 	skill,
 } from "@atomist/skill";
+
 import { AutoMergeConfiguration } from "./lib/configuration";
 
 export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
