@@ -15,9 +15,10 @@
  */
 
 import { EventHandler, secret } from "@atomist/skill";
+
+import { executeAutoMerge } from "../autoMerge";
 import { AutoMergeConfiguration } from "../configuration";
 import { AutoMergeOnCheckSubscription } from "../typings/types";
-import { executeAutoMerge } from "../autoMerge";
 
 export const handler: EventHandler<
 	AutoMergeOnCheckSubscription,

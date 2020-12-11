@@ -21,10 +21,11 @@ import {
 	secret,
 	status,
 } from "@atomist/skill";
+
 import {
+	AutoMergeBprSuccessLabel,
 	AutoMergeCheckSuccessLabel,
 	AutoMergeLabel,
-	AutoMergeBprSuccessLabel,
 	AutoMergeMethodLabel,
 	AutoMergeMethodLabels,
 	AutoMergeMethods,
