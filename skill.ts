@@ -55,7 +55,7 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 			type: ParameterType.SingleChoice,
 			displayName: "Default auto-merge policy",
 			description:
-				"Select the default policy to use when auto-merging pull requests",
+				"Select the default policy to use when auto-merging pull requests. If no policy is selected the skill will default to auto merge on successful reviews and status checks.",
 			options: [
 				{
 					text: "On successful reviews and status checks",
@@ -76,7 +76,7 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 			type: ParameterType.SingleChoice,
 			displayName: "Default auto-merge method",
 			description:
-				"Select the default merge method to use when auto-merging pull requests",
+				"Select the default merge method to use when auto-merging pull requests. If no method is selected this skill will default to auto-merge with a merge commit.",
 			options: [
 				{
 					text: "Merge commit",
