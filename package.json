@@ -49,16 +49,16 @@
   },
   "dependencies": {
     "@atomist/skill": "^0.7.1",
-    "@octokit/plugin-rest-endpoint-methods": "^4.8.1",
+    "@octokit/plugin-rest-endpoint-methods": "^4.9.2",
     "@octokit/rest": "^18.0.15",
     "p-retry": "^4.3.0"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.7.1",
     "@types/mocha": "^8.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^4.14.1",
-    "eslint": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
