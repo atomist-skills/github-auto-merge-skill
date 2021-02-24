@@ -49,15 +49,15 @@
   },
   "dependencies": {
     "@atomist/skill": "^0.7.1",
-    "@octokit/plugin-rest-endpoint-methods": "^4.10.3",
-    "@octokit/rest": "^18.1.1",
+    "@octokit/plugin-rest-endpoint-methods": "^4.12.2",
+    "@octokit/rest": "^18.2.1",
     "p-retry": "^4.4.0"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.7.1",
-    "@types/mocha": "^8.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.15.0",
-    "@typescript-eslint/parser": "^4.15.0",
+    "@types/mocha": "^8.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -71,7 +71,7 @@
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
     "typedoc": "^0.20.28",
-    "typescript": "^4.1.5"
+    "typescript": "^4.2.2"
   },
   "husky": {
     "hooks": {
