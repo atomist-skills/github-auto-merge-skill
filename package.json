@@ -49,8 +49,8 @@
   },
   "dependencies": {
     "@atomist/skill": "^0.7.1",
-    "@octokit/plugin-rest-endpoint-methods": "^4.14.0",
-    "@octokit/rest": "^18.4.0",
+    "@octokit/plugin-rest-endpoint-methods": "^4.15.0",
+    "@octokit/rest": "^18.5.0",
     "p-retry": "^4.4.0"
   },
   "devDependencies": {
