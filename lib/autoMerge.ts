@@ -337,7 +337,7 @@ export async function executeAutoMerge(
 	const link = `[${slug}](${pr.url})`;
 
 	if (pr.state !== "open") {
-		await ctx.audit.log(`Pull request auto-merge ignoring closed ${slug}`);
+		log.info(`Pull request auto-merge ignoring closed ${slug}`);
 		return status
 			.success(`Pull request auto-merge ignoring closed ${link}`)
 			.hidden();
@@ -346,7 +346,7 @@ export async function executeAutoMerge(
 	const cfg = ctx.configuration?.parameters;
 	const authors = cfg?.authors || [];
 	if (authors.length > 0 && !authors.includes(pr.author.login)) {
-		await ctx.audit.log(
+		log.info(
 			`Pull request ${slug} ignored because not authored by any of the configured users`,
 		);
 		return status
@@ -376,13 +376,11 @@ export async function executeAutoMerge(
 	pr.labels = ghPr?.labels?.map(l => ({ name: l.name })) || pr.labels;
 
 	if (!isPrAutoMergeEnabled(pr)) {
-		await ctx.audit.log(
-			`Pull request auto-merge not requested for ${slug}`,
-		);
+		log.info(`Pull request auto-merge not requested for ${slug}`);
 		return status.success(`Pull request ${link} not auto-merged`).hidden();
 	}
 
-	await ctx.audit.log(
+	log.info(
 		`Starting auto-merge processing for pull request ${slug} with labels: ${pr.labels
 			.map(l => l.name)
 			.join(", ")}`,
@@ -407,7 +405,7 @@ export async function executeAutoMerge(
 	}
 
 	if (failedRules.length > 0) {
-		await ctx.audit.log(
+		log.info(
 			`Pull request auto-merge not enabled for ${slug} because following rules failed: ${failedRules.join(
 				", ",
 			)}`,
@@ -417,7 +415,7 @@ export async function executeAutoMerge(
 		);
 	}
 
-	await ctx.audit.log(
+	log.info(
 		`Pull request auto-merge enabled for ${slug}. Attempting to merge...`,
 	);
 
@@ -470,7 +468,7 @@ ${github.formatMarkers(ctx)}`;
 							commit_title: details.title,
 							commit_message: details.message,
 						});
-						await ctx.audit.log(`Pull request ${slug} auto-merged`);
+						log.info(`Pull request ${slug} auto-merged`);
 
 						await api.issues.createComment({
 							owner: pr.repo.owner,
@@ -480,9 +478,7 @@ ${github.formatMarkers(ctx)}`;
 
 ${body}`,
 						});
-						await ctx.audit.log(
-							`Pull request auto-merge comment created`,
-						);
+						log.info(`Pull request auto-merge comment created`);
 						return status.success(
 							`Pull request ${link} auto-merged`,
 						);
@@ -530,7 +526,7 @@ To enable auto-merge on this pull request disable the dry-run mode in the [skill
 						);
 					}
 				} else {
-					await ctx.audit.log(
+					log.info(
 						`Pull request ${slug} not auto-merged because it can't be merged at this time`,
 					);
 					return status.success(
@@ -553,7 +549,7 @@ To enable auto-merge on this pull request disable the dry-run mode in the [skill
 
 		return result;
 	} catch (e) {
-		await ctx.audit.log(
+		log.info(
 			`Pull request ${slug} not auto-merged because it can't be merged at this time`,
 		);
 		return status.success(

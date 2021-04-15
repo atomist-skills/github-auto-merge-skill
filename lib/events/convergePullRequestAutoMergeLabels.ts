@@ -17,6 +17,7 @@
 import {
 	EventHandler,
 	github,
+	log,
 	repository,
 	secret,
 	status,
@@ -53,7 +54,7 @@ export const handler: EventHandler<
 	const pr = ctx.data.PullRequest[0];
 
 	if (pr.action !== PullRequestAction.Opened) {
-		await ctx.audit.log(
+		log.info(
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} action not opened. Ignoring...`,
 		);
 
@@ -66,7 +67,7 @@ export const handler: EventHandler<
 
 	const authors = ctx.configuration?.parameters?.authors || [];
 	if (authors.length > 0 && !authors.includes(pr.author.login)) {
-		await ctx.audit.log(
+		log.info(
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} not authored by any of the configured users. Ignoring...`,
 		);
 
@@ -87,7 +88,7 @@ export const handler: EventHandler<
 	const api = github.api(id);
 	const repoDetails = (await api.repos.get({ owner, repo: name })).data;
 
-	await ctx.audit.log(
+	log.info(
 		`Converging auto-merge labels based on repository's merge configuration`,
 	);
 
@@ -112,7 +113,7 @@ export const handler: EventHandler<
 
 	for (const label of AutoMergeMethods) {
 		if (mergeMethodSettings(repoDetails)[label]) {
-			await ctx.audit.log(
+			log.info(
 				`Adding ${AutoMergeMethodLabel}${label} label to repository`,
 			);
 			await github.convergeLabel(
@@ -122,7 +123,7 @@ export const handler: EventHandler<
 				AutoMergeMethodLabels[label],
 			);
 		} else {
-			await ctx.audit.log(
+			log.info(
 				`Removing ${AutoMergeMethodLabel}${label} label from repository`,
 			);
 			await api.issues.deleteLabel({
@@ -133,7 +134,7 @@ export const handler: EventHandler<
 		}
 	}
 
-	await ctx.audit.log(
+	log.info(
 		`Labelling pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} with configured auto-merge policy and method`,
 	);
 
@@ -148,7 +149,7 @@ export const handler: EventHandler<
 	if (!pr.labels.some(l => l.name.startsWith("auto-merge-method:"))) {
 		const method = ctx.configuration?.parameters?.mergeMethod || "merge";
 		if (!mergeMethodSettings(repoDetails)[method]) {
-			await ctx.audit.log(
+			log.info(
 				`Pull request ${pr.repo.owner}/${pr.repo.name}#${pr.number} can't be labelled with auto-merge labels because configured merge method '${method}' is not available on this repository`,
 			);
 			return status.failure(
@@ -171,7 +172,7 @@ export const handler: EventHandler<
 			labels,
 		});
 
-		await ctx.audit.log(
+		log.info(
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${
 				pr.number
 			} labelled with: ${labels.join(", ")}`,
@@ -181,7 +182,7 @@ export const handler: EventHandler<
 			`Pull request [${pr.repo.owner}/${pr.repo.name}#${pr.number}](${pr.url}) labelled with auto-merged labels`,
 		);
 	} else {
-		await ctx.audit.log(
+		log.info(
 			`Pull request ${pr.repo.owner}/${pr.repo.name}#${
 				pr.number
 			} labelled with: ${labels.join(", ")}`,
