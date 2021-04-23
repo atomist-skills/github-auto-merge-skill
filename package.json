@@ -1,6 +1,6 @@
 {
   "name": "@atomist/github-auto-merge-skill",
-  "homepage": "https://github.com/atomist-skills/github-auto-merge-skill",
+  "homepage": "https://github.com/atomist-skills/github-auto-merge-skill#readme",
   "license": "Apache-2.0",
   "author": {
     "name": "Atomist, Inc.",
@@ -55,7 +55,7 @@
     "p-retry": "^4.5.0"
   },
   "devDependencies": {
-    "@atomist/npm-tools": "^0.1.1-master.0",
+    "@atomist/npm-tools": "^0.1.1-main.0",
     "@google-cloud/functions-framework": "^1.7.1",
     "@types/mocha": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
