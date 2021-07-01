@@ -50,8 +50,8 @@
   },
   "dependencies": {
     "@atomist/skill": "^0.11.0",
-    "@octokit/plugin-rest-endpoint-methods": "^5.3.6",
-    "@octokit/rest": "^18.6.4",
+    "@octokit/plugin-rest-endpoint-methods": "^5.3.7",
+    "@octokit/rest": "^18.6.6",
     "p-retry": "^4.6.0"
   },
   "devDependencies": {
@@ -75,7 +75,7 @@
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
     "typedoc": "^0.20.37",
-    "typescript": "^4.3.4"
+    "typescript": "^4.3.5"
   },
   "husky": {
     "hooks": {
