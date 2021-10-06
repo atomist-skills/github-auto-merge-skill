@@ -325,6 +325,7 @@ function commitDetails(
 	method: string,
 	pr: PullRequest,
 	bpr: any,
+	ctx: EventContext<any, AutoMergeConfiguration>,
 ): { title: string; message: string } {
 	let title;
 	let message = "";
@@ -347,7 +348,7 @@ Pull request auto merged:
 ${
 	bpr ? `* Protection rule for branch \`${pr.baseBranchName}\` passed\n` : ""
 }* ${reviewComment(pr)}
-* ${statusComment(pr)}`;
+* ${statusComment(pr, ctx)}`;
 	return { title, message };
 }
 
@@ -478,6 +479,7 @@ export async function executeAutoMerge(
 						method,
 						pr,
 						(pr as any).protectionRule,
+						ctx,
 					);
 
 					const body = `${
@@ -485,7 +487,7 @@ export async function executeAutoMerge(
 							? `* Branch protection rule for branch \`${pr.baseBranchName}\` passed\n`
 							: ""
 					}* ${reviewComment(pr)}
-* ${statusComment(pr)}
+* ${statusComment(pr, ctx)}
 ${github.formatMarkers(ctx)}`;
 
 					if (!cfg.dryRun) {
