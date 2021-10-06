@@ -24,6 +24,7 @@ subscription autoMergeOnBuild {
         checkSuites {
           appSlug
           checkRuns {
+            checkRunId
             name
             conclusion
             status

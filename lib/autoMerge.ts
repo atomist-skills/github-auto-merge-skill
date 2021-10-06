@@ -25,6 +25,7 @@ import {
 } from "@atomist/skill";
 import { RestEndpointMethodTypes } from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types";
 import { Octokit } from "@octokit/rest"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import * as _ from "lodash";
 import * as retry from "p-retry";
 
 import { AutoMergeConfiguration } from "./configuration";
@@ -119,15 +120,18 @@ function aggregateChecksAndStatus(pr: PullRequest): Check[] {
 	// Second checks
 	pr.head?.checkSuites?.forEach(c => {
 		const app = c.appSlug;
-		c.checkRuns?.forEach(r => {
+
+		const checkGroups = _.groupBy(c.checkRuns, "name");
+		_.forEach(checkGroups, v => {
+			const check = _.maxBy(v, c => +c.checkRunId);
 			let state;
-			switch (r.status) {
+			switch (check.status) {
 				case CheckRunStatus.InProgress:
 				case CheckRunStatus.Queued:
 					state = StatusState.Pending;
 					break;
 				case CheckRunStatus.Completed:
-					switch (r.conclusion) {
+					switch (check.conclusion) {
 						case CheckRunConclusion.Success:
 						case CheckRunConclusion.Neutral:
 						case CheckRunConclusion.Skipped:
@@ -144,11 +148,11 @@ function aggregateChecksAndStatus(pr: PullRequest): Check[] {
 					break;
 			}
 			allChecks.push({
-				name: `${app}/${r.name}`,
-				description: r.outputTitle,
-				url: r.htmlUrl,
+				name: `${app}/${check.name}`,
+				description: check.outputTitle,
+				url: check.htmlUrl,
 				state,
-				detailsUrl: r.detailsUrl,
+				detailsUrl: check.detailsUrl,
 			});
 		});
 	});

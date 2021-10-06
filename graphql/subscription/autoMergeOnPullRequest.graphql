@@ -23,6 +23,7 @@ subscription autoMergeOnPullRequest {
       checkSuites {
         appSlug
         checkRuns {
+          checkRunId
           name
           conclusion
           status
