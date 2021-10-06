@@ -345,7 +345,7 @@ export async function executeAutoMerge(
 
 	const cfg = ctx.configuration?.parameters;
 	const authors = cfg?.authors || [];
-	if (authors.length > 0 && !authors.includes(pr.author.login)) {
+	if (authors.length > 0 && !authors.includes(pr?.author?.login)) {
 		log.info(
 			`Pull request ${slug} ignored because not authored by any of the configured users`,
 		);
