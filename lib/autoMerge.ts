@@ -157,7 +157,11 @@ function aggregateChecksAndStatus(pr: PullRequest): Check[] {
 
 interface AutoMergeRule {
 	name: string;
-	check: (pr: PullRequest, api: Octokit) => Promise<boolean>;
+	check: (
+		pr: PullRequest,
+		api: Octokit,
+		ctx: EventContext<any, AutoMergeConfiguration>,
+	) => Promise<boolean>;
 }
 
 const BranchProtectionAutoMergeRule: AutoMergeRule = {
@@ -237,10 +241,18 @@ const ReviewApproveAutoMergeRule: AutoMergeRule = {
 
 const CheckAutoMergeRule: AutoMergeRule = {
 	name: "checks and statuses",
-	check: async pr => {
+	check: async (pr, api, ctx) => {
 		const checks = aggregateChecksAndStatus(pr);
-		if (checks?.length === 0) {
+		const requiredChecks = ctx.configuration.parameters.checks || [];
+		if (checks?.length === 0 && requiredChecks?.length === 0) {
 			return isPrTagged(pr, AutoMergeLabel, AutoMergeTag);
+		} else if (requiredChecks?.length > 0) {
+			return (
+				checks
+					.filter(c => c.state === StatusState.Success)
+					.filter(c => requiredChecks.includes(c.name)).length ===
+				requiredChecks.length
+			);
 		} else if (checks?.some(s => s.state !== StatusState.Success)) {
 			return false;
 		}
@@ -399,7 +411,7 @@ export async function executeAutoMerge(
 	}
 
 	for (const rule of rules) {
-		if (!(await rule.check(pr, api))) {
+		if (!(await rule.check(pr, api, ctx))) {
 			failedRules.push(rule.name);
 		}
 	}

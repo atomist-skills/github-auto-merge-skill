@@ -18,6 +18,7 @@ import {
 	Category,
 	parameter,
 	ParameterType,
+	ParameterVisibility,
 	resourceProvider,
 	skill,
 } from "@atomist/skill";
@@ -99,6 +100,14 @@ export const Skill = skill<AutoMergeConfiguration & { repos: any }>({
 			description:
 				"Auto-merge pull requests that are authored from the following GitHub users or bots only",
 			required: false,
+		},
+		checks: {
+			type: ParameterType.StringArray,
+			displayName: "Required checks and statuses",
+			description:
+				"Provide a list of checks that need to be successful in order to auto-merge pull requests",
+			required: false,
+			visibility: ParameterVisibility.Advanced,
 		},
 		repos: parameter.repoFilter({ required: false }),
 	},
