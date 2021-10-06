@@ -11,7 +11,7 @@ This page details all runtime dependencies of `@atomist/github-auto-merge-skill`
 | License                              | Count |
 | ------------------------------------ | ----- |
 | [0BSD](#0bsd)                        | 4     |
-| [Apache-2.0](#apache-20)             | 98    |
+| [Apache-2.0](#apache-20)             | 99    |
 | [BSD-2-Clause](#bsd-2-clause)        | 12    |
 | [BSD-3-Clause](#bsd-3-clause)        | 23    |
 | [CC-BY-3.0](#cc-by-30)               | 1     |
@@ -138,6 +138,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `spdx-correct`                              | `3.1.0`           | Kyle E. Mitchell            | [https://github.com/jslicense/spdx-correct.js](https://github.com/jslicense/spdx-correct.js)                                           |
 | `teeny-request`                             | `7.1.3`           | fhinkel                     | [https://github.com/googleapis/teeny-request](https://github.com/googleapis/teeny-request)                                             |
 | `tslib`                                     | `1.10.0`          | Microsoft Corp.             | [https://github.com/Microsoft/tslib](https://github.com/Microsoft/tslib)                                                               |
+| `typescript`                                | `4.4.3`           | Microsoft Corp.             | [https://github.com/Microsoft/TypeScript](https://github.com/Microsoft/TypeScript)                                                     |
 | `validate-npm-package-license`              | `3.0.4`           | Kyle E. Mitchell            | [https://github.com/kemitchell/validate-npm-package-license.js](https://github.com/kemitchell/validate-npm-package-license.js)         |
 | `yaml-ast-parser`                           | `0.0.43`          |                             | [https://github.com/mulesoft-labs/yaml-ast-parser](https://github.com/mulesoft-labs/yaml-ast-parser)                                   |
 
@@ -253,7 +254,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `glob-parent`               | `5.1.2`   | Gulp Team          | [https://github.com/gulpjs/glob-parent](https://github.com/gulpjs/glob-parent)                               |
 | `glob`                      | `7.1.6`   | Isaac Z. Schlueter | [https://github.com/isaacs/node-glob](https://github.com/isaacs/node-glob)                                   |
 | `graceful-fs`               | `4.2.4`   |                    | [https://github.com/isaacs/node-graceful-fs](https://github.com/isaacs/node-graceful-fs)                     |
-| `hosted-git-info`           | `2.8.9`   | Rebecca Turner     | [https://github.com/npm/hosted-git-info](https://github.com/npm/hosted-git-info)                             |
+| `hosted-git-info`           | `2.8.8`   | Rebecca Turner     | [https://github.com/npm/hosted-git-info](https://github.com/npm/hosted-git-info)                             |
 | `inflight`                  | `1.0.6`   | Isaac Z. Schlueter | [https://github.com/npm/inflight](https://github.com/npm/inflight)                                           |
 | `inherits`                  | `2.0.3`   |                    | [https://github.com/isaacs/inherits](https://github.com/isaacs/inherits)                                     |
 | `inherits`                  | `2.0.4`   |                    | [https://github.com/isaacs/inherits](https://github.com/isaacs/inherits)                                     |
@@ -433,7 +434,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@types/mime`                                        | `1.3.2`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/node-fetch`                                  | `2.5.12`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/node`                                        | `14.14.41`     |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
-| `@types/normalize-package-data`                      | `2.4.1`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
+| `@types/normalize-package-data`                      | `2.4.0`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/parse-json`                                  | `4.0.0`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/pluralize`                                   | `0.0.29`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/qs`                                          | `6.9.7`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
@@ -805,7 +806,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `path-exists`                                        | `4.0.0`        | Sindre Sorhus                  | [https://github.com/sindresorhus/path-exists](https://github.com/sindresorhus/path-exists)                                                                                                           |
 | `path-is-absolute`                                   | `1.0.1`        | Sindre Sorhus                  | [https://github.com/sindresorhus/path-is-absolute](https://github.com/sindresorhus/path-is-absolute)                                                                                                 |
 | `path-key`                                           | `3.1.1`        | Sindre Sorhus                  | [https://github.com/sindresorhus/path-key](https://github.com/sindresorhus/path-key)                                                                                                                 |
-| `path-parse`                                         | `1.0.7`        | Javier Blanco                  | [https://github.com/jbgutierrez/path-parse](https://github.com/jbgutierrez/path-parse)                                                                                                               |
+| `path-parse`                                         | `1.0.6`        | Javier Blanco                  | [https://github.com/jbgutierrez/path-parse](https://github.com/jbgutierrez/path-parse)                                                                                                               |
 | `path-root-regex`                                    | `0.1.2`        | Jon Schlinkert                 | [https://github.com/regexhq/path-root-regex](https://github.com/regexhq/path-root-regex)                                                                                                             |
 | `path-root`                                          | `0.1.1`        | Jon Schlinkert                 | [https://github.com/jonschlinkert/path-root](https://github.com/jonschlinkert/path-root)                                                                                                             |
 | `path-to-regexp`                                     | `0.1.7`        |                                | [https://github.com/component/path-to-regexp](https://github.com/component/path-to-regexp)                                                                                                           |
