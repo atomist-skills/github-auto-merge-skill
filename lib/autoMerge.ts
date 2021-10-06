@@ -295,14 +295,27 @@ function reviewComment(pr: PullRequest): string {
 	}
 }
 
-function statusComment(pr: PullRequest): string {
+function statusComment(
+	pr: PullRequest,
+	ctx: EventContext<any, AutoMergeConfiguration>,
+): string {
 	if (pr.head?.statuses?.length > 0 || pr.head?.checkSuites?.length > 0) {
-		const checks = aggregateChecksAndStatus(pr).filter(
-			c => c.state === StatusState.Success,
-		);
-		return `${checks.length} successful ${
-			checks.length === 1 ? "check" : "checks"
-		}`;
+		if (ctx.configuration.parameters.checks?.length > 0) {
+			return `${
+				ctx.configuration.parameters.checks?.length
+			} successful required ${
+				ctx.configuration.parameters.checks?.length === 1
+					? "check"
+					: "checks"
+			}`;
+		} else {
+			const checks = aggregateChecksAndStatus(pr).filter(
+				c => c.state === StatusState.Success,
+			);
+			return `${checks.length} successful ${
+				checks.length === 1 ? "check" : "checks"
+			}`;
+		}
 	} else {
 		return "No checks";
 	}
