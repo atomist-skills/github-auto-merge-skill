@@ -11,7 +11,7 @@ This page details all runtime dependencies of `@atomist/github-auto-merge-skill`
 | License                              | Count |
 | ------------------------------------ | ----- |
 | [0BSD](#0bsd)                        | 4     |
-| [Apache-2.0](#apache-20)             | 99    |
+| [Apache-2.0](#apache-20)             | 98    |
 | [BSD-2-Clause](#bsd-2-clause)        | 12    |
 | [BSD-3-Clause](#bsd-3-clause)        | 23    |
 | [CC-BY-3.0](#cc-by-30)               | 1     |
@@ -138,7 +138,6 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `spdx-correct`                              | `3.1.0`           | Kyle E. Mitchell            | [https://github.com/jslicense/spdx-correct.js](https://github.com/jslicense/spdx-correct.js)                                           |
 | `teeny-request`                             | `7.1.3`           | fhinkel                     | [https://github.com/googleapis/teeny-request](https://github.com/googleapis/teeny-request)                                             |
 | `tslib`                                     | `1.10.0`          | Microsoft Corp.             | [https://github.com/Microsoft/tslib](https://github.com/Microsoft/tslib)                                                               |
-| `typescript`                                | `4.4.3`           | Microsoft Corp.             | [https://github.com/Microsoft/TypeScript](https://github.com/Microsoft/TypeScript)                                                     |
 | `validate-npm-package-license`              | `3.0.4`           | Kyle E. Mitchell            | [https://github.com/kemitchell/validate-npm-package-license.js](https://github.com/kemitchell/validate-npm-package-license.js)         |
 | `yaml-ast-parser`                           | `0.0.43`          |                             | [https://github.com/mulesoft-labs/yaml-ast-parser](https://github.com/mulesoft-labs/yaml-ast-parser)                                   |
 
