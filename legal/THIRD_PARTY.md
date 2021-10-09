@@ -11,7 +11,7 @@ This page details all runtime dependencies of `@atomist/github-auto-merge-skill`
 | License                              | Count |
 | ------------------------------------ | ----- |
 | [0BSD](#0bsd)                        | 4     |
-| [Apache-2.0](#apache-20)             | 98    |
+| [Apache-2.0](#apache-20)             | 99    |
 | [BSD-2-Clause](#bsd-2-clause)        | 12    |
 | [BSD-3-Clause](#bsd-3-clause)        | 23    |
 | [CC-BY-3.0](#cc-by-30)               | 1     |
@@ -21,7 +21,7 @@ This page details all runtime dependencies of `@atomist/github-auto-merge-skill`
 | [GPL-3.0-or-later](#gpl-30-or-later) | 1     |
 | [ISC](#isc)                          | 46    |
 | [MIT AND Zlib](#mit-and-zlib)        | 1     |
-| [MIT](#mit)                          | 663   |
+| [MIT](#mit)                          | 665   |
 | [Public Domain](#public-domain)      | 1     |
 | [Python-2.0](#python-20)             | 1     |
 
@@ -43,7 +43,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | Name                                        | Version           | Publisher                   | Repository                                                                                                                             |
 | ------------------------------------------- | ----------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `@atomist/skill-logging`                    | `1.0.8-main.30`   | Atomist, Inc.               | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                                     |
-| `@atomist/skill`                            | `0.11.1-main.411` | Atomist, Inc.               | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
+| `@atomist/skill`                            | `0.11.1-main.415` | Atomist, Inc.               | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
 | `@atomist/slack-messages`                   | `1.2.2`           | Atomist                     | [https://github.com/atomist/slack-messages](https://github.com/atomist/slack-messages)                                                 |
 | `@aws-crypto/ie11-detection`                | `1.0.0`           | AWS Crypto Tools Team       | [https://github.com/aws/aws-sdk-js-crypto-helpers](https://github.com/aws/aws-sdk-js-crypto-helpers)                                   |
 | `@aws-crypto/sha256-browser`                | `1.2.1`           | AWS Crypto Tools Team       | [https://github.com/aws/aws-sdk-js-crypto-helpers](https://github.com/aws/aws-sdk-js-crypto-helpers)                                   |
@@ -101,6 +101,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `@aws-sdk/util-utf8-browser`                | `3.36.0`          | AWS SDK for JavaScript Team | [https://github.com/aws/aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3)                                                           |
 | `@aws-sdk/util-utf8-node`                   | `3.36.0`          | AWS SDK for JavaScript Team | [https://github.com/aws/aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3)                                                           |
 | `@aws-sdk/util-waiter`                      | `3.36.0`          | AWS SDK for JavaScript Team | [https://github.com/aws/aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3)                                                           |
+| `@google-cloud/common`                      | `3.7.2`           | Google Inc.                 | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                             |
 | `@google-cloud/common`                      | `3.7.4`           | Google Inc.                 | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                             |
 | `@google-cloud/functions-framework`         | `1.10.0`          | Google Inc.                 | [https://github.com/GoogleCloudPlatform/functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) |
 | `@google-cloud/logging`                     | `8.2.0`           | Google Inc.                 | [https://github.com/googleapis/nodejs-logging](https://github.com/googleapis/nodejs-logging)                                           |
@@ -246,7 +247,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `cliui`                     | `6.0.0`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `cliui`                     | `7.0.4`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `deprecation`               | `2.3.1`   |                    | [https://github.com/gr2m/deprecation](https://github.com/gr2m/deprecation)                                   |
-| `electron-to-chromium`      | `1.3.862` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
+| `electron-to-chromium`      | `1.3.864` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
 | `fastq`                     | `1.10.0`  | Matteo Collina     | [https://github.com/mcollina/fastq](https://github.com/mcollina/fastq)                                       |
 | `fs.realpath`               | `1.0.0`   | Isaac Z. Schlueter | [https://github.com/isaacs/fs.realpath](https://github.com/isaacs/fs.realpath)                               |
 | `get-caller-file`           | `2.0.5`   | Stefan Penner      | [https://github.com/stefanpenner/get-caller-file](https://github.com/stefanpenner/get-caller-file)           |
@@ -390,13 +391,15 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@octokit/endpoint`                                  | `6.0.12`       |                                | [https://github.com/octokit/endpoint.js](https://github.com/octokit/endpoint.js)                                                                                                                     |
 | `@octokit/graphql`                                   | `4.8.0`        |                                | [https://github.com/octokit/graphql.js](https://github.com/octokit/graphql.js)                                                                                                                       |
 | `@octokit/openapi-types`                             | `11.0.0`       | Gregor Martynus                | [https://github.com/octokit/openapi-types.ts](https://github.com/octokit/openapi-types.ts)                                                                                                           |
+| `@octokit/openapi-types`                             | `11.1.0`       | Gregor Martynus                | [https://github.com/octokit/openapi-types.ts](https://github.com/octokit/openapi-types.ts)                                                                                                           |
 | `@octokit/plugin-paginate-rest`                      | `2.16.8`       |                                | [https://github.com/octokit/plugin-paginate-rest.js](https://github.com/octokit/plugin-paginate-rest.js)                                                                                             |
 | `@octokit/plugin-request-log`                        | `1.0.4`        |                                | [https://github.com/octokit/plugin-request-log.js](https://github.com/octokit/plugin-request-log.js)                                                                                                 |
-| `@octokit/plugin-rest-endpoint-methods`              | `5.12.0`       |                                | [https://github.com/octokit/plugin-rest-endpoint-methods.js](https://github.com/octokit/plugin-rest-endpoint-methods.js)                                                                             |
+| `@octokit/plugin-rest-endpoint-methods`              | `5.12.1`       |                                | [https://github.com/octokit/plugin-rest-endpoint-methods.js](https://github.com/octokit/plugin-rest-endpoint-methods.js)                                                                             |
 | `@octokit/request-error`                             | `2.1.0`        |                                | [https://github.com/octokit/request-error.js](https://github.com/octokit/request-error.js)                                                                                                           |
 | `@octokit/request`                                   | `5.6.2`        |                                | [https://github.com/octokit/request.js](https://github.com/octokit/request.js)                                                                                                                       |
 | `@octokit/rest`                                      | `18.12.0`      |                                | [https://github.com/octokit/rest.js](https://github.com/octokit/rest.js)                                                                                                                             |
 | `@octokit/types`                                     | `6.32.0`       |                                | [https://github.com/octokit/types.ts](https://github.com/octokit/types.ts)                                                                                                                           |
+| `@octokit/types`                                     | `6.33.0`       |                                | [https://github.com/octokit/types.ts](https://github.com/octokit/types.ts)                                                                                                                           |
 | `@samverschueren/stream-to-observable`               | `0.3.1`        |                                | [https://github.com/SamVerschueren/stream-to-observable](https://github.com/SamVerschueren/stream-to-observable)                                                                                     |
 | `@sindresorhus/is`                                   | `0.14.0`       | Sindre Sorhus                  | [https://github.com/sindresorhus/is](https://github.com/sindresorhus/is)                                                                                                                             |
 | `@szmarczak/http-timer`                              | `1.1.2`        | Szymon Marczak                 | [https://github.com/szmarczak/http-timer](https://github.com/szmarczak/http-timer)                                                                                                                   |
