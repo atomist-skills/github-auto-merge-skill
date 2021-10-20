@@ -49,7 +49,7 @@
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
   },
   "dependencies": {
-    "@atomist/skill": "^0.11.1-main.417",
+    "@atomist/skill": "^0.11.1-main.418",
     "@octokit/plugin-rest-endpoint-methods": "^5.13.0",
     "@octokit/rest": "^18.12.0",
     "p-retry": "^4.6.1"
@@ -60,7 +60,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^8.2.3",
     "@types/power-assert": "^1.5.4",
-    "@types/semver": "^7.3.8",
+    "@types/semver": "^7.3.9",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "eslint": "^7.32.0",
