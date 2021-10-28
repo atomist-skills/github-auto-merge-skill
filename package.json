@@ -49,7 +49,7 @@
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\""
   },
   "dependencies": {
-    "@atomist/skill": "^0.11.1-main.423",
+    "@atomist/skill": "^0.11.1-main.430",
     "@octokit/plugin-rest-endpoint-methods": "^5.13.0",
     "@octokit/rest": "^18.12.0",
     "p-retry": "^4.6.1"
@@ -70,7 +70,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^1.1.5",
     "espower-typescript": "^9.0.2",
-    "graphql": "^15.7.0",
+    "graphql": "^15.7.1",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
     "mocha": "^8.4.0",
