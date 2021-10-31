@@ -43,7 +43,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | Name                                        | Version           | Publisher                   | Repository                                                                                                                             |
 | ------------------------------------------- | ----------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `@atomist/skill-logging`                    | `1.0.8-main.30`   | Atomist, Inc.               | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                                     |
-| `@atomist/skill`                            | `0.11.1-main.432` | Atomist, Inc.               | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
+| `@atomist/skill`                            | `0.11.1-main.434` | Atomist, Inc.               | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
 | `@atomist/slack-messages`                   | `1.2.2`           | Atomist                     | [https://github.com/atomist/slack-messages](https://github.com/atomist/slack-messages)                                                 |
 | `@aws-crypto/ie11-detection`                | `2.0.0`           | AWS Crypto Tools Team       | [https://github.com/aws/aws-sdk-js-crypto-helpers](https://github.com/aws/aws-sdk-js-crypto-helpers)                                   |
 | `@aws-crypto/sha256-browser`                | `2.0.0`           | AWS Crypto Tools Team       | [https://github.com/aws/aws-sdk-js-crypto-helpers](https://github.com/aws/aws-sdk-js-crypto-helpers)                                   |
@@ -205,7 +205,7 @@ Creative Commons Attribution 4.0 International - [https://creativecommons.org/li
 
 | Name           | Version        | Publisher  | Repository                                                                                   |
 | -------------- | -------------- | ---------- | -------------------------------------------------------------------------------------------- |
-| `caniuse-lite` | `1.0.30001272` | Ben Briggs | [https://github.com/browserslist/caniuse-lite](https://github.com/browserslist/caniuse-lite) |
+| `caniuse-lite` | `1.0.30001274` | Ben Briggs | [https://github.com/browserslist/caniuse-lite](https://github.com/browserslist/caniuse-lite) |
 
 #### CC0-1.0
 
