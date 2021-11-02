@@ -11,7 +11,7 @@ This page details all runtime dependencies of `@atomist/github-auto-merge-skill`
 | License                              | Count |
 | ------------------------------------ | ----- |
 | [0BSD](#0bsd)                        | 4     |
-| [Apache-2.0](#apache-20)             | 99    |
+| [Apache-2.0](#apache-20)             | 98    |
 | [BSD-2-Clause](#bsd-2-clause)        | 12    |
 | [BSD-3-Clause](#bsd-3-clause)        | 23    |
 | [CC-BY-3.0](#cc-by-30)               | 1     |
@@ -21,7 +21,7 @@ This page details all runtime dependencies of `@atomist/github-auto-merge-skill`
 | [GPL-3.0-or-later](#gpl-30-or-later) | 1     |
 | [ISC](#isc)                          | 46    |
 | [MIT AND Zlib](#mit-and-zlib)        | 1     |
-| [MIT](#mit)                          | 665   |
+| [MIT](#mit)                          | 666   |
 | [Public Domain](#public-domain)      | 1     |
 | [Python-2.0](#python-20)             | 1     |
 
@@ -43,7 +43,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | Name                                        | Version           | Publisher                   | Repository                                                                                                                             |
 | ------------------------------------------- | ----------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `@atomist/skill-logging`                    | `1.0.8-main.30`   | Atomist, Inc.               | [https://github.com/atomist-skills/skill-logging](https://github.com/atomist-skills/skill-logging)                                     |
-| `@atomist/skill`                            | `0.11.1-main.434` | Atomist, Inc.               | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
+| `@atomist/skill`                            | `0.11.1-main.436` | Atomist, Inc.               | [https://github.com/atomist-skills/skill](https://github.com/atomist-skills/skill)                                                     |
 | `@atomist/slack-messages`                   | `1.2.2`           | Atomist                     | [https://github.com/atomist/slack-messages](https://github.com/atomist/slack-messages)                                                 |
 | `@aws-crypto/ie11-detection`                | `2.0.0`           | AWS Crypto Tools Team       | [https://github.com/aws/aws-sdk-js-crypto-helpers](https://github.com/aws/aws-sdk-js-crypto-helpers)                                   |
 | `@aws-crypto/sha256-browser`                | `2.0.0`           | AWS Crypto Tools Team       | [https://github.com/aws/aws-sdk-js-crypto-helpers](https://github.com/aws/aws-sdk-js-crypto-helpers)                                   |
@@ -101,8 +101,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `@aws-sdk/util-utf8-browser`                | `3.37.0`          | AWS SDK for JavaScript Team | [https://github.com/aws/aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3)                                                           |
 | `@aws-sdk/util-utf8-node`                   | `3.37.0`          | AWS SDK for JavaScript Team | [https://github.com/aws/aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3)                                                           |
 | `@aws-sdk/util-waiter`                      | `3.38.0`          | AWS SDK for JavaScript Team | [https://github.com/aws/aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3)                                                           |
-| `@google-cloud/common`                      | `3.7.2`           | Google Inc.                 | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                             |
-| `@google-cloud/common`                      | `3.7.4`           | Google Inc.                 | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                             |
+| `@google-cloud/common`                      | `3.8.0`           | Google Inc.                 | [https://github.com/googleapis/nodejs-common](https://github.com/googleapis/nodejs-common)                                             |
 | `@google-cloud/functions-framework`         | `1.10.0`          | Google Inc.                 | [https://github.com/GoogleCloudPlatform/functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) |
 | `@google-cloud/logging`                     | `8.2.0`           | Google Inc.                 | [https://github.com/googleapis/nodejs-logging](https://github.com/googleapis/nodejs-logging)                                           |
 | `@google-cloud/paginator`                   | `3.0.6`           | Google Inc.                 | [https://github.com/googleapis/nodejs-paginator](https://github.com/googleapis/nodejs-paginator)                                       |
@@ -111,7 +110,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `@google-cloud/promisify`                   | `2.0.4`           | Google Inc.                 | [https://github.com/googleapis/nodejs-promisify](https://github.com/googleapis/nodejs-promisify)                                       |
 | `@google-cloud/pubsub`                      | `2.18.1`          | Google Inc.                 | [https://github.com/googleapis/nodejs-pubsub](https://github.com/googleapis/nodejs-pubsub)                                             |
 | `@google-cloud/secret-manager`              | `3.10.1`          | Google LLC                  | [https://github.com/googleapis/nodejs-secret-manager](https://github.com/googleapis/nodejs-secret-manager)                             |
-| `@google-cloud/storage`                     | `5.15.3`          | Google Inc.                 | [https://github.com/googleapis/nodejs-storage](https://github.com/googleapis/nodejs-storage)                                           |
+| `@google-cloud/storage`                     | `5.15.4`          | Google Inc.                 | [https://github.com/googleapis/nodejs-storage](https://github.com/googleapis/nodejs-storage)                                           |
 | `@grpc/grpc-js`                             | `1.4.2`           | Google Inc.                 | [https://github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js)       |
 | `@grpc/proto-loader`                        | `0.6.6`           | Google Inc.                 | [https://github.com/grpc/grpc-node](https://github.com/grpc/grpc-node)                                                                 |
 | `@opencensus/core`                          | `0.0.22`          | Google Inc.                 | [https://github.com/census-instrumentation/opencensus-node](https://github.com/census-instrumentation/opencensus-node)                 |
@@ -247,7 +246,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `cliui`                     | `6.0.0`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `cliui`                     | `7.0.4`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `deprecation`               | `2.3.1`   |                    | [https://github.com/gr2m/deprecation](https://github.com/gr2m/deprecation)                                   |
-| `electron-to-chromium`      | `1.3.885` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
+| `electron-to-chromium`      | `1.3.886` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
 | `fastq`                     | `1.10.0`  | Matteo Collina     | [https://github.com/mcollina/fastq](https://github.com/mcollina/fastq)                                       |
 | `fs.realpath`               | `1.0.0`   | Isaac Z. Schlueter | [https://github.com/isaacs/fs.realpath](https://github.com/isaacs/fs.realpath)                               |
 | `get-caller-file`           | `2.0.5`   | Stefan Penner      | [https://github.com/stefanpenner/get-caller-file](https://github.com/stefanpenner/get-caller-file)           |
@@ -321,7 +320,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@babel/highlight`                                   | `7.14.5`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
 | `@babel/highlight`                                   | `7.16.0`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
 | `@babel/parser`                                      | `7.15.8`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
-| `@babel/parser`                                      | `7.16.0`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
+| `@babel/parser`                                      | `7.16.2`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
 | `@babel/plugin-proposal-class-properties`            | `7.16.0`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
 | `@babel/plugin-proposal-object-rest-spread`          | `7.16.0`       | The Babel Team                 | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
 | `@babel/plugin-syntax-class-properties`              | `7.12.13`      |                                | [https://github.com/babel/babel](https://github.com/babel/babel)                                                                                                                                     |
@@ -613,7 +612,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `globby`                                             | `11.0.4`       | Sindre Sorhus                  | [https://github.com/sindresorhus/globby](https://github.com/sindresorhus/globby)                                                                                                                     |
 | `google-p12-pem`                                     | `3.1.2`        | Ryan Seys                      | [https://github.com/googleapis/google-p12-pem](https://github.com/googleapis/google-p12-pem)                                                                                                         |
 | `got`                                                | `9.6.0`        |                                | [https://github.com/sindresorhus/got](https://github.com/sindresorhus/got)                                                                                                                           |
-| `graphql-config`                                     | `4.0.2`        | Kamil Kisiela                  | [https://github.com/kamilkisiela/graphql-config](https://github.com/kamilkisiela/graphql-config)                                                                                                     |
+| `graphql-config`                                     | `4.1.0`        | Kamil Kisiela                  | [https://github.com/kamilkisiela/graphql-config](https://github.com/kamilkisiela/graphql-config)                                                                                                     |
 | `graphql-request`                                    | `3.6.1`        | Prisma Labs Team               | [https://github.com/prisma/graphql-request](https://github.com/prisma/graphql-request)                                                                                                               |
 | `graphql-sse`                                        | `1.0.4`        | Denis Badurina                 | [https://github.com/enisdenjo/graphql-sse](https://github.com/enisdenjo/graphql-sse)                                                                                                                 |
 | `graphql-tag`                                        | `2.12.5`       |                                | [https://github.com/apollographql/graphql-tag](https://github.com/apollographql/graphql-tag)                                                                                                         |
@@ -771,6 +770,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `node-eta`                                           | `0.9.0`        | Constantin Titarenko           | [https://github.com/titarenko/eta](https://github.com/titarenko/eta)                                                                                                                                 |
 | `node-fetch`                                         | `2.6.1`        | David Frank                    | [https://github.com/bitinn/node-fetch](https://github.com/bitinn/node-fetch)                                                                                                                         |
 | `node-fetch`                                         | `2.6.5`        | David Frank                    | [https://github.com/bitinn/node-fetch](https://github.com/bitinn/node-fetch)                                                                                                                         |
+| `node-fetch`                                         | `2.6.6`        | David Frank                    | [https://github.com/bitinn/node-fetch](https://github.com/bitinn/node-fetch)                                                                                                                         |
 | `node-int64`                                         | `0.4.0`        | Robert Kieffer                 | [https://github.com/broofa/node-int64](https://github.com/broofa/node-int64)                                                                                                                         |
 | `node-releases`                                      | `2.0.1`        | Sergey Rubanov                 | [https://github.com/chicoxyzzy/node-releases](https://github.com/chicoxyzzy/node-releases)                                                                                                           |
 | `normalize-path`                                     | `2.1.1`        | Jon Schlinkert                 | [https://github.com/jonschlinkert/normalize-path](https://github.com/jonschlinkert/normalize-path)                                                                                                   |
